@@ -1,0 +1,97 @@
+.header {
+    color: #fff;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 74px 0 60px;
+    &__logo {
+        padding-right: 39px;
+        position: relative;
+        img {
+            margin-bottom: 5px;
+            width: 100%;
+        }
+        &::after {
+            position: absolute;
+            content: "";
+            background-color: #f4f4f4;
+            width: 1px;
+            height: 47px;
+            top: 52%;
+            transform: translateY(-50%);
+            right: 0;
+        }
+    }
+    &__menu {
+        padding: 41px 0;
+        font: 500 20px/26px "DM Sans";
+        letter-spacing: 0.04em;
+        &-link {
+            &--active {
+                position: relative;
+                &::after {
+                    position: absolute;
+                    content: "";
+                    bottom: 0;
+                    right: 0;
+                    left: 0;
+                    background-color: #27d6ff;
+                    width: 100%;
+                    height: 6px;
+                }
+            }
+            padding: 41px 15px;
+            transition: all 0.2s;
+            &:hover {
+                background-color: #1e6394;
+            }
+        }
+    }
+    &__search {
+        position: relative;
+        &::after {
+            position: absolute;
+            content: "";
+            background: url("./../../../public/img/header/search.svg") no-repeat center center;
+            width: 24px;
+            height: 24px;
+            right: 31px;
+            top: 50%;
+            transform: translateY(-50%);
+        }
+        input {
+            width: 873px;
+            padding: 17px 29px 18px;
+            font: 500 16px/21px "DM Sans";
+            color: #c0c0c0;
+            border: 2px solid #efefef;
+            border-radius: 100px;
+            &::placeholder {
+                font: 500 16px/21px "DM Sans";
+                color: #c0c0c0;
+            }
+        }
+    }
+    &__buttons {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        &-connect {
+            font: 700 20px/24px "Montserrat";
+            padding: 16px 25px;
+            text-transform: uppercase;
+            background: #ff4500;
+            border-radius: 60px;
+        }
+        &-theme {
+            margin-left: 38px;
+            margin-top: 8px;
+            img {
+                transition: all 0.2s;
+                &:hover {
+                    opacity: 0.8;
+                }
+            }
+        }
+    }
+}

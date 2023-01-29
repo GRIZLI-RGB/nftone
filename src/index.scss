@@ -1,0 +1,53 @@
+*,
+*::after,
+*::before {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    color: inherit;
+    font: inherit;
+}
+
+ul,
+ol {
+    list-style: none;
+}
+
+a {
+    text-decoration: none;
+    cursor: pointer;
+}
+
+button {
+    background-color: transparent;
+    border: none;
+    cursor: pointer;
+}
+
+input {
+    bottom: none;
+    outline: none;
+}
+
+::-webkit-scrollbar {
+    display: none;
+}
+
+.slick-slide > div {
+    margin: 0 10px;
+    margin-left: 0;
+}
+
+.slick-list {
+    margin: 0 -10px;
+    margin-left: 0;
+    padding: 47px 0;
+}
+
+.slick-track {
+}
+
+.slick-slider {
+    position: relative;
+    z-index: 999;
+}

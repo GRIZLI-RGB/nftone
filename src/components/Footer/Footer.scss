@@ -1,0 +1,53 @@
+.footer {
+    color: #fff;
+    padding: 60px 62px 34px 62px;
+    &__info {
+        display: flex;
+        justify-content: space-between;
+        &-about {
+            &-text {
+                font: 400 18px/160% "Montserrat";
+                max-width: 465px;
+                margin-top: 17px;
+            }
+        }
+        &-list {
+            font: 500 18px/200% "DM Sans";
+            &-title {
+                font: 700 20px/26px "DM Sans";
+                margin-bottom: 21px;
+            }
+            &-item {
+                color: rgba(255, 255, 255, 0.85);
+                a {
+                    transition: all 0.2s;
+                    &:hover {
+                        color: #27d6ff;
+                    }
+                }
+            }
+        }
+        &-social {
+            font: 700 18px/23px "DM Sans";
+            &-title {
+                margin-bottom: 28px;
+            }
+            &-items {
+                display: flex;
+                column-gap: 10px;
+                max-height: 50px;
+                a {
+                    transition: all 0.2s;
+                    &:hover {
+                        opacity: 0.8;
+                    }
+                }
+            }
+        }
+    }
+    &__copyright {
+        font: 400 14px/18px "DM Sans";
+        margin-top: 51px;
+        text-align: center;
+    }
+}
