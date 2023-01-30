@@ -4,90 +4,94 @@
     max-width: 495px;
     display: flex;
     flex-direction: column;
-    padding: 25px 25px 22px 25px;
+    padding: 1.3vw;
     position: relative;
     cursor: pointer;
     transition: all 0.2s;
     &-dark {
-        &:hover {
-            background: #3A434B !important;
+        div &:hover {
+            background-color: #3A434B !important;
         }
         &:hover .card__menuEmoji {
             background-color: #3A434B !important;
         }
     }
     &:hover {
-        background-color: #0088cc;
-        color: #fff;
+        background-color: #0088cc !important;
+        color: #fff !important;
     }
     &:hover &__menuEmoji {
         opacity: 1;
         bottom: 0;
         pointer-events: all;
     }
-    &:hover &__info-right-emoji-item {
-        background: rgba(255, 255, 255, 0.2);
+    &:hover &__info-right-emoji-item-light {
+        background: rgba(255, 255, 255, 0.2) !important;
     }
-    &:hover &__info-right-emoji-item span {
+    &:hover &__info-right-emoji-item-light span {
         color: #fff;
     }
     &:hover &__info-left-price {
-        color: #fff;
-    }
-    &:hover &__info-left-price::after {
-        background: url("./../../../public/img/card/diamond-light.png");
+        color: #fff !important;
     }
     &__photo {
-        margin-bottom: 30px;
+        margin-bottom: 1.55vw;
     }
     &__info {
         display: flex;
         justify-content: space-between;
         &-left {
             &-title {
-                font: 700 24px/19px "DM Sans";
-                margin-bottom: 21px;
+                font-family: "DM Sans";
+                font-weight: 700;
+                font-size: 1.25vw;
+                line-height: 0.99vw;
+                margin-bottom: 1.09vw;
             }
             &-price {
-                font: 700 22px/29px "DM Sans";
-                padding-left: 29px;
+                font-family: "DM Sans";
+                font-weight: 700;
+                font-size: 1.15vw;
+                line-height: 1.51vw;
                 position: relative;
-                &::after {
-                    width: 23px;
-                    height: 23px;
-                    position: absolute;
-                    content: "";
-                    background: url("./../../../public/img/card/diamond-dark.png");
-                    left: 0;
-                    top: 50%;
-                    transform: translateY(-50%);
+                display: flex;
+                align-items: center;
+                img {
+                    padding-right: 0.26vw;
+                    width: 1.5vw;
                 }
             }
         }
         &-right {
             &-user {
-                margin-bottom: 12px;
+                margin-bottom: 0.63vw;
                 display: flex;
                 align-items: center;
                 justify-content: flex-end;
                 &-name {
-                    font: 500 14px/18px "DM Sans";
-                    margin-left: 10px;
+                    font-family: "DM Sans";
+                    font-weight: 500;
+                    font-size: 0.73vw;
+                    line-height: 0.94vw;
+                    margin-left: 0.52vw;
                 }
             }
             &-emoji {
                 display: flex;
-                column-gap: 5px;
+                column-gap: 0.26vw;
                 &-item-light {
                     text-align: center;
                     background: rgba(0, 77, 140, 0.1);
                     border-radius: 57px;
-                    padding: 5px 4px;
+                    padding: 0.26vw 0.21vw;
+                    font-size: 0.73vw;
                     span {
-                        margin-top: 2px;
+                        margin-top: 0.1vw;
                         display: block;
                         color: rgba(0, 0, 0, 0.7);
-                        font: 400 14px/18px "DM Sans";
+                        font-family: "DM Sans";
+                        font-weight: 400;
+                        line-height: 0.94vw;
                         letter-spacing: -0.03em;
                     }
                 }
@@ -95,12 +99,15 @@
                     text-align: center;
                     background: rgba(255, 255, 255, 0.21);
                     border-radius: 57px;
-                    padding: 5px 4px;
+                    padding: 0.26vw 0.21vw;
+                    font-size: 0.73vw;
                     span {
                         margin-top: 2px;
                         display: block;
                         color: rgba(0, 0, 0, 0.7);
-                        font: 400 14px/18px "DM Sans";
+                        font-family: "DM Sans";
+                        font-weight: 400;
+                        line-height: 0.94vw;
                         letter-spacing: -0.03em;
                     }
                 }
@@ -111,19 +118,19 @@
         transition: all 0.2s;
         position: absolute;
         transform: translateX(105%);
-        right: 0;
+        right: 0.15vw;
         bottom: -50px;
         z-index: 999;
         background: #ffffff;
         box-shadow: 0px 4px 40px rgba(0, 0, 0, 0.1);
         border-radius: 100px 100px 20px 0px;
-        font-size: 30px;
-        padding: 24px;
+        font-size: 1.56vw;
+        padding: 1.25vw;
         opacity: 0;
         pointer-events: none;
         &-item {
             & + & {
-                margin-top: 15px;
+                margin-top: 0.78vw;
             }
             transition: all 0.2s;
             &:hover {

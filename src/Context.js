@@ -4,7 +4,8 @@ export const ContextApp = createContext();
 
 function Context(props) {
     const [theme, setTheme] = useState("light");
-    return <ContextApp.Provider value={{theme, setTheme}}>{props.children}</ContextApp.Provider>;
+    const [popup, setPopup] = useState(false);
+    return <ContextApp.Provider value={{ theme, setTheme, popup, setPopup }}>{props.children}</ContextApp.Provider>;
 }
 
 export default Context;

@@ -1,18 +1,22 @@
-import { useContext } from "react";
+import { useContext, useState } from "react";
 import "./Card.scss";
 import { ContextApp } from "../../Context";
 
 function Card() {
+    const [diamond, setDiamond] = useState("dark");
     const { theme } = useContext(ContextApp);
     return (
         <div
             className={`${theme === "light" ? "card" : "card card-dark"}`}
+            onMouseOver={() => setDiamond('light')}
+            onMouseOut={() => setDiamond('dark')}
             style={{ background: theme === "light" ? "#fff" : "#2B3239", color: theme === "light" ? "#000" : "#fff" }}>
             <img className="card__photo" src="./img/card/photo-1.svg" alt="Card" />
             <div className="card__info">
                 <div className="card__info-left">
                     <h6 className="card__info-left-title">KingCrypto</h6>
                     <p className="card__info-left-price" style={{ color: theme === "light" ? "#0088cc" : "#fff" }}>
+                        <img src={`./img/card/diamond-${diamond}.png`} alt="Price" />
                         0.25 TON
                     </p>
                 </div>

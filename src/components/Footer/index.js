@@ -14,30 +14,32 @@ function Footer() {
                         tokens (NFTs). Buy, sell, and discover exclusive digital items.
                     </p>
                 </div>
-                <ul className="footer__info-list">
-                    <li className="footer__info-list-title">Market Place</li>
-                    <li class="footer__info-list-item">
-                        <a href="#">Catalog</a>
-                    </li>
-                    <li class="footer__info-list-item">
-                        <a href="#">Search</a>
-                    </li>
-                    <li class="footer__info-list-item">
-                        <a href="#">FAQ</a>
-                    </li>
-                </ul>
-                <ul className="footer__info-list">
-                    <li className="footer__info-list-title">My Account</li>
-                    <li class="footer__info-list-item">
-                        <a href="#">Profile</a>
-                    </li>
-                    <li class="footer__info-list-item">
-                        <a href="#">My Collections</a>
-                    </li>
-                    <li class="footer__info-list-item">
-                        <a href="#">My NFTs</a>
-                    </li>
-                </ul>
+                <div className="footer__info-box">
+                    <ul className="footer__info-box-list">
+                        <li className="footer__info-box-list-title">Market Place</li>
+                        <li className="footer__info-box-list-item">
+                            <a href="#">Catalog</a>
+                        </li>
+                        <li className="footer__info-box-list-item">
+                            <a href="#">Search</a>
+                        </li>
+                        <li className="footer__info-box-list-item">
+                            <a href="#">FAQ</a>
+                        </li>
+                    </ul>
+                    <ul className="footer__info-box-list">
+                        <li className="footer__info-box-list-title">My Account</li>
+                        <li className="footer__info-box-list-item">
+                            <a href="#">Profile</a>
+                        </li>
+                        <li className="footer__info-box-list-item">
+                            <a href="#">My Collections</a>
+                        </li>
+                        <li className="footer__info-box-list-item">
+                            <a href="#">My NFTs</a>
+                        </li>
+                    </ul>
+                </div>
                 <div className="footer__info-social">
                     <h6 className="footer__info-social-title">Follow Us On</h6>
                     <div className="footer__info-social-items">

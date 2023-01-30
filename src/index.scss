@@ -6,6 +6,11 @@
     box-sizing: border-box;
     color: inherit;
     font: inherit;
+    user-select: none;
+}
+
+body {
+    position: relative;
 }
 
 ul,
@@ -42,9 +47,11 @@ input {
     margin: 0 -10px;
     margin-left: 0;
     padding: 47px 0;
+    // padding:0 20% 0 0 !important;
 }
 
-.slick-track {
+.slick-slide {
+    // min-width: 270px !important;
 }
 
 .slick-slider {
