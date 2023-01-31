@@ -1,6 +1,8 @@
 import { useContext, useState } from "react";
 import { ContextApp } from "../../Context";
 import "./Header.scss";
+import Marketplace from "../../pages/Marketplace";
+import { Link } from "react-router-dom";
 
 function Header() {
     const [openMobileMenu, setOpenMobileMenu] = useState(false);
@@ -17,11 +19,12 @@ function Header() {
                 </div>
             )}
             <nav class="header__menu">
-                <a
+                <Link
+                    to={<Marketplace />}
                     className={`header__menu-link ${globalContext.theme === "light" ? "" : "header__menu-link--dark"}`}
                     href="#">
                     Marketplace
-                </a>
+                </Link>
                 <a
                     className={`header__menu-link ${globalContext.theme === "light" ? "" : "header__menu-link--dark"}`}
                     href="#">
@@ -51,7 +54,7 @@ function Header() {
                     <button className="header__buttons-theme">
                         <img
                             onClick={() => globalContext.setTheme(globalContext.theme === "light" ? "dark" : "light")}
-                            src={`./img/header/${globalContext.theme}-theme.svg`}
+                            src={`./img/header/${globalContext.theme}-theme.png`}
                             alt={`${globalContext.theme} theme`}
                         />
                     </button>

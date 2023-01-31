@@ -65,7 +65,7 @@
         }
         input {
             width: 873px;
-            padding: 17px 29px 18px;
+            padding: 11px 26px 11px;
             font: 500 16px/21px "DM Sans";
             color: #c0c0c0;
             border: 2px solid #efefef;
@@ -93,7 +93,7 @@
         }
         &-theme {
             margin-left: 38px;
-            margin-top: 7px;
+            margin-top: 4px;
             img {
                 transition: all 0.2s;
                 &:hover {
@@ -139,16 +139,16 @@
             input {
                 width: 38vw;
                 height: 100%;
-                padding: 10px 16px;
-                font-size: 16px;
+                padding: 6px 15px;
+                font-size: 15px;
                 &::placeholder {
-                    font-size: 16px;
+                    font-size: 15px;
                 }
             }
             &::after {
-                top: 10px;
+                top: 6px;
                 right: 13px;
-                transform: scale(0.8);
+                transform: scale(0.75);
             }
         }
         &__buttons {
@@ -190,16 +190,16 @@
             input {
                 width: 38vw;
                 height: 100%;
-                padding: 10px 16px;
-                font-size: 16px;
+                padding: 5px 16px;
+                font-size: 15px;
                 &::placeholder {
-                    font-size: 16px;
+                    font-size: 15px;
                 }
             }
             &::after {
-                top: 10px;
-                right: 13px;
-                transform: scale(0.8);
+                top: 5px;
+                right: 12px;
+                transform: scale(0.7);
             }
         }
         &__buttons {
@@ -245,16 +245,16 @@
             input {
                 width: 25vw;
                 height: 100%;
-                padding: 10px 16px;
-                font-size: 16px;
+                padding: 5px 16px;
+                font-size: 15px;
                 &::placeholder {
-                    font-size: 16px;
+                    font-size: 15px;
                 }
             }
             &::after {
-                top: 10px;
-                right: 13px;
-                transform: scale(0.8);
+                top: 5px;
+                right: 10px;
+                transform: scale(0.7);
             }
         }
         &__buttons {

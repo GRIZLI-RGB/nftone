@@ -10,10 +10,10 @@
     transition: all 0.2s;
     &-dark {
         div &:hover {
-            background-color: #3A434B !important;
+            background-color: #3a434b !important;
         }
         &:hover .card__menuEmoji {
-            background-color: #3A434B !important;
+            background-color: #3a434b !important;
         }
     }
     &:hover {
@@ -79,36 +79,34 @@
             &-emoji {
                 display: flex;
                 column-gap: 0.26vw;
-                &-item-light {
-                    text-align: center;
-                    background: rgba(0, 77, 140, 0.1);
-                    border-radius: 57px;
-                    padding: 0.26vw 0.21vw;
-                    font-size: 0.73vw;
-                    span {
-                        margin-top: 0.1vw;
-                        display: block;
-                        color: rgba(0, 0, 0, 0.7);
-                        font-family: "DM Sans";
-                        font-weight: 400;
-                        line-height: 0.94vw;
-                        letter-spacing: -0.03em;
+                &-item {
+                    &-light,
+                    &-dark {
+                        width: 1.56vw;
+                        text-align: center;
+                        border-radius: 0.8vw;
+                        // padding: 0.26vw 0.21vw;
+                        padding: 0.26vw 0;
+                        font-size: 0.73vw;
+                        transition: all .2s;
+                        span {
+                            margin-top: 0.1vw;
+                            display: block;
+                            color: rgba(0, 0, 0, 0.7);
+                            font-family: "DM Sans";
+                            font-weight: 400;
+                            line-height: 0.94vw;
+                            letter-spacing: -0.03em;
+                        }
+                        &:hover {
+                            opacity: 0.6;
+                        }
                     }
-                }
-                &-item-dark {
-                    text-align: center;
-                    background: rgba(255, 255, 255, 0.21);
-                    border-radius: 57px;
-                    padding: 0.26vw 0.21vw;
-                    font-size: 0.73vw;
-                    span {
-                        margin-top: 2px;
-                        display: block;
-                        color: rgba(0, 0, 0, 0.7);
-                        font-family: "DM Sans";
-                        font-weight: 400;
-                        line-height: 0.94vw;
-                        letter-spacing: -0.03em;
+                    &-light {
+                        background: rgba(0, 77, 140, 0.1);
+                    }
+                    &-dark {
+                        background: rgba(255, 255, 255, 0.21);
                     }
                 }
             }
@@ -117,8 +115,7 @@
     &__menuEmoji {
         transition: all 0.2s;
         position: absolute;
-        transform: translateX(105%);
-        right: 0.15vw;
+        left: 0;
         bottom: -50px;
         z-index: 999;
         background: #ffffff;

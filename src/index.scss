@@ -9,8 +9,10 @@
     user-select: none;
 }
 
-body {
+html, body {
     position: relative;
+    overflow-x: hidden;
+    max-width: 100vw;
 }
 
 ul,

@@ -3,6 +3,8 @@ import Slider from "react-slick";
 import Card from "../../components/Card";
 import "./Home.scss";
 import { ContextApp } from "./../../Context";
+import Header from "./../../components/Header";
+import Footer from "./../../components/Footer";
 
 function Home() {
     const [popularFilter, setPopularFilter] = useState("nft");
@@ -33,6 +35,7 @@ function Home() {
     };
     return (
         <>
+            <Header />
             <section className="welcome" style={{ background: theme === "light" ? "#fff" : "#15191E" }}>
                 <div class="welcome__bg" style={{ display: theme === "light" ? "none" : "block" }}></div>
                 <div className="welcome__info">
@@ -205,7 +208,7 @@ function Home() {
                         onClick={() => setPopularFilter("nft")}
                         className={`popular__categories-nfts ${
                             popularFilter === "nft" ? "popular__categories-nfts--active" : ""
-                        }`}
+                        } ${popularFilter !== "nft" ? "popular__categories-nfts--hoverMe" : ""}`}
                         style={{
                             color: theme === "light" && popularFilter !== "nft" ? "#000" : "#fff",
                             background: theme === "light" ? "rgba(220, 220, 220, 0.5)" : "#2B3239",
@@ -216,7 +219,7 @@ function Home() {
                         onClick={() => setPopularFilter("collection")}
                         className={`popular__categories-collections ${
                             popularFilter === "collection" ? "popular__categories-collections--active" : ""
-                        }`}
+                        } ${popularFilter !== "collection" ? "popular__categories-collections--hoverMe" : ""}`}
                         style={{
                             color: theme === "light" && popularFilter !== "collection" ? "#000" : "#fff",
                             background: theme === "light" ? "rgba(220, 220, 220, 0.5)" : "#2B3239",
@@ -244,7 +247,7 @@ function Home() {
                     <button
                         className={`recent__categories-nfts ${
                             recentFilter === "nft" ? "recent__categories-nfts--active" : ""
-                        }`}
+                        } ${recentFilter !== "nft" ? "recent__categories-nfts--hoverMe" : ""}`}
                         onClick={() => setRecentFilter("nft")}
                         style={{
                             color:
@@ -265,7 +268,7 @@ function Home() {
                     <button
                         className={`recent__categories-collections ${
                             recentFilter === "collection" ? "recent__categories-collections--active" : ""
-                        }`}
+                        } ${recentFilter !== "collection" ? "recent__categories-collections--hoverMe" : ""}`}
                         onClick={() => setRecentFilter("collection")}
                         style={{
                             color:
@@ -330,6 +333,7 @@ function Home() {
                     </div>
                 </div>
             )}
+            <Footer />
         </>
     );
 }
