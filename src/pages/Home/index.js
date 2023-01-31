@@ -13,7 +13,7 @@ function Home() {
     const settingsForSlider = {
         infinite: true,
         speed: 500,
-        slidesToShow: 4,
+        slidesToShow: 5,
         slidesToScroll: 1,
         swipeToSlide: true,
         autoplay: false,
@@ -22,13 +22,13 @@ function Home() {
             {
                 breakpoint: 768,
                 settings: {
-                    slidesToShow: 2,
+                    slidesToShow: 3,
                 },
             },
             {
                 breakpoint: 530,
                 settings: {
-                    slidesToShow: 1,
+                    slidesToShow: 2,
                 },
             },
         ],
@@ -36,7 +36,7 @@ function Home() {
     return (
         <>
             <Header />
-            <section className="welcome" style={{ background: theme === "light" ? "#fff" : "#15191E" }}>
+            <section className="welcome" style={{ background: theme === "light" ? "rgba(217, 224, 236, 0.3)" : "#15191E" }}>
                 <div class="welcome__bg" style={{ display: theme === "light" ? "none" : "block" }}></div>
                 <div className="welcome__info">
                     <h1 className="welcome__info-title" style={{ color: theme === "light" ? "#000" : "#fff" }}>
@@ -199,7 +199,7 @@ function Home() {
             </section>
             <section
                 className="popular"
-                style={{ background: theme === "light" ? "rgba(217, 224, 236, 0.3)" : "#15191E" }}>
+                style={{ background: theme === "light" ? "#fff" : "#15191E" }}>
                 <h2 class="popular__title" style={{ color: theme === "light" ? "#000" : "#fff" }}>
                     Popular NFTs
                 </h2>
