@@ -1,5 +1,4 @@
 import { useContext, useState } from "react";
-import { Link } from "react-router-dom";
 import { ContextApp } from "../../Context";
 import "./Header.scss";
 
@@ -20,13 +19,13 @@ function Header({ currentPage }) {
             )}
             <nav class="header__menu">
                 {["Marketplace", "Catalog", "FAQ"].map(item => (
-                    <Link
+                    <a
                         href={`/${item.toLowerCase()}`}
                         className={`header__menu-link ${theme === "light" ? "" : "header__menu-link--dark"} ${
                             currentPage === item.toLocaleLowerCase() ? "header__menu-link--active" : ""
                         }`}>
                         {item}
-                    </Link>
+                    </a>
                 ))}
             </nav>
             <div className="header__search">
