@@ -1,61 +1,53 @@
 import { useContext, useState } from "react";
 import { ContextApp } from "../../Context";
 import "./Header.scss";
-import Marketplace from "../../pages/Marketplace";
-import { Link } from "react-router-dom";
 
-function Header() {
+function Header({ currentPage }) {
     const [openMobileMenu, setOpenMobileMenu] = useState(false);
     const [openSearch, setOpenSearch] = useState(false);
     const [searchQuery, setSearchQuery] = useState("");
-    const globalContext = useContext(ContextApp);
+    const [popup, setPopup] = useState(false);
+    const { theme, setTheme } = useContext(ContextApp);
     return (
-        <header className="header" style={{ backgroundColor: globalContext.theme === "light" ? "#004f87" : "#1C2026" }}>
-            {openSearch ? null : (
+        <header className="header" style={{ backgroundColor: theme === "light" ? "#004f87" : "#1C2026" }}>
+            {!openSearch && (
                 <div class="header__logo">
-                    <a href="#">
+                    <a href="/">
                         <img src="./img/header/header-logo.svg" alt="Logo" />
                     </a>
                 </div>
             )}
             <nav class="header__menu">
-                <Link
-                    to={<Marketplace />}
-                    className={`header__menu-link ${globalContext.theme === "light" ? "" : "header__menu-link--dark"}`}
-                    href="#">
-                    Marketplace
-                </Link>
-                <a
-                    className={`header__menu-link ${globalContext.theme === "light" ? "" : "header__menu-link--dark"}`}
-                    href="#">
-                    Catalog
-                </a>
-                <a
-                    className={`header__menu-link ${globalContext.theme === "light" ? "" : "header__menu-link--dark"}`}
-                    href="#">
-                    FAQ
-                </a>
+                {["Marketplace", "Catalog", "FAQ"].map(item => (
+                    <a
+                        href={`/${item.toLowerCase()}`}
+                        className={`header__menu-link ${theme === "light" ? "" : "header__menu-link--dark"} ${
+                            currentPage === item.toLocaleLowerCase() ? "header__menu-link--active" : ""
+                        }`}>
+                        {item}
+                    </a>
+                ))}
             </nav>
             <div className="header__search">
                 <input
                     type="text"
                     placeholder="Search"
                     style={{
-                        backgroundColor: globalContext.theme === "light" ? "#fff" : "#272E37",
-                        borderColor: globalContext.theme === "light" ? "#efefef" : "#373F4A",
+                        backgroundColor: theme === "light" ? "#fff" : "#272E37",
+                        borderColor: theme === "light" ? "#efefef" : "#373F4A",
                     }}
                 />
             </div>
-            {openSearch ? null : (
+            {!openSearch && (
                 <div class="header__buttons">
-                    <button onClick={() => globalContext.setPopup(true)} className="header__buttons-connect">
+                    <button onClick={() => setPopup(true)} className="header__buttons-connect">
                         {window.innerWidth <= 1440 ? "Connect" : "Connect wallet"}
                     </button>
                     <button className="header__buttons-theme">
                         <img
-                            onClick={() => globalContext.setTheme(globalContext.theme === "light" ? "dark" : "light")}
-                            src={`./img/header/${globalContext.theme}-theme.png`}
-                            alt={`${globalContext.theme} theme`}
+                            onClick={() => setTheme(theme === "light" ? "dark" : "light")}
+                            src={`./img/header/${theme}-theme.png`}
+                            alt={`${theme} theme`}
                         />
                     </button>
                 </div>
@@ -76,12 +68,12 @@ function Header() {
                 class="header__mobileMenu"
                 style={{
                     right: openMobileMenu ? "0" : "-600px",
-                    color: globalContext.theme === "light" ? "#000" : "#fff",
-                    backgroundColor: globalContext.theme === "light" ? "#fff" : "#1C2026",
+                    color: theme === "light" ? "#000" : "#fff",
+                    backgroundColor: theme === "light" ? "#fff" : "#1C2026",
                 }}>
                 <img
                     className="header__mobileMenu-close"
-                    src={`./img/header/${globalContext.theme === "light" ? "close" : "close-white"}.png`}
+                    src={`./img/header/${theme === "light" ? "close" : "close-white"}.png`}
                     alt="Close"
                     onClick={() => setOpenMobileMenu(false)}
                 />
@@ -107,18 +99,14 @@ function Header() {
                         </a>
                         <div className="header__mobileMenu-list-item-switch">
                             <input type="checkbox" id="switch" />
-                            <label
-                                onClick={() =>
-                                    globalContext.setTheme(globalContext.theme === "light" ? "dark" : "light")
-                                }
-                                for="switch">
+                            <label onClick={() => setTheme(theme === "light" ? "dark" : "light")} for="switch">
                                 Toggle
                             </label>
                         </div>
                     </li>
                 </ul>
                 <div className="header__mobileMenu-down">
-                    <button class="header__mobileMenu-connect" onClick={() => globalContext.setPopup(true)}>
+                    <button class="header__mobileMenu-connect" onClick={() => setPopup(true)}>
                         Connect
                     </button>
                     <div className="header__mobileMenu-items">
@@ -160,9 +148,9 @@ function Header() {
                     onChange={e => setSearchQuery(e.target.value)}
                     value={searchQuery}
                     style={{
-                        backgroundColor: globalContext.theme === "light" ? "#fff" : "#272E37",
-                        borderColor: globalContext.theme === "light" ? "#efefef" : "#373F4A",
-                        color: globalContext.theme === "light" ? "#2d333e" : "#fff",
+                        backgroundColor: theme === "light" ? "#fff" : "#272E37",
+                        borderColor: theme === "light" ? "#efefef" : "#373F4A",
+                        color: theme === "light" ? "#2d333e" : "#fff",
                     }}
                 />
                 <img
@@ -178,6 +166,43 @@ function Header() {
                     onClick={() => setSearchQuery("")}
                 />
             </div>
+            {popup && (
+                <div className="connect">
+                    <div class="connect__popup" style={{ backgroundColor: theme === "light" ? "#fff" : "#1C2026" }}>
+                        <img
+                            onClick={() => setPopup(false)}
+                            className="connect__popup-img"
+                            src={`./img/header/${theme === "light" ? "close" : "close-white"}.png`}
+                            alt="Close"
+                        />
+                        <h6 className="connect__popup-title" style={{ color: theme === "light" ? "#000" : "#fff" }}>
+                            Connect Wallet
+                        </h6>
+                        <p
+                            className="connect__popup-text"
+                            style={{ color: theme === "light" ? "rgba(0, 0, 0, 0.5)" : "rgba(255, 255, 255, 0.7)" }}>
+                            A wallet is a simple, anonymous way to log in. To create ('mint') or buy an NFT, you must
+                            connect a wallet or create a new one.
+                        </p>
+                        <button
+                            class="connect__popup-btn"
+                            style={{
+                                color: theme === "light" ? "#000" : "#fff",
+                                backgroundColor: theme === "light" ? "#f4f4f4" : "#272E37",
+                            }}>
+                            Tonkeeper
+                        </button>
+                        <button
+                            class="connect__popup-btn"
+                            style={{
+                                color: theme === "light" ? "#000" : "#fff",
+                                backgroundColor: theme === "light" ? "#f4f4f4" : "#272E37",
+                            }}>
+                            Tonhub
+                        </button>
+                    </div>
+                </div>
+            )}
         </header>
     );
 }

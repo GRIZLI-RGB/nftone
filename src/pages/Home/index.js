@@ -9,7 +9,7 @@ import Footer from "./../../components/Footer";
 function Home() {
     const [popularFilter, setPopularFilter] = useState("nft");
     const [recentFilter, setRecentFilter] = useState("nft");
-    const { theme, popup, setPopup } = useContext(ContextApp);
+    const { theme } = useContext(ContextApp);
     const settingsForSlider = {
         infinite: true,
         speed: 500,
@@ -35,7 +35,7 @@ function Home() {
     };
     return (
         <>
-            <Header />
+            <Header currentPage={"zero"} />
             <section className="welcome" style={{ background: theme === "light" ? "rgba(217, 224, 236, 0.3)" : "#15191E" }}>
                 <div class="welcome__bg" style={{ display: theme === "light" ? "none" : "block" }}></div>
                 <div className="welcome__info">
@@ -296,43 +296,6 @@ function Home() {
                     <button className="recent__all-btn">View all</button>
                 </div>
             </section>
-            {popup && (
-                <div className="connect">
-                    <div class="connect__popup" style={{ backgroundColor: theme === "light" ? "#fff" : "#1C2026" }}>
-                        <img
-                            onClick={() => setPopup(false)}
-                            className="connect__popup-img"
-                            src={`./img/header/${theme === "light" ? "close" : "close-white"}.png`}
-                            alt="Close"
-                        />
-                        <h6 className="connect__popup-title" style={{ color: theme === "light" ? "#000" : "#fff" }}>
-                            Connect Wallet
-                        </h6>
-                        <p
-                            className="connect__popup-text"
-                            style={{ color: theme === "light" ? "rgba(0, 0, 0, 0.5)" : "rgba(255, 255, 255, 0.7)" }}>
-                            A wallet is a simple, anonymous way to log in. To create ('mint') or buy an NFT, you must
-                            connect a wallet or create a new one.
-                        </p>
-                        <button
-                            class="connect__popup-btn"
-                            style={{
-                                color: theme === "light" ? "#000" : "#fff",
-                                backgroundColor: theme === "light" ? "#f4f4f4" : "#272E37",
-                            }}>
-                            Tonkeeper
-                        </button>
-                        <button
-                            class="connect__popup-btn"
-                            style={{
-                                color: theme === "light" ? "#000" : "#fff",
-                                backgroundColor: theme === "light" ? "#f4f4f4" : "#272E37",
-                            }}>
-                            Tonhub
-                        </button>
-                    </div>
-                </div>
-            )}
             <Footer />
         </>
     );

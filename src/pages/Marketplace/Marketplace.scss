@@ -1,0 +1,780 @@
+.catalog {
+    padding: 2.96vw 2.78vw 4.54vw 2.78vw;
+    &__title {
+        font: 800 1.94vw/2.36vw "Montserrat";
+        text-transform: uppercase;
+        margin-bottom: 2.96vw;
+    }
+    &__container {
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-start;
+        &-filters {
+            width: 22.92vw;
+            background: #fff;
+            border-radius: 0.93vw;
+            padding: 1.99vw 1.25vw;
+            &-status,
+            &-quantity,
+            &-price,
+            &-rarity,
+            &-emotional,
+            &-category {
+                margin-bottom: 2.31vw;
+                font: 400 0.83vw/1.06vw "DM Sans";
+                div {
+                    margin-bottom: 0.93vw;
+                    position: relative;
+                    h6 {
+                        font: 700 0.93vw/1.2vw "DM Sans";
+                        cursor: pointer;
+                    }
+                    img {
+                        position: absolute;
+                        right: 0;
+                        top: 50%;
+                        transform: translateY(-50%);
+                    }
+                }
+            }
+            &-price {
+                &-content {
+                    display: flex;
+                    justify-content: space-between;
+                    input[type="number"] {
+                        background: transparent;
+                        border: 1px solid #d9d9d9;
+                        border-radius: 50px;
+                        padding: 0.46vw 0.69vw;
+                        width: 9.95vw;
+                        height: 2.31vw;
+                    }
+                    p {
+                        font: 700 0.65vw/0.83vw "DM Sans";
+                        margin-bottom: 0.56vw;
+                    }
+                }
+            }
+            &-apply {
+                font: 400 0.74vw/0.93vw "Montserrat";
+                color: #fff;
+                border-radius: 2.78vw;
+                padding: 0.93vw;
+                width: 100%;
+                transition: all 0.3s;
+                background: linear-gradient(90deg, var(--c1, #004d8c), var(--c2, #0088cc) 51%, var(--c1, #004d8c))
+                    var(--x, 0) / 200%;
+                --с1: #004d8c;
+                --c2: #0088cc;
+                &:hover {
+                    --x: 100%;
+                }
+            }
+        }
+        &-content {
+            width: 70.6vw;
+            &-optionsMobile {
+                display: none;
+            }
+            &-options {
+                display: flex;
+                justify-content: space-between;
+                align-items: flex-start;
+                margin-bottom: 2.08vw;
+                &-categories {
+                    display: flex;
+                    column-gap: 0.79vw;
+                    &-nfts,
+                    &-collections {
+                        padding: 10px 20px;
+                        font: 700 24px/17px "DM Sans";
+                        transition: all 0.2s;
+                        background: rgba(220, 220, 220, 0.5);
+                        border-radius: 100px;
+                        &--active {
+                            background: linear-gradient(104.43deg, #004d8c 2.74%, #0088cc 96.79%) !important;
+                            color: #fff;
+                        }
+                        &--hoverMe {
+                            &:hover {
+                                opacity: 0.7;
+                            }
+                        }
+                    }
+                }
+                &-sorting {
+                    button {
+                        font: 700 18px/17px "DM Sans";
+                        padding: 20px 30px;
+                        border-radius: 100px;
+                        transition: all 0.2s;
+                        &:hover {
+                            opacity: 0.7;
+                        }
+                        img {
+                            margin-left: 10px;
+                            margin-bottom: 1px;
+                        }
+                        &:last-child {
+                            margin-left: 20px;
+                        }
+                    }
+                }
+            }
+            &-items {
+                display: flex;
+                flex-wrap: wrap;
+                gap: 55px 0.83vw;
+            }
+            &-more {
+                display: none;
+            }
+        }
+    }
+}
+
+@media (min-width: 769px) and (max-width: 1300px) {
+    .catalog {
+        &__title {
+            font-size: 3.94vw;
+            line-height: 4.6vw;
+        }
+        &__container {
+            display: flex;
+            justify-content: space-between;
+            &-filters {
+                width: 26vw;
+                background: #fff;
+                border-radius: 0.93vw;
+                padding: 1.99vw 1.25vw;
+                &-status,
+                &-quantity,
+                &-price,
+                &-rarity,
+                &-emotional,
+                &-category {
+                    margin-bottom: 2.31vw;
+                    font: 400 1.5vw/100% "DM Sans";
+                    div {
+                        margin-bottom: 0.93vw;
+                        position: relative;
+                        h6 {
+                            font: 700 1.8vw/100% "DM Sans";
+                        }
+                        img {
+                            position: absolute;
+                            right: 0;
+                            top: 50%;
+                            transform: translateY(-50%) scale(0.8);
+                        }
+                    }
+                }
+                &-price {
+                    &-content {
+                        display: flex;
+                        justify-content: space-between;
+                        input[type="number"] {
+                            background: #ffffff;
+                            border: 1px solid #d9d9d9;
+                            border-radius: 50px;
+                            padding: 1vw 1vw;
+                            width: 10.8vw;
+                            height: 3vw;
+                        }
+                        p {
+                            font: 700 1.3vw/100% "DM Sans";
+                            margin: 0.5vw;
+                        }
+                    }
+                }
+                &-apply {
+                    font: 400 1.5vw/100% "Montserrat";
+                    color: #fff;
+                    background: linear-gradient(104.43deg, #004d8c 2.74%, #0088cc 96.79%);
+                    border-radius: 2.78vw;
+                    padding: 1vw;
+                    width: 100%;
+                }
+            }
+            &-content {
+                width: 67vw;
+                &-options {
+                    display: flex;
+                    justify-content: space-between;
+                    align-items: flex-start;
+                    margin-bottom: 45px;
+                    &-categories {
+                        display: flex;
+                        column-gap: 0.8vw;
+                        &-nfts,
+                        &-collections {
+                            padding: 1.6vw 1.8vw;
+                            font: 700 1.6vw/0.93vw "DM Sans";
+                            &:last-child {
+                                margin-left: 0px;
+                            }
+                        }
+                    }
+                    &-sorting {
+                        display: flex;
+                        column-gap: 0.8vw;
+                        button {
+                            display: flex;
+                            align-items: center;
+                            font: 700 1.6vw/0.83vw "DM Sans";
+                            padding: 1.6vw 1.8vw;
+                            background: rgba(220, 220, 220, 0.5);
+                            border-radius: 100px;
+                            img {
+                                margin-left: 10px;
+                                margin-bottom: 1px;
+                            }
+                            &:last-child {
+                                margin-left: 0px;
+                            }
+                        }
+                    }
+                }
+                &-items {
+                    gap: 1vw 0.83vw;
+                    .collectionCard {
+                        display: none;
+                    }
+                    .cardDefault {
+                        box-shadow: 0px 4px 40px rgba(0, 0, 0, 0.1);
+                        border-radius: 13px;
+                        display: flex;
+                        flex-direction: column;
+                        padding: 1.5vw;
+                        position: relative;
+                        cursor: pointer;
+                        transition: all 0.2s;
+                        max-width: 33vw;
+                        &__photo {
+                            margin-bottom: 1.55vw;
+                        }
+                        &__info {
+                            display: flex;
+                            justify-content: space-between;
+                            &-left {
+                                &-title {
+                                    font-family: "DM Sans";
+                                    font-weight: 700;
+                                    font-size: 2.15vw;
+                                    line-height: 100%;
+                                    margin-bottom: 1.09vw;
+                                }
+                                &-price {
+                                    font-family: "DM Sans";
+                                    font-weight: 700;
+                                    font-size: 1.7vw;
+                                    line-height: 1.51vw;
+                                    position: relative;
+                                    display: flex;
+                                    align-items: center;
+                                    img {
+                                        padding-right: 0.3vw;
+                                        width: 2vw;
+                                        margin-bottom: 0.2vw;
+                                    }
+                                }
+                            }
+                            &-right {
+                                &-user {
+                                    margin-bottom: 1.63vw;
+                                    display: flex;
+                                    align-items: center;
+                                    justify-content: flex-end;
+                                    img {
+                                        width: 2.4vw;
+                                    }
+                                    &-name {
+                                        font-family: "DM Sans";
+                                        font-weight: 500;
+                                        font-size: 1.2vw;
+                                        line-height: 0.94vw;
+                                        margin-left: 0.52vw;
+                                    }
+                                }
+                                &-auction {
+                                    background: rgba(0, 172, 79, 0.1);
+                                    border-radius: 5px;
+                                    font: 500 1vw/100% "DM Sans";
+                                    color: #00ac4f;
+                                    padding: 9px 15px;
+                                }
+                                &-emoji {
+                                    display: none;
+                                }
+                            }
+                        }
+                        &__menuEmoji {
+                            transition: all 0.2s;
+                            position: absolute;
+                            left: 0;
+                            bottom: -50px;
+                            z-index: 999;
+                            background: #ffffff;
+                            box-shadow: 0px 4px 40px rgba(0, 0, 0, 0.1);
+                            border-radius: 100px 100px 20px 0px;
+                            font-size: 2.3vw;
+                            padding: 1.2vw;
+                            opacity: 0;
+                            pointer-events: none;
+                            &-item {
+                                & + & {
+                                    margin-top: 0.69vw;
+                                }
+                                transition: all 0.2s;
+                                &:hover {
+                                    transform: scale(1.2);
+                                }
+                            }
+                        }
+                        &__emoji {
+                            position: absolute;
+                            top: 2.45vw;
+                            right: 2.13vw;
+                            display: flex;
+                            column-gap: 0.3vw;
+                            &-item {
+                                &-light,
+                                &-dark {
+                                    width: 2.2vw;
+                                    text-align: center;
+                                    border-radius: 0.8vw;
+                                    padding: 0.26vw 0;
+                                    font-size: 1.2vw;
+                                    transition: all 0.2s;
+                                    span {
+                                        margin-top: 0.3vw;
+                                        display: block;
+                                        color: #000;
+                                        font-family: "DM Sans";
+                                        font-weight: 400;
+                                        line-height: 0.94vw;
+                                        letter-spacing: -0.03em;
+                                    }
+                                    &:hover {
+                                        opacity: 0.6;
+                                    }
+                                }
+                                &-light {
+                                    background: rgba(255, 255, 255, 0.6);
+                                }
+                                &-dark {
+                                    background: rgba(255, 255, 255, 0.21);
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
+
+@media (min-width: 631px) and (max-width: 768px) {
+    .catalog {
+        padding: 20px 16px;
+        &__title {
+            font: 800 32px/39px "Montserrat";
+            margin-bottom: 18px;
+        }
+        &__container {
+            &-filters {
+                display: none;
+            }
+            &-content {
+                width: 100%;
+                &-optionsMobile {
+                    display: flex;
+                    column-gap: 9px;
+                    margin-bottom: 20px;
+                    button {
+                        font: 700 18px/17px "DM Sans";
+                        position: relative;
+                        background: rgba(220, 220, 220, 0.5);
+                        border-radius: 100px;
+                        transition: all 0.2s;
+                        padding: 15px 20px;
+                        img {
+                            margin-left: 8px;
+                        }
+                        &:hover {
+                            opacity: 0.7;
+                        }
+                    }
+                }
+                &-options {
+                    display: none;
+                }
+                &-items {
+                    display: grid;
+                    grid-template-columns: repeat(3, 1fr);
+                    gap: 20px 10px;
+                    .collectionCard {
+                        display: none;
+                        width: 43.73vw;
+                        img {
+                            width: 43.73vw;
+                        }
+                        &__tag {
+                            border-radius: 10px;
+                            font: 700 2vw/100% "DM Sans";
+                            margin: 10% 8%;
+                            padding: 5px 8px;
+                        }
+                        &__emoji {
+                            display: none;
+                        }
+                        &__info {
+                            position: absolute;
+                            bottom: 10%;
+                            left: 8%;
+                            right: 8%;
+                            height: 7vw;
+                            background: rgba(0, 0, 0, 0.27);
+                            border-radius: 12px;
+                            &-bg {
+                                backdrop-filter: blur(25px);
+                                width: 100%;
+                                height: 100%;
+                                border-radius: 12px;
+                                background: rgba(0, 0, 0, 0.27);
+                            }
+                            &-text {
+                                font: 700 3vw/100% "DM Sans";
+                                color: #fff;
+                                letter-spacing: -0.05em;
+                                position: absolute;
+                                top: 27%;
+                                left: 5%;
+                            }
+                        }
+                        &__menuEmoji {
+                            font-size: 3vw;
+                            padding: 1.2vw;
+                        }
+                    }
+                    .cardDefault {
+                        max-width: 30.73vw;
+                        padding: 1.5vw;
+                        transition: all 0.2s;
+                        &__photo {
+                            margin-bottom: 0.5vw;
+                            border-radius: 13px;
+                        }
+                        &__info {
+                            display: flex;
+                            flex-direction: column;
+                            align-items: flex-start;
+                            &-left {
+                                &-title {
+                                    font-size: 3.33vw;
+                                    line-height: 100%;
+                                    margin: 2.67vw 0 1.87vw;
+                                }
+                                &-price {
+                                    font-size: 2.73vw;
+                                    line-height: 100%;
+                                    position: relative;
+                                    display: flex;
+                                    align-items: center;
+                                    img {
+                                        padding-right: 0.93vw;
+                                        width: 4.07vw;
+                                        margin-bottom: 0.1vw;
+                                    }
+                                }
+                            }
+                            &-right {
+                                margin: 2.5vw 0 0 0;
+                                &-user {
+                                    margin-bottom: 2vw;
+                                    justify-content: flex-start;
+                                    img {
+                                        width: 3.5vw;
+                                    }
+                                    &-name {
+                                        font-size: 2vw;
+                                        line-height: 100%;
+                                        margin-left: 1.2vw;
+                                    }
+                                }
+                                &-auction {
+                                    display: none;
+                                }
+                                &-emoji {
+                                    display: flex;
+                                    column-gap: 0.8vw;
+                                    align-items: center;
+                                    &-item {
+                                        &-light,
+                                        &-dark {
+                                            width: 4.93vw;
+                                            text-align: center;
+                                            border-radius: 100px;
+                                            padding: 1vw 0 1.8vw;
+                                            font-size: 2.2vw;
+                                            transition: all 0.2s;
+                                            span {
+                                                margin-top: 1.2vw;
+                                                font-size: 1.9vw;
+                                                display: block;
+                                                color: rgba(0, 0, 0, 0.7);
+                                                font-family: "DM Sans";
+                                                font-weight: 400;
+                                                line-height: 0.94vw;
+                                                letter-spacing: -0.03em;
+                                            }
+                                            &:hover {
+                                                opacity: 0.6;
+                                            }
+                                        }
+                                        &-light {
+                                            background: rgba(0, 77, 140, 0.1);
+                                        }
+                                        &-dark {
+                                            background: rgba(255, 255, 255, 0.21);
+                                        }
+                                    }
+                                    &-itemCount {
+                                        font: 400 2.5vw/100% "DM Sans";
+                                        letter-spacing: -0.03em;
+                                    }
+                                }
+                            }
+                        }
+                        &__menuEmoji {
+                            font-size: 4vw;
+                            padding: 1.6vw;
+                        }
+                        &__emoji {
+                            display: none;
+                        }
+                    }
+                }
+                &-more {
+                    display: block;
+                    width: 100%;
+                    text-align: center;
+                    margin: 45px 0 38px;
+                    button {
+                        text-transform: uppercase;
+                        font: 500 20px/100% "Montserrat";
+                        color: #004d8c;
+                        padding: 20px 100px;
+                        border-radius: 60px;
+                        border: 2px solid #004d8c;
+                    }
+                }
+            }
+        }
+    }
+}
+
+@media (max-width: 630px) {
+    .catalog {
+        padding: 20px 16px;
+        &__title {
+            font: 800 32px/39px "Montserrat";
+            margin-bottom: 18px;
+        }
+        &__container {
+            &-filters {
+                display: none;
+            }
+            &-content {
+                width: 100%;
+                &-optionsMobile {
+                    display: flex;
+                    column-gap: 9px;
+                    margin-bottom: 20px;
+                    button {
+                        font: 700 18px/17px "DM Sans";
+                        position: relative;
+                        background: rgba(220, 220, 220, 0.5);
+                        border-radius: 100px;
+                        transition: all 0.2s;
+                        padding: 15px 20px;
+                        img {
+                            margin-left: 8px;
+                        }
+                        &:hover {
+                            opacity: 0.7;
+                        }
+                    }
+                }
+                &-options {
+                    display: none;
+                }
+                &-items {
+                    display: grid;
+                    grid-template-columns: repeat(2, 1fr);
+                    gap: 20px 1px;
+                    .collectionCard {
+                        display: none;
+                        width: 43.73vw;
+                        img {
+                            width: 43.73vw;
+                        }
+                        &__tag {
+                            border-radius: 10px;
+                            font: 700 2vw/100% "DM Sans";
+                            margin: 10% 8%;
+                            padding: 5px 8px;
+                        }
+                        &__emoji {
+                            display: none;
+                        }
+                        &__info {
+                            position: absolute;
+                            bottom: 10%;
+                            left: 8%;
+                            right: 8%;
+                            height: 7vw;
+                            background: rgba(0, 0, 0, 0.27);
+                            border-radius: 12px;
+                            &-bg {
+                                backdrop-filter: blur(25px);
+                                width: 100%;
+                                height: 100%;
+                                border-radius: 12px;
+                                background: rgba(0, 0, 0, 0.27);
+                            }
+                            &-text {
+                                font: 700 3vw/100% "DM Sans";
+                                color: #fff;
+                                letter-spacing: -0.05em;
+                                position: absolute;
+                                top: 27%;
+                                left: 5%;
+                            }
+                        }
+                        &__menuEmoji {
+                            font-size: 3vw;
+                            padding: 1.2vw;
+                        }
+                    }
+                    .cardDefault {
+                        max-width: 43.73vw;
+                        padding: 2.93vw 2.4vw;
+                        transition: all 0.2s;
+                        width: 43.73vw;
+                        &__photo {
+                            margin-bottom: 2.93vw;
+                            border-radius: 13px;
+                        }
+                        &__info {
+                            display: flex;
+                            flex-direction: column;
+                            align-items: flex-start;
+                            &-left {
+                                &-title {
+                                    font-size: 5.33vw;
+                                    line-height: 100%;
+                                    margin: 2.67vw 0 1.87vw;
+                                }
+                                &-price {
+                                    font-size: 3.73vw;
+                                    line-height: 100%;
+                                    position: relative;
+                                    display: flex;
+                                    align-items: center;
+                                    img {
+                                        padding-right: 1.33vw;
+                                        width: 5.07vw;
+                                        margin-bottom: 0.1vw;
+                                    }
+                                }
+                            }
+                            &-right {
+                                margin: 2.93vw 0 0 0;
+                                &-user {
+                                    margin-bottom: 2.6vw;
+                                    justify-content: flex-start;
+                                    img {
+                                        width: 7.47vw;
+                                    }
+                                    &-name {
+                                        font-size: 3.73vw;
+                                        line-height: 100%;
+                                        margin-left: 1.2vw;
+                                    }
+                                }
+                                &-auction {
+                                    display: none;
+                                }
+                                &-emoji {
+                                    display: flex;
+                                    column-gap: 1.6vw;
+                                    align-items: center;
+                                    &-item {
+                                        &-light,
+                                        &-dark {
+                                            width: 6.93vw;
+                                            text-align: center;
+                                            border-radius: 100px;
+                                            padding: 1.33vw 0 2vw;
+                                            font-size: 4.2vw;
+                                            transition: all 0.2s;
+                                            span {
+                                                margin-top: 1.7vw;
+                                                font-size: 2.4vw;
+                                                display: block;
+                                                color: rgba(0, 0, 0, 0.7);
+                                                font-family: "DM Sans";
+                                                font-weight: 400;
+                                                line-height: 0.94vw;
+                                                letter-spacing: -0.03em;
+                                            }
+                                            &:hover {
+                                                opacity: 0.6;
+                                            }
+                                        }
+                                        &-light {
+                                            background: rgba(0, 77, 140, 0.1);
+                                        }
+                                        &-dark {
+                                            background: rgba(255, 255, 255, 0.21);
+                                        }
+                                    }
+                                    &-itemCount {
+                                        font: 400 3.2vw/14.27vw "DM Sans";
+                                        letter-spacing: -0.03em;
+                                    }
+                                }
+                            }
+                        }
+                        &__menuEmoji {
+                            font-size: 5.3vw;
+                            padding: 1.4vw;
+                        }
+                        &__emoji {
+                            display: none;
+                        }
+                    }
+                }
+                &-more {
+                    display: block;
+                    width: 100%;
+                    text-align: center;
+                    margin: 45px 0 38px;
+                    button {
+                        text-transform: uppercase;
+                        font: 500 20px/100% "Montserrat";
+                        padding: 20px 100px;
+                        border-radius: 60px;
+                        border: 2px solid #004d8c;
+                        transition: all .2s;
+                        &:hover {
+                            background: linear-gradient(104.43deg, #004D8C 2.74%, #0088CC 96.79%);
+                            color: #fff !important;
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
