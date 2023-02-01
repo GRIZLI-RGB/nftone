@@ -1,0 +1,598 @@
+.createNFT {
+    display: flex;
+    justify-content: space-between;
+    align-items: start;
+    padding: 5vw 2.87vw 8.6vw 2.87vw;
+    row-gap: 5vw;
+    &--dark {
+        input[type="text"] {
+            background: #1c2026 !important;
+            border: 2px solid #596577 !important;
+            color: #fff !important;
+            &::placeholder {
+                color: rgba(255, 255, 255, 0.7) !important;
+            }
+        }
+        input#tags-input {
+            border: none !important;
+        }
+        textarea {
+            background: #1c2026 !important;
+            border: 2px solid #596577 !important;
+        }
+    }
+    &__left {
+        &-download,
+        &-attr {
+            background: #f4f6f9;
+            border: 1px solid #efefef;
+            border-radius: 20px;
+        }
+        &-download {
+            text-align: center;
+            padding: 3.38vw 12.82vw;
+            margin-bottom: 1.34vw;
+            &-img {
+                width: 12.96vw;
+            }
+            &-drag {
+                font: 700 0.93vw/1.2vw "DM Sans";
+                margin: 1.62vw 0 0.23vw;
+            }
+            &-or {
+                font: 400 0.74vw/0.97vw "DM Sans";
+                color: rgba(0, 0, 0, 0.7);
+                margin-bottom: 1.2vw;
+            }
+            &-browse {
+                color: #fff;
+                font: 400 0.93vw/1.11vw "Montserrat";
+                padding: 0.93vw 1.85vw;
+                letter-spacing: 0.065em;
+                border-radius: 60px;
+                transition: all 0.3s;
+                background: linear-gradient(90deg, var(--c1, #004d8c), var(--c2, #0088cc) 51%, var(--c1, #004d8c))
+                    var(--x, 0) / 200%;
+                --с1: #004d8c;
+                --c2: #0088cc;
+                &:hover {
+                    --x: 100%;
+                }
+            }
+        }
+        &-attr {
+            padding: 2.59vw 2.92vw 2.59vw 3.7vw;
+            &-title {
+                font: 700 1.11vw/0.79vw "DM Sans";
+            }
+            &-box {
+                margin: 1.76vw 0;
+                display: flex;
+                column-gap: 0.93vw;
+                &-name,
+                &-value {
+                    display: flex;
+                    flex-direction: column;
+                    label {
+                        font: 500 0.83vw/0.79vw "DM Sans";
+                        padding-left: 1.57vw;
+                        margin-bottom: 0.46vw;
+                    }
+                    input + input {
+                        margin-top: 0.35vw;
+                    }
+                    input {
+                        background: #ffffff;
+                        border: 2px solid #e3e3e3;
+                        border-radius: 100px;
+                        height: 2.78vw;
+                        padding: 0.97vw 1.57vw;
+                        width: 15.46vw;
+                        font: 400 0.83vw/0.79vw "DM Sans";
+                        &::placeholder {
+                            color: rgba(0, 0, 0, 0.7);
+                        }
+                    }
+                }
+            }
+            &-add {
+                font: 700 0.93vw/0.79vw "DM Sans";
+                background: linear-gradient(104.43deg, #004d8c 2.74%, #0088cc 96.79%);
+                -webkit-background-clip: text;
+                -webkit-text-fill-color: transparent;
+                background-clip: text;
+                transition: all 0.2s;
+                &:hover {
+                    filter: brightness(130%);
+                }
+            }
+        }
+    }
+    &__right {
+        background: #f4f6f9;
+        border: 1px solid #efefef;
+        border-radius: 20px;
+        padding: 2.69vw 3.7vw 2.31vw;
+        width: 100%;
+        max-width: 54.72vw;
+        &-title {
+            text-transform: uppercase;
+            font: 800 1.94vw/2.36vw "Montserrat";
+            margin-bottom: 2.59vw;
+        }
+        &-form {
+            position: relative;
+            div + div {
+                margin-top: 1.16vw;
+            }
+            &-name,
+            &-tags,
+            &-collection,
+            &-category,
+            &-description,
+            &-royalties {
+                display: flex;
+                flex-direction: column;
+                label {
+                    padding: 0 0 0.46vw 1.57vw;
+                    font: 500 0.83vw/0.79vw "DM Sans";
+                }
+            }
+            &-name {
+                input {
+                    font: 400 0.83vw/0.79vw "DM Sans";
+                    padding: 0.97vw 1.57vw;
+                    background: #ffffff;
+                    border: 2px solid #e3e3e3;
+                    border-radius: 100px;
+                    height: 2.78vw;
+                }
+            }
+            &-tags {
+                &-box {
+                    width: 100%;
+                    background: #ffffff;
+                    border: 2px solid #e3e3e3;
+                    border-radius: 100px;
+                    position: relative;
+                    height: 2.78vw;
+                    &-items {
+                        position: absolute;
+                        display: flex;
+                        align-items: center;
+                        right: 1.57vw;
+                        left: 1.57vw;
+                        top: 50%;
+                        transform: translateY(-50%);
+                        &-item {
+                            background: rgba(0, 0, 0, 0.13);
+                            border-radius: 50px;
+                            font: 500 0.65vw/0.74vw "Roboto";
+                            padding: 0.23vw 1.44vw 0.23vw 0.46vw;
+                            position: relative;
+                            img {
+                                position: absolute;
+                                right: 0.46vw;
+                                width: 0.74vw;
+                                top: 50%;
+                                transform: translateY(-50%);
+                            }
+                            & + & {
+                                margin-top: 0;
+                                margin-left: 0.25vw;
+                            }
+                        }
+                        input {
+                            width: 100%;
+                            margin-left: 0.69vw;
+                            border: none !important;
+                            font: 400 0.83vw/0.79vw "DM Sans";
+                        }
+                    }
+                }
+            }
+            &-description {
+                textarea {
+                    padding: 18px 36px;
+                    height: 192px;
+                    resize: none;
+                    background: #ffffff;
+                    border: 2px solid #e3e3e3;
+                    border-radius: 20px;
+                    font: 400 0.83vw/0.79vw "DM Sans";
+                }
+            }
+            &-attributes {
+                display: flex;
+                align-items: flex-start;
+                justify-content: space-between;
+                column-gap: 0.93vw;
+                &-type,
+                &-price {
+                    display: flex;
+                    flex-direction: column;
+                    margin-top: 0 !important;
+                    width: 50%;
+                    label {
+                        padding: 0 0 0.46vw 1.57vw;
+                        font: 500 0.83vw/0.79vw "DM Sans";
+                    }
+                }
+                &-price {
+                    input {
+                        height: 2.78vw;
+                        background: #ffffff;
+                        border: 2px solid #e3e3e3;
+                        border-radius: 100px;
+                        font: 400 0.83vw/0.79vw "DM Sans";
+                        padding: 0.97vw 1.57vw;
+                    }
+                }
+            }
+            &-buttons {
+                position: absolute;
+                bottom: -7.8vw;
+                left: -3.7vw;
+                display: flex;
+                column-gap: 0.93vw;
+                input[type="button"] {
+                    font: 700 0.93vw/100% "Montserrat";
+                    border-radius: 60px;
+                    padding: 1.39vw 4.63vw;
+                    cursor: pointer;
+                }
+                &-create {
+                    color: #fff;
+                    transition: all 0.2s;
+                    background: linear-gradient(90deg, var(--c1, #004d8c), var(--c2, #0088cc) 51%, var(--c1, #004d8c))
+                        var(--x, 0) / 200%;
+                    --с1: #004d8c;
+                    --c2: #0088cc;
+                    &:hover {
+                        --x: 100%;
+                    }
+                }
+                &-reset {
+                    color: #004d8c;
+                    border: 2px solid #004d8c !important;
+                    transition: all 0.2s;
+                    &--dark {
+                        border-color: #fff !important;
+                        color: #fff;
+                        &:hover {
+                            background: #fff !important;
+                            color: #004d8c !important;
+                        }
+                    }
+                    &:hover {
+                        background: linear-gradient(104.43deg, #004d8c 2.74%, #0088cc 96.79%);
+                        color: #fff;
+                    }
+                }
+            }
+        }
+    }
+}
+
+@media (min-width: 769px) and (max-width: 1400px) {
+    .createNFT {
+        column-gap: 0.8vw;
+        &__left {
+            &-download {
+                margin-bottom: 0.7vw;
+                padding: 2.8vw;
+                &-img {
+                    width: 16vw;
+                }
+                &-drag {
+                    font: 700 2vw/100% "DM Sans";
+                    margin: 2vw 0 1vw;
+                }
+                &-or {
+                    font: 400 2vw/100% "DM Sans";
+                    color: rgba(0, 0, 0, 0.7);
+                    margin-bottom: 1vw;
+                }
+                &-browse {
+                    color: #fff;
+                    font: 400 1.2vw/100% "Montserrat";
+                    padding: 1.2vw 1.6vw;
+                }
+            }
+            &-attr {
+                padding: 3vw 3.27vw;
+                &-title {
+                    font: 700 2vw/100% "DM Sans";
+                }
+                &-box {
+                    margin: 2vw 0 1.95vw;
+                    row-gap: 5vw;
+                    &-name,
+                    &-value {
+                        label {
+                            font: 500 1.4vw/100% "DM Sans";
+                            padding-left: 1.4vw;
+                            margin-bottom: 0.6vw;
+                        }
+                        input {
+                            height: 2.7vw;
+                            padding: 1vw 1vw;
+                            width: 100%;
+                            font: 400 1.36vw/100% "DM Sans";
+                        }
+                    }
+                }
+                &-add {
+                    font: 700 1.8vw/100% "DM Sans";
+                }
+            }
+        }
+        &__right {
+            padding: 3vw 3.27vw;
+            &-title {
+                font: 800 2.2vw/100% "Montserrat";
+                margin-bottom: 2vw;
+            }
+            &-form {
+                position: relative;
+                div + div {
+                    margin-top: 1.4vw;
+                }
+                &-name,
+                &-tags,
+                &-collection,
+                &-category,
+                &-description,
+                &-royalties {
+                    display: flex;
+                    flex-direction: column;
+                    label {
+                        padding: 0 0 1vw 2vw;
+                        font: 500 1.35vw/100% "DM Sans";
+                    }
+                }
+                &-name {
+                    input {
+                        font: 400 1.2vw/100% "DM Sans";
+                        padding: 1.2vw 2vw;
+                        height: 1vw;
+                    }
+                }
+                &-tags {
+                    &-box {
+                        height: 5vw;
+                        &-items {
+                            position: absolute;
+                            display: flex;
+                            align-items: center;
+                            right: 1.57vw;
+                            left: 1.57vw;
+                            top: 50%;
+                            transform: translateY(-50%);
+                            &-item {
+                                background: rgba(0, 0, 0, 0.13);
+                                border-radius: 50px;
+                                font: 500 1vw/100% "Roboto";
+                                padding: 1vw 3vw 1vw 1.67vw;
+                                position: relative;
+                                img {
+                                    position: absolute;
+                                    right: 1vw;
+                                    width: 1.3vw;
+                                }
+                            }
+                            input {
+                                width: 100%;
+                                margin-left: 1vw;
+                                border: none;
+                                font: 400 1.2vw/100% "DM Sans";
+                            }
+                        }
+                    }
+                }
+                &-description {
+                    textarea {
+                        padding: 2vw;
+                        height: 9vw;
+                        font: 400 1.2vw/100% "DM Sans";
+                    }
+                }
+                &-attributes {
+                    column-gap: 1.2vw;
+                    &-type,
+                    &-price {
+                        margin-top: 0 !important;
+                        label {
+                            padding: 0 0 0.46vw 1.57vw;
+                            font: 400 1.35vw/100% "DM Sans";
+                        }
+                    }
+                    &-price {
+                        input {
+                            height: 3vw;
+                            font: 400 1.2vw/100% "DM Sans";
+                            padding: 0.97vw 1.57vw;
+                        }
+                    }
+                }
+                &-buttons {
+                    bottom: -8.6vw;
+                    input[type="button"] {
+                        font: 700 1.2vw/100% "Montserrat";
+                        padding: 1.2vw 1.9vw;
+                    }
+                }
+            }
+        }
+    }
+}
+
+@media (max-width: 768px) {
+    .createNFT {
+        align-items: stretch;
+        flex-direction: column;
+        padding: 3.47vw 4.27vw 45vw 4.27vw;
+        &__left {
+            &-download {
+                text-align: center;
+                margin-bottom: 5vw;
+                padding: 9.6vw;
+                &-img {
+                    width: 53.33vw;
+                }
+                &-drag {
+                    font: 700 4.7vw/100% "DM Sans";
+                    margin: 8vw 0 1.33vw;
+                }
+                &-or {
+                    font: 400 4.27vw/100% "DM Sans";
+                    color: rgba(0, 0, 0, 0.7);
+                    margin-bottom: 2.8vw;
+                }
+                &-browse {
+                    color: #fff;
+                    font: 400 3.73vw/100% "Montserrat";
+                    padding: 4vw 7.5vw;
+                }
+            }
+            &-attr {
+                padding: 5.47vw 4.27vw;
+                &-title {
+                    font: 700 6vw/100% "DM Sans";
+                }
+                &-box {
+                    margin: 7vw 0 5.87vw;
+                    display: flex;
+                    row-gap: 5vw;
+                    flex-direction: column;
+                    &-name,
+                    &-value {
+                        label {
+                            font: 500 4vw/100% "DM Sans";
+                            padding-left: 9.07vw;
+                            margin-bottom: 2.67vw;
+                        }
+                        input {
+                            height: 12vw;
+                            padding: 5.6vw 6vw;
+                            width: 100%;
+                            font: 400 4vw/100% "DM Sans";
+                        }
+                    }
+                }
+                &-add {
+                    font: 700 5vw/100% "DM Sans";
+                }
+            }
+        }
+        &__right {
+            padding: 5.47vw 4.27vw;
+            min-width: 100%;
+            &-title {
+                font: 800 5.2vw/100% "Montserrat";
+                margin-bottom: 6vw;
+            }
+            &-form {
+                position: relative;
+                div + div {
+                    margin-top: 4vw;
+                }
+                &-name,
+                &-tags,
+                &-collection,
+                &-category,
+                &-description,
+                &-royalties {
+                    display: flex;
+                    flex-direction: column;
+                    label {
+                        padding: 0 0 1.6vw 2.6vw;
+                        font: 500 3vw/100% "DM Sans";
+                    }
+                }
+                &-name {
+                    input {
+                        font: 400 3vw/100% "DM Sans";
+                        padding: 3vw 2.57vw;
+                        height: 12vw;
+                    }
+                }
+                &-tags {
+                    &-box {
+                        height: 12vw;
+                        &-items {
+                            position: absolute;
+                            display: flex;
+                            align-items: center;
+                            right: 1.57vw;
+                            left: 1.57vw;
+                            top: 50%;
+                            transform: translateY(-50%);
+                            &-item {
+                                background: rgba(0, 0, 0, 0.13);
+                                border-radius: 50px;
+                                font: 500 3.2vw/100% "Roboto";
+                                padding: 1.3vw 7.6vw 1.3vw 2.67vw;
+                                position: relative;
+                                img {
+                                    position: absolute;
+                                    right: 2.5vw;
+                                    width: 3.6vw;
+                                }
+                            }
+                            input {
+                                width: 100%;
+                                margin-left: 1.69vw;
+                                border: none;
+                                font: 400 3.2vw/100% "DM Sans";
+                            }
+                        }
+                    }
+                }
+                &-description {
+                    textarea {
+                        padding: 4.5vw 5vw;
+                        height: 51.2vw;
+                        font: 400 3.2vw/100% "DM Sans";
+                    }
+                }
+                &-attributes {
+                    flex-direction: column;
+                    row-gap: 6vw;
+                    &-type,
+                    &-price {
+                        margin-top: 0 !important;
+                        width: 100%;
+                        label {
+                            padding: 0 0 0.46vw 1.57vw;
+                            font: 400 3.2vw/100% "DM Sans";
+                        }
+                    }
+                    &-price {
+                        input {
+                            height: 12vw;
+                            font: 400 3.2vw/100% "DM Sans";
+                            padding: 0.97vw 1.57vw;
+                        }
+                    }
+                }
+                &-buttons {
+                    position: absolute;
+                    bottom: -40vw;
+                    left: 0;
+                    right: 0;
+                    display: flex;
+                    flex-direction: column;
+                    align-items: center;
+                    row-gap: 2vw;
+                    input[type="button"] {
+                        font: 700 4vw/100% "Montserrat";
+                        padding: 4.33vw 5vw;
+                        max-width: 340px;
+                        width: 100%;
+                    }
+                }
+            }
+        }
+    }
+}

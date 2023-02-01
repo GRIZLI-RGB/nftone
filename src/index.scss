@@ -37,6 +37,16 @@ input {
     outline: none;
 }
 
+input[type="button"] {
+    outline: none;
+    border: none;
+    background-color: transparent;
+}
+
+textarea:focus {
+    outline: none;
+}
+
 ::-webkit-scrollbar {
     display: none;
 }

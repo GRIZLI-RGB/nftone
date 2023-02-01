@@ -1,0 +1,107 @@
+.select {
+    background: #ffffff;
+    border: 2px solid #e3e3e3;
+    border-radius: 100px;
+    height: 2.78vw;
+    padding: 0.97vw 1.57vw;
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    cursor: pointer;
+    &--dark {
+        p {
+            color: #fff !important;
+        }
+        ul {
+            background-color: #1C2026;
+            border: 2px solid #596577;
+            color: #fff;
+        }
+    }
+    &__text {
+        font: 400 0.83vw/0.79vw "DM Sans";
+        color: rgba(#000, 0.7);
+    }
+    &__arrow {
+        width: 0.83vw;
+    }
+    &__content {
+        padding: 0.97vw 1.57vw;
+        left: 0;
+        right: 0;
+        position: absolute;
+        font: 400 0.83vw/0.79vw "DM Sans";
+        color: rgba(#000, 0.7);
+        top: 110%;
+        z-index: 999;
+        background: #ffffff;
+        border: 2px solid #e3e3e3;
+        border-radius: 1.04vw;
+        &-item {
+            cursor: pointer;
+            transition: all .25s;
+            position: relative;
+            left: 0;
+            & + & {
+                margin-top: 0.63vw;
+            }
+            &:hover {
+                filter: brightness(150%);
+                left: 0.16vw;
+            }
+        }
+    }
+}
+
+@media(min-width: 769px) and (max-width: 1400px) {
+    .select {
+        height: 3vw;
+        padding: 1vw 2vw;
+        &__text {
+            font: 400 1.2vw/100% "DM Sans";
+            color: rgba(#000, 0.7);
+        }
+        &__arrow {
+            width: 1.2vw;
+        }
+        &__content {
+            padding: 2vw;
+            font: 400 1.2vw/100% "DM Sans";
+            border-radius: 2vw;
+            &-item {
+                & + & {
+                    margin-top: 1.4vw;
+                }
+            }
+        }
+    }
+}
+
+@media (max-width: 768px) {
+    .select {
+        height: 12vw;
+        padding: 3vw 2.57vw;
+        position: relative;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        &__text {
+            font: 400 3vw/100% "DM Sans";
+            color: rgba(#000, 0.7);
+        }
+        &__arrow {
+            width: 3.4vw;
+        }
+        &__content {
+            padding: 2.97vw 2.57vw;
+            font: 400 3vw/100% "DM Sans";
+            border-radius: 3.2vw;
+            &-item {
+                & + & {
+                    margin-top: 1.63vw;
+                }
+            }
+        }
+    }
+}
