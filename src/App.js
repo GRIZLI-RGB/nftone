@@ -4,6 +4,7 @@ import Marketplace from "./pages/Marketplace";
 import Catalog from "./pages/Catalog";
 import FAQ from "./pages/FAQ";
 import CreateNFT from "./pages/CreateNFT";
+import NFT from "./pages/NFT";
 
 function App() {
     return (
@@ -14,6 +15,7 @@ function App() {
                 <Route exact path="/catalog" element={<Catalog />} />
                 <Route exact path="/faq" element={<FAQ />} />
                 <Route exact path="/create-nft" element={<CreateNFT />} />
+                <Route exact path="/NFT" element={<NFT />} />
             </Routes>
         </>
     );

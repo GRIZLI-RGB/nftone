@@ -1,0 +1,874 @@
+.nft {
+    background-color: #f4f6f9;
+    padding: 4.63vw 2.78vw 3vw 2.78vw;
+    &--dark {
+        background-color: #15191e;
+        .nft__up {
+            &-left {
+                &-emoji,
+                &-people-owner,
+                &-people-creator,
+                &-collection {
+                    background-color: #1c2026;
+                    color: #fff;
+                }
+            }
+            &-right {
+                color: #fff;
+                &-info {
+                    &-heading {
+                        &-box {
+                            &-label {
+                                color: rgba(255, 255, 255, 0.7);
+                            }
+                        }
+                    }
+                    &-tags {
+                        &-tag {
+                            background: rgba(255, 255, 255, 0.13);
+                        }
+                    }
+                    &-extra {
+                        &-text {
+                            color: rgba(255, 255, 255, 0.7);
+                        }
+                    }
+                }
+                &-other {
+                    &-box {
+                        &-title {
+                            color: rgba(255, 255, 255, 0.5);
+                        }
+                    }
+                }
+                &-other,
+                &-history {
+                    background-color: #1c2026;
+                    &-box {
+                        &-graph {
+                            &-colums {
+                                &-column {
+                                    &-text {
+                                        color: rgba(255, 255, 255, 0.7);
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        .nft__history {
+            background-color: #1c2026;
+            color: #fff;
+            &-table {
+                &-row {
+                    &-item {
+                        span {
+                            color: rgba(255, 255, 255, 0.5) !important;
+                        }
+                    }
+                }
+            }
+        }
+    }
+    &__up {
+        display: flex;
+        align-items: flex-start;
+        column-gap: 2.55vw;
+        &-left {
+            width: 38.66vw;
+            &-card {
+                display: inline-block;
+                position: relative;
+                margin-bottom: 0.83vw;
+                img {
+                    width: 100%;
+                }
+                &-favourite {
+                    padding: 0.69vw;
+                    position: absolute;
+                    background: rgba(255, 255, 255, 0.34);
+                    border-radius: 0.23vw;
+                    top: 1.48vw;
+                    right: 1.81vw;
+                    width: 3.38vw;
+                    height: 3.38vw;
+                    cursor: pointer;
+                    &--true {
+                        svg path {
+                            fill: rgb(255, 42, 42);
+                        }
+                    }
+                    &:hover svg path {
+                        fill: rgb(255, 42, 42);
+                    }
+                    svg {
+                        position: absolute;
+                        width: 1.99vw;
+                        height: 1.99vw;
+                        path {
+                            transition: all 0.2s;
+                        }
+                    }
+                }
+            }
+            &-emoji {
+                display: flex;
+                column-gap: 0.46vw;
+                background: #ffffff;
+                border-radius: 0.93vw;
+                padding: 1.02vw 1.57vw;
+                margin-bottom: 1.39vw;
+                &-item {
+                    &-light,
+                    &-dark {
+                        width: 1.56vw;
+                        text-align: center;
+                        border-radius: 100px;
+                        padding: 0.26vw 0;
+                        font-size: 0.74vw;
+                        transition: all 0.2s;
+                        span {
+                            margin-top: 0.1vw;
+                            display: block;
+                            color: #000;
+                            font-family: "DM Sans";
+                            font-weight: 400;
+                            line-height: 0.94vw;
+                            letter-spacing: -0.03em;
+                        }
+                        &:hover {
+                            opacity: 0.6;
+                        }
+                    }
+                    &-light {
+                        background: rgba(0, 0, 0, 0.2);
+                    }
+                    &-dark {
+                        background: rgba(255, 255, 255, 0.21);
+                    }
+                }
+            }
+            &-people {
+                display: flex;
+                column-gap: 0.69vw;
+                margin-bottom: 1.39vw;
+                &-owner,
+                &-creator {
+                    padding: 1.16vw 1.25vw 0.83vw 1.71vw;
+                    width: 18.98vw;
+                    background: #ffffff;
+                    border-radius: 0.93vw;
+                    position: relative;
+                    cursor: pointer;
+                    &-title {
+                        font: 700 1.11vw/1.39vw "Montserrat";
+                        margin-bottom: 0.83vw;
+                    }
+                    &-left {
+                        display: flex;
+                        align-items: center;
+                        column-gap: 0.93vw;
+                        font: 700 1.11vw/1.39vw "DM Sans";
+                        &-avatar {
+                            width: 3.24vw;
+                        }
+                    }
+                    &-arrow {
+                        position: absolute;
+                        right: 1.25vw;
+                        top: 60%;
+                        width: 0.51vw;
+                    }
+                }
+            }
+            &-collection {
+                padding: 1.16vw 1.25vw 0.83vw 1.71vw;
+                background: #ffffff;
+                border-radius: 0.93vw;
+                position: relative;
+                margin-bottom: 1.39vw;
+                cursor: pointer;
+                &-title {
+                    font: 700 1.11vw/1.39vw "Montserrat";
+                    margin-bottom: 0.83vw;
+                }
+                &-user {
+                    display: flex;
+                    align-items: center;
+                    column-gap: 0.93vw;
+                    font: 700 1.11vw/1.39vw "DM Sans";
+                    &-avatar {
+                        width: 3.24vw;
+                    }
+                }
+                &-arrow {
+                    position: absolute;
+                    right: 1.25vw;
+                    top: 60%;
+                    width: 0.51vw;
+                }
+            }
+        }
+        &-right {
+            &-info {
+                &-heading {
+                    display: flex;
+                    justify-content: space-between;
+                    &-title {
+                        font: 800 1.94vw/2.36vw "Montserrat";
+                        letter-spacing: 0.05em;
+                        text-transform: uppercase;
+                    }
+                    &-box {
+                        display: flex;
+                        align-items: center;
+                        &-label {
+                            font: 400 0.93vw/1.2vw "DM Sans";
+                            color: rgba(#000, 0.7);
+                        }
+                        &-diamond {
+                            width: 2.45vw;
+                            margin: 0 0.97vw 0 0.69vw;
+                        }
+                        &-price {
+                            font: 800 1.48vw/1.81vw "Montserrat";
+                        }
+                    }
+                }
+                &-tags {
+                    margin: 1.39vw 0;
+                    display: flex;
+                    align-items: center;
+                    column-gap: 0.23vw;
+                    font: 500 0.65vw/0.74vw "Roboto";
+                    &-tag {
+                        padding: 0.23vw 0.46vw;
+                        background: rgba(0, 0, 0, 0.13);
+                        border-radius: 2.31vw;
+                        cursor: pointer;
+                        transition: all .2s;
+                        &:hover {
+                            opacity: 0.75;
+                        }
+                    }
+                }
+                &-extra {
+                    &-text {
+                        font: 400 1.11vw/1.76vw "DM Sans";
+                        color: #565656;
+                        margin-bottom: 1.11vw;
+                    }
+                    &-place {
+                        font: 700 0.93vw/100% "Montserrat";
+                        color: #fff;
+                        padding: 0.93vw 6.94vw;
+                        text-transform: uppercase;
+                        border-radius: 2.78vw;
+                        transition: all .2s;
+                        background: linear-gradient(90deg, var(--c1, #004d8c), var(--c2, #0088cc) 51%, var(--c1, #004d8c))
+                        var(--x, 0) / 200%;
+                    --с1: #004d8c;
+                    --c2: #0088cc;
+                    &:hover {
+                        --x: 100%;
+                    }
+                    }
+                }
+            }
+            &-other {
+                margin: 2.31vw 0 1.39vw;
+                padding: 1.71vw 2.08vw 2.31vw 2.31vw;
+                background: #ffffff;
+                border-radius: 0.93vw;
+                &-title {
+                    margin-bottom: 1.11vw;
+                    font: 700 1.11vw/1.39vw "Montserrat";
+                }
+                &-box {
+                    position: relative;
+                    & + & {
+                        margin-top: 1.62vw;
+                    }
+                    &-title {
+                        font: 500 0.93vw/1.2vw "DM Sans";
+                        color: rgba(#000, 0.5);
+                    }
+                    &-text {
+                        font: 500 1.11vw/1.39vw "DM Sans";
+                        margin-top: 0.46vw;
+                    }
+                    &-img {
+                        position: absolute;
+                        right: 0;
+                        top: 50%;
+                        transform: translateY(-50%);
+                        width: 3.01vw;
+                        transition: all .2s;
+                        cursor: pointer;
+                        &:hover {
+                            opacity: .6;
+                        }
+                    }
+                }
+            }
+            &-history {
+                margin-bottom: 1.39vw;
+                position: relative;
+                background: #ffffff;
+                border-radius: 0.93vw;
+                padding: 1.53vw 1.39vw 2.31vw 1.16vw;
+                &-title {
+                    font: 700 1.11vw/1.34vw "Montserrat";
+                    margin-bottom: 1.99vw;
+                }
+                &-box {
+                    display: flex;
+                    align-items: flex-end;
+                    column-gap: 1.94vw;
+                    &-prices {
+                        font: 500 0.93vw/1.11vw "Montserrat";
+                        display: flex;
+                        flex-direction: column;
+                        row-gap: 2.41vw;
+                    }
+                    &-graph {
+                        display: flex;
+                        flex-direction: column;
+                        &-line {
+                            margin-bottom: 0.23vw;
+                            width: 39.49vw;
+                        }
+                        &-colums {
+                            display: flex;
+                            align-items: flex-end;
+                            column-gap: 3vw;
+                            &-column {
+                                background: #e9e9e9;
+                                border-radius: 0.37vw;
+                                width: 2.13vw;
+                                position: relative;
+                                &:nth-child(1) {
+                                    height: 2.69vw;
+                                }
+                                &:nth-child(2) {
+                                    height: 6.57vw;
+                                }
+                                &:nth-child(3) {
+                                    height: 4.54vw;
+                                }
+                                &-text {
+                                    font: 500 0.65vw/0.93vw "DM Sans";
+                                    color: #525252;
+                                    letter-spacing: -0.05em;
+                                    position: absolute;
+                                    bottom: -1.11vw;
+                                    right: 0;
+                                    left: 0;
+                                    text-align: center;
+                                }
+                            }
+                        }
+                    }
+                }
+                &-resize {
+                    width: 2.08vw;
+                    position: absolute;
+                    right: 1.16vw;
+                    top: 1.16vw;
+                    cursor: pointer;
+                    transition: all .2s;
+                    &:hover {
+                        opacity: .75;
+                    }
+                }
+            }
+        }
+    }
+    &__history {
+        background-color: #fff;
+        border-radius: 0.93vw;
+        padding: 2.13vw 2.82vw 2.45vw 3.24vw;
+        &-title {
+            font: 700 1.11vw/1.34vw "Montserrat";
+            margin-bottom: 1.99vw;
+        }
+        &-table {
+            &-headings {
+                font: 400 0.93vw/0.79vw "DM Sans";
+                text-transform: uppercase;
+                text-align: left;
+                padding-bottom: 1.9vw;
+                display: inline-block;
+                &-heading {
+                    &:nth-child(2) {
+                        padding-left: 21vw;
+                    }
+                    &:nth-child(3) {
+                        padding-left: 14.1vw;
+                    }
+                    &:nth-child(4) {
+                        padding-left: 18.5vw;
+                    }
+                    &:nth-child(5) {
+                        padding-left: 20vw;
+                    }
+                }
+            }
+            &-row {
+                display: flex;
+                column-gap: 13.19vw;
+                padding-bottom: 1.16vw;
+                align-items: center;
+                border-bottom: 1px solid #ebebeb;
+                & + & {
+                    margin-top: 1.16vw;
+                }
+                &-item {
+                    font: 700 1.11vw/0.79vw "DM Sans";
+                    &:nth-child(2) {
+                        span {
+                            margin-top: 0.51vw;
+                            font-size: 0.83vw;
+                            color: rgba(#000, 0.5);
+                            display: block;
+                            text-align: right;
+                        }
+                    }
+                    &:nth-child(3),
+                    &:nth-child(4) {
+                        color: #0088cc;
+                    }
+                    &:nth-child(5) {
+                        font-weight: 400;
+                    }
+                    &:first-child {
+                        position: relative;
+                        padding-left: 2.31vw;
+                        img {
+                            position: absolute;
+                            left: 0;
+                            width: 1.5vw;
+                            top: -0.4vw;
+                        }
+                    }
+                }
+            }
+            &-headings,
+            &-row {
+                div {
+                    display: inline-block;
+                }
+            }
+        }
+    }
+}
+
+.also {
+    padding: 75px 0 60px 70px;
+    background: conic-gradient(
+        from 138.04deg at 49.21% 52.37%,
+        #2442ad 0deg,
+        #2240e0 105.21deg,
+        #1fbdeb 203.25deg,
+        #f39475 313.87deg,
+        #2442ad 360deg
+    );
+    position: relative;
+    &__bg {
+        position: absolute;
+        background: conic-gradient(
+            from 138.04deg at 49.21% 52.37%,
+            #2442ad 0deg,
+            #2240e0 105.21deg,
+            #1fbdeb 203.25deg,
+            #f39475 313.87deg,
+            #2442ad 360deg
+        );
+        z-index: 1;
+        opacity: 0.2;
+        top: 0;
+        right: 0;
+        left: 0;
+        bottom: 0;
+    }
+    &__title {
+        text-transform: uppercase;
+        font: 800 42px/51px "Montserrat";
+        color: #fff;
+        position: relative;
+        z-index: 999;
+    }
+    &__categories {
+        position: relative;
+        z-index: 999;
+        margin-top: 47px;
+        &-nfts,
+        &-collections {
+            &--active {
+                background-color: #fff;
+                color: #000;
+            }
+            &--hoverMe {
+                transition: all 0.2s;
+                &:hover {
+                    background: #ff6c35 !important;
+                }
+            }
+        }
+        &-nfts {
+            padding: 15px 20px;
+            font: 700 24px/17px "DM Sans";
+            background-color: #fff;
+            border-radius: 100px;
+        }
+        &-collections {
+            padding: 15px 20px;
+            font: 700 24px/17px "DM Sans";
+            border-radius: 100px;
+            margin-left: 12px;
+            color: #fff;
+        }
+    }
+    &__all {
+        position: relative;
+        z-index: 999;
+        text-align: center;
+        &-btn {
+            font: 600 20px/24px "Montserrat";
+            color: #fff;
+            letter-spacing: 0.01em;
+            background: #ff4500;
+            border-radius: 60px;
+            padding: 20px 40px;
+            margin-top: 62px;
+            transition: all 0.2s;
+            &:hover {
+                background-color: #ff6c35;
+            }
+        }
+    }
+}
+
+@media (max-width: 768px) {
+    .nft {
+        background-color: #f4f6f9;
+        padding: 4.63vw 2.78vw 3vw 2.78vw;
+        &__up {
+            align-items: center;
+            flex-direction: column;
+            row-gap: 1.6vw;
+            &-left {
+                width: 91.47vw;
+                &-card {
+                    margin-bottom: 4vw;
+                    &-favourite {
+                        padding: 2vw;
+                        border-radius: 1.33vw;
+                        top: 5.5vw;
+                        right: 5.5vw;
+                        width: 12vw;
+                        height: 12vw;
+                        svg {
+                            width: 8vw;
+                            height: 8vw;
+                        }
+                    }
+                }
+                &-emoji {
+                    column-gap: 1.2vw;
+                    background: transparent;
+                    padding: 0;
+                    margin-bottom: 7vw;
+                    &-item {
+                        &-light,
+                        &-dark {
+                            width: 10vw;
+                            padding: 1vw 0vw;
+                            font-size: 3.8vw;
+                            border-radius: 4.6vw;
+                            span {
+                                margin-top: 1.2vw;
+                                line-height: 3.6vw;
+                                letter-spacing: -0.03em;
+                                font-size: 3.2vw;
+                            }
+                        }
+                    }
+                }
+                &-people {
+                    flex-direction: column;
+                    row-gap: 5.33vw;
+                    margin-bottom: 5.33vw;
+                    &-owner,
+                    &-creator {
+                        padding: 4.5vw 7vw;
+                        width: 91.47vw;
+                        border-radius: 6vw;
+                        &-title {
+                            font: 700 5.6vw/100% "Montserrat";
+                            margin-bottom: 3.8vw;
+                        }
+                        &-left {
+                            column-gap: 3.7vw;
+                            font: 700 4.5vw/100% "DM Sans";
+                            &-avatar {
+                                width: 12vw;
+                            }
+                        }
+                        &-arrow {
+                            position: absolute;
+                            right: 9.8vw;
+                            top: 19vw;
+                            width: 3vw;
+                        }
+                    }
+                }
+                &-collection {
+                    padding: 4.5vw 7vw;
+                    border-radius: 6vw;
+                    margin-bottom: 5.33vw;
+                    &-title {
+                        font: 700 5.6vw/100% "Montserrat";
+                        margin-bottom: 3.8vw;
+                    }
+                    &-user {
+                        column-gap: 3.7vw;
+                        font: 700 4.5vw/100% "DM Sans";
+                        &-avatar {
+                            width: 12vw;
+                        }
+                    }
+                    &-arrow {
+                        position: absolute;
+                        right: 9.8vw;
+                        top: 19vw;
+                        width: 3vw;
+                    }
+                }
+            }
+            &-right {
+                width: 91.47vw;
+                &-info {
+                    &-heading {
+                        display: flex;
+                        flex-direction: column;
+                        justify-content: space-between;
+                        &-title {
+                            font: 800 8vw/100% "Montserrat";
+                            letter-spacing: 0.05em;
+                            text-transform: uppercase;
+                        }
+                        &-box {
+                            display: flex;
+                            flex-direction: column;
+                            align-items: flex-start;
+                            margin: 5vw 0;
+                            position: relative;
+                            &-label {
+                                font: 400 3.6vw/100% "DM Sans";
+                                margin-bottom: 3vw;
+                            }
+                            &-diamond {
+                                position: absolute;
+                                width: 8vw;
+                                margin: 0;
+                                left: 0vw;
+                                top: 4.5vw;
+                            }
+                            &-price {
+                                font: 800 5vw/100% "Montserrat";
+                                padding-left: 10vw;
+                            }
+                        }
+                    }
+                    &-tags {
+                        margin: 0 0 5vw 0;
+                        column-gap: 0.8vw;
+                        font: 500 3vw/100% "Roboto";
+                        &-tag {
+                            padding: 0.65vw 1vw;
+                        }
+                    }
+                    &-extra {
+                        &-text {
+                            font: 400 4vw/120% "DM Sans";
+                            color: #565656;
+                            margin-bottom: 4vw;
+                        }
+                        &-place {
+                            font: 700 3.93vw/100% "Montserrat";
+                            padding: 5vw 10vw;
+                            border-radius: 100vw;
+                        }
+                    }
+                }
+                &-other {
+                    margin: 5vw 0;
+                    padding: 4.5vw 7vw;
+                    border-radius: 6vw;
+                    &-title {
+                        font: 700 5.6vw/100% "Montserrat";
+                        margin-bottom: 3.8vw;
+                    }
+                    &-box {
+                        position: relative;
+                        & + & {
+                            margin-top: 4.5vw;
+                        }
+                        &-title {
+                            font: 500 3.4vw/100% "DM Sans";
+                        }
+                        &-text {
+                            font: 500 3.4vw/100% "DM Sans";
+                            margin-top: 1.8vw;
+                        }
+                        &-img {
+                            width: 9vw;
+                        }
+                    }
+                }
+                &-history {
+                    margin: 5vw 0;
+                    padding: 4.5vw 7vw;
+                    border-radius: 6vw;
+                    &-title {
+                        font: 700 5.6vw/100% "Montserrat";
+                        margin-bottom: 3.8vw;
+                    }
+                    &-box {
+                        display: flex;
+                        align-items: flex-end;
+                        column-gap: 1.94vw;
+                        &-prices {
+                            font: 500 2.6vw/100% "Montserrat";
+                            row-gap: 4vw;
+                        }
+                        &-graph {
+                            &-line {
+                                margin-bottom: 1vw;
+                                width: 34vw;
+                            }
+                            &-colums {
+                                display: flex;
+                                align-items: flex-end;
+                                column-gap: 3vw;
+                                &-column {
+                                    border-radius: 1.2vw;
+                                    width: 6.13vw;
+                                    position: relative;
+                                    &:nth-child(1) {
+                                        height: 5.8vw;
+                                    }
+                                    &:nth-child(2) {
+                                        height: 13vw;
+                                    }
+                                    &:nth-child(3) {
+                                        height: 8vw;
+                                    }
+                                    &-text {
+                                        font: 500 2vw/100% "DM Sans";
+                                        color: #525252;
+                                        letter-spacing: -0.05em;
+                                        bottom: -2.6vw;
+                                    }
+                                }
+                            }
+                        }
+                    }
+                    &-resize {
+                        width: 6vw;
+                        right: 4vw;
+                        top: 4vw;
+                    }
+                }
+            }
+        }
+        &__history {
+            margin: 0 0 3vw 0;
+            padding: 4.5vw 7vw;
+            border-radius: 6vw;
+            min-width: 160vw;
+            &-title {
+                font: 700 5.6vw/100% "Montserrat";
+                margin-bottom: 3.8vw;
+            }
+            &-table {
+                &-headings {
+                    font: 400 2.8vw/100% "DM Sans";
+                    padding-bottom: 4vw;
+                    display: inline-block;
+                    &-heading {
+                        &:nth-child(2) {
+                            padding-left: 30vw;
+                        }
+                        &:nth-child(3) {
+                            padding-left: 16vw;
+                        }
+                        &:nth-child(4) {
+                            padding-left: 27vw;
+                        }
+                        &:nth-child(5) {
+                            padding-left: 31.8vw;
+                        }
+                    }
+                }
+                &-row {
+                    column-gap: 14vw;
+                    padding-bottom: 2vw;
+                    & + & {
+                        margin-top: 2vw;
+                    }
+                    &-item {
+                        font: 700 3vw/100% "DM Sans";
+                        &:nth-child(2) {
+                            span {
+                                margin-top: 0.51vw;
+                                font-size: 2.4vw;
+                            }
+                        }
+                        &:nth-child(3),
+                        &:nth-child(4) {
+                            color: #0088cc;
+                        }
+                        &:nth-child(5) {
+                            font-weight: 400;
+                        }
+                        &:first-child {
+                            position: relative;
+                            padding-left: 4.2vw;
+                            img {
+                                position: absolute;
+                                left: 0;
+                                width: 3.6vw;
+                                top: -0.6vw;
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+    .also {
+        padding: 44px 0 44px 16px;
+        &__title {
+            font-weight: 32px;
+            line-height: 39px;
+        }
+        &__categories {
+            &-nfts {
+                font-size: 20px;
+            }
+            &-collections {
+                font-size: 20px;
+            }
+        }
+        &__all {
+            max-width: 342px;
+            &-btn {
+                width: 100%;
+            }
+        }
+    }
+}
