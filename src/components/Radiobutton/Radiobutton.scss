@@ -3,7 +3,8 @@
         &:checked {
             & + label {
                 &::before {
-                    border: 1px solid #004F87;
+                    border: 0.265vw solid #fff;
+                    outline: 0.05vw solid #bbb;
                     background-color: #004F87;
                 }
             }
@@ -11,7 +12,7 @@
         &:not(:checked) {
             & + label {
                 &::before {
-                    border: 1px solid #bbb;
+                    border: 0.05vw solid #bbb;
                     background-color: transparent;
                 }
             }

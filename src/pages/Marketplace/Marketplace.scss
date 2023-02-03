@@ -9,68 +9,6 @@
         display: flex;
         justify-content: space-between;
         align-items: flex-start;
-        &-filters {
-            width: 22.92vw;
-            background: #fff;
-            border-radius: 0.93vw;
-            padding: 1.99vw 1.25vw;
-            &-status,
-            &-quantity,
-            &-price,
-            &-rarity,
-            &-emotional,
-            &-category {
-                margin-bottom: 2.31vw;
-                font: 400 0.83vw/1.06vw "DM Sans";
-                div {
-                    margin-bottom: 0.93vw;
-                    position: relative;
-                    h6 {
-                        font: 700 0.93vw/1.2vw "DM Sans";
-                        cursor: pointer;
-                    }
-                    img {
-                        position: absolute;
-                        right: 0;
-                        top: 50%;
-                        transform: translateY(-50%);
-                    }
-                }
-            }
-            &-price {
-                &-content {
-                    display: flex;
-                    justify-content: space-between;
-                    input[type="number"] {
-                        background: transparent;
-                        border: 1px solid #d9d9d9;
-                        border-radius: 50px;
-                        padding: 0.46vw 0.69vw;
-                        width: 9.95vw;
-                        height: 2.31vw;
-                    }
-                    p {
-                        font: 700 0.65vw/0.83vw "DM Sans";
-                        margin-bottom: 0.56vw;
-                    }
-                }
-            }
-            &-apply {
-                font: 400 0.74vw/0.93vw "Montserrat";
-                color: #fff;
-                border-radius: 2.78vw;
-                padding: 0.93vw;
-                width: 100%;
-                transition: all 0.3s;
-                background: linear-gradient(90deg, var(--c1, #004d8c), var(--c2, #0088cc) 51%, var(--c1, #004d8c))
-                    var(--x, 0) / 200%;
-                --с1: #004d8c;
-                --c2: #0088cc;
-                &:hover {
-                    --x: 100%;
-                }
-            }
-        }
         &-content {
             width: 70.6vw;
             &-optionsMobile {
@@ -142,60 +80,6 @@
         &__container {
             display: flex;
             justify-content: space-between;
-            &-filters {
-                width: 26vw;
-                background: #fff;
-                border-radius: 0.93vw;
-                padding: 1.99vw 1.25vw;
-                &-status,
-                &-quantity,
-                &-price,
-                &-rarity,
-                &-emotional,
-                &-category {
-                    margin-bottom: 2.31vw;
-                    font: 400 1.5vw/100% "DM Sans";
-                    div {
-                        margin-bottom: 0.93vw;
-                        position: relative;
-                        h6 {
-                            font: 700 1.8vw/100% "DM Sans";
-                        }
-                        img {
-                            position: absolute;
-                            right: 0;
-                            top: 50%;
-                            transform: translateY(-50%) scale(0.8);
-                        }
-                    }
-                }
-                &-price {
-                    &-content {
-                        display: flex;
-                        justify-content: space-between;
-                        input[type="number"] {
-                            background: #ffffff;
-                            border: 1px solid #d9d9d9;
-                            border-radius: 50px;
-                            padding: 1vw 1vw;
-                            width: 10.8vw;
-                            height: 3vw;
-                        }
-                        p {
-                            font: 700 1.3vw/100% "DM Sans";
-                            margin: 0.5vw;
-                        }
-                    }
-                }
-                &-apply {
-                    font: 400 1.5vw/100% "Montserrat";
-                    color: #fff;
-                    background: linear-gradient(104.43deg, #004d8c 2.74%, #0088cc 96.79%);
-                    border-radius: 2.78vw;
-                    padding: 1vw;
-                    width: 100%;
-                }
-            }
             &-content {
                 width: 67vw;
                 &-options {
@@ -382,9 +266,6 @@
             margin-bottom: 18px;
         }
         &__container {
-            &-filters {
-                display: none;
-            }
             &-content {
                 width: 100%;
                 &-optionsMobile {
@@ -582,9 +463,6 @@
             margin-bottom: 18px;
         }
         &__container {
-            &-filters {
-                display: none;
-            }
             &-content {
                 width: 100%;
                 &-optionsMobile {
