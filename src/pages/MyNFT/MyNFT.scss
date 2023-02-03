@@ -375,7 +375,6 @@
         }
     }
     .myContent {
-        row-gap: 20px;
         padding: 0 16px 35px 16px;
         align-items: center;
         flex-direction: column;
@@ -388,6 +387,8 @@
             &-user {
                 border-radius: 20px;
                 padding: 26px;
+                position: relative;
+                bottom: 160px;
                 &-avatar {
                     width: 172px;
                     height: 172px;
@@ -464,6 +465,7 @@
             }
         }
         &__right {
+            margin-top: -200px;
             display: flex;
             flex-direction: column;
             row-gap: 20px;
