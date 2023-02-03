@@ -65,6 +65,9 @@
                 display: flex;
                 align-items: center;
                 justify-content: flex-end;
+                &-avatar {
+                    width: 1.3vw;
+                }
                 &-name {
                     font: 500 0.73vw/0.94vw "DM Sans";
                     margin-left: 0.52vw;
