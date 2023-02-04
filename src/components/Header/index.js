@@ -7,7 +7,8 @@ function Header({ currentPage }) {
     const [openSearch, setOpenSearch] = useState(false);
     const [searchQuery, setSearchQuery] = useState("");
     const [popup, setPopup] = useState(false);
-    const { theme, setTheme } = useContext(ContextApp);
+    const [userMenu, setUserMenu] = useState(false);
+    const { theme, setTheme, changeTheme, auth, setAuth } = useContext(ContextApp);
     return (
         <header className="header" style={{ backgroundColor: theme === "light" ? "#004f87" : "#1C2026" }}>
             {!openSearch && (
@@ -37,12 +38,77 @@ function Header({ currentPage }) {
                         borderColor: theme === "light" ? "#efefef" : "#373F4A",
                     }}
                 />
+                <img src="./img/header/search.svg" alt=""/>
             </div>
             {!openSearch && (
                 <div class="header__buttons">
-                    <button onClick={() => setPopup(true)} className="header__buttons-connect">
-                        {window.innerWidth <= 1440 ? "Connect" : "Connect wallet"}
-                    </button>
+                    {!auth ? (
+                        <button onClick={() => setPopup(true)} className="header__buttons-connect">
+                            {window.innerWidth <= 1440 ? "Connect" : "Connect wallet"}
+                        </button>
+                    ) : (
+                        <>
+                            <button className="header__buttons-user" onClick={() => setUserMenu(!userMenu)}>
+                                <img className="header__buttons-user-avatar" src="./img/header/avatar.svg" alt="" />
+                                EQA8weLFddq...
+                                <img
+                                    className="header__buttons-user-arrow"
+                                    src="./img/header/arrow.svg"
+                                    alt=""
+                                    style={{ transform: `rotate(${userMenu ? "180deg" : "0deg"})` }}
+                                />
+                            </button>
+                            {userMenu && (
+                                <ul
+                                    className={`header__buttons-userMenu ${changeTheme(
+                                        "",
+                                        "header__buttons-userMenu--dark",
+                                    )}`}>
+                                    <li className="header__buttons-userMenu-item">
+                                        <img src={`./img/header/profile-${theme}.svg`} alt="" />
+                                        <a className="header__buttons-userMenu-item-link" href="/my-nft">
+                                            Profile
+                                        </a>
+                                    </li>
+                                    <li className="header__buttons-userMenu-item">
+                                        <img src={`./img/header/collections-${theme}.svg`} alt="" />
+                                        <a className="header__buttons-userMenu-item-link" href="/my-nft">
+                                            My Collections
+                                        </a>
+                                    </li>
+                                    <li className="header__buttons-userMenu-item">
+                                        <img src={`./img/header/create-${theme}.svg`} alt="" />
+                                        <a className="header__buttons-userMenu-item-link" href="/create-nft">
+                                            Create
+                                        </a>
+                                    </li>
+                                    <li className="header__buttons-userMenu-item">
+                                        <img src={`./img/header/favorite-${theme}.svg`} alt="" />
+                                        <a className="header__buttons-userMenu-item-link" href="/my-nft">
+                                            Favorites
+                                        </a>
+                                    </li>
+                                    <li className="header__buttons-userMenu-item">
+                                        <img src={`./img/header/settings-${theme}.svg`} alt="" />
+                                        <a className="header__buttons-userMenu-item-link" href="/my-nft">
+                                            Settings
+                                        </a>
+                                    </li>
+                                    <li
+                                        className="header__buttons-userMenu-item"
+                                        onClick={() => {
+                                            setAuth(false);
+                                            setUserMenu(false);
+                                        }}>
+                                        <img src={`./img/header/exit-${theme}.svg`} alt="" />
+                                        <a className="header__buttons-userMenu-item-link" href="#">
+                                            Exit
+                                        </a>
+                                    </li>
+                                </ul>
+                            )}
+                        </>
+                    )}
                     <button className="header__buttons-theme">
                         <img
                             onClick={() => setTheme(theme === "light" ? "dark" : "light")}
@@ -52,7 +118,7 @@ function Header({ currentPage }) {
                     </button>
                 </div>
             )}
-            {openSearch ? null : (
+            {!openSearch && (
                 <div class="header__mobile">
                     <button class="header__mobile-search" onClick={() => setOpenSearch(true)}>
                         <img src="./img/header/search-white.svg" alt="Search" />
@@ -79,17 +145,17 @@ function Header({ currentPage }) {
                 />
                 <ul class="header__mobileMenu-list">
                     <li class="header__mobileMenu-list-item">
-                        <a className="header__mobileMenu-list-item-link" href="#">
+                        <a className="header__mobileMenu-list-item-link" href="/marketplace">
                             Marketplace
                         </a>
                     </li>
                     <li class="header__mobileMenu-list-item">
-                        <a className="header__mobileMenu-list-item-link" href="#">
+                        <a className="header__mobileMenu-list-item-link" href="/catalog">
                             Catalog
                         </a>
                     </li>
                     <li class="header__mobileMenu-list-item">
-                        <a className="header__mobileMenu-list-item-link" href="#">
+                        <a className="header__mobileMenu-list-item-link" href="/faq">
                             FAQ
                         </a>
                     </li>
@@ -186,6 +252,10 @@ function Header({ currentPage }) {
                         </p>
                         <button
                             class="connect__popup-btn"
+                            onClick={() => {
+                                setPopup(false);
+                                setAuth(true);
+                            }}
                             style={{
                                 color: theme === "light" ? "#000" : "#fff",
                                 backgroundColor: theme === "light" ? "#f4f4f4" : "#272E37",
@@ -194,6 +264,10 @@ function Header({ currentPage }) {
                         </button>
                         <button
                             class="connect__popup-btn"
+                            onClick={() => {
+                                setPopup(false);
+                                setAuth(true);
+                            }}
                             style={{
                                 color: theme === "light" ? "#000" : "#fff",
                                 backgroundColor: theme === "light" ? "#f4f4f4" : "#272E37",

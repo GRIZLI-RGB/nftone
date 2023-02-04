@@ -239,7 +239,7 @@
                     transition: all 0.2s;
                     cursor: pointer;
                     &:hover {
-                        transform: translateY(-50%) scale(1.1);
+                        opacity: .6;
                     }
                 }
             }

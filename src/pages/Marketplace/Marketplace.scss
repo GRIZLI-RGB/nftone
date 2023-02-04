@@ -17,7 +17,7 @@
             &-options {
                 display: flex;
                 justify-content: space-between;
-                align-items: flex-start;
+                align-items: center;
                 margin-bottom: 2.08vw;
                 &-categories {
                     display: flex;
@@ -42,8 +42,8 @@
                 }
                 &-sorting {
                     button {
-                        font: 700 18px/17px "DM Sans";
-                        padding: 20px 30px;
+                        font: 700 16px/100% "DM Sans";
+                        padding: 12px 20px;
                         border-radius: 100px;
                         transition: all 0.2s;
                         &:hover {
@@ -63,6 +63,44 @@
                 display: flex;
                 flex-wrap: wrap;
                 gap: 55px 0.83vw;
+                .collectionCard {
+                    border-radius: 20px;
+                    &__img {
+                        width: 22.9vw;
+                        border-radius: 20px;
+                    }
+                    &__tag {
+                        padding: 0.35vw 0.6vw;
+                        &-text {
+                            font-size: 0.9vw;
+                        }
+                    }
+                    &__info {
+                        height: 4vw;
+                        &-text {
+                            font-size: 1.45vw;
+                            padding: 0vw;
+                        }
+                    }
+                    &__menuEmoji {
+                        transition: all 0.2s;
+                        position: absolute;
+                        left: 0;
+                        bottom: -50px;
+                        z-index: 999;
+                        background: #ffffff;
+                        border-radius: 100px 100px 20px 0px;
+                        font-size: 24px;
+                        padding: 12px;
+                        opacity: 0;
+                        pointer-events: none;
+                        &-item {
+                            & + & {
+                                margin-top: 0.78vw;
+                            }
+                        }
+                    }
+                }
             }
             &-more {
                 display: none;

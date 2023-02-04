@@ -1,6 +1,7 @@
 import { useContext, useState } from "react";
 import Slider from "react-slick";
 import Card from "../../components/Card";
+import CollectionCard from "../../components/CollectionCard";
 import "./Home.scss";
 import { ContextApp } from "./../../Context";
 import Header from "./../../components/Header";
@@ -9,7 +10,7 @@ import Footer from "./../../components/Footer";
 function Home() {
     const [popularFilter, setPopularFilter] = useState("nft");
     const [recentFilter, setRecentFilter] = useState("nft");
-    const { theme } = useContext(ContextApp);
+    const { changeTheme } = useContext(ContextApp);
     const settingsForSlider = {
         infinite: true,
         speed: 500,
@@ -36,13 +37,11 @@ function Home() {
     return (
         <>
             <Header currentPage={"zero"} />
-            <section className="welcome" style={{ background: theme === "light" ? "rgba(217, 224, 236, 0.3)" : "#15191E" }}>
-                <div class="welcome__bg" style={{ display: theme === "light" ? "none" : "block" }}></div>
+            <section className={`welcome ${changeTheme("", "welcome--dark")}`}>
+                <div class="welcome__bg"></div>
                 <div className="welcome__info">
-                    <h1 className="welcome__info-title" style={{ color: theme === "light" ? "#000" : "#fff" }}>
-                        Discover, and collect Digital Art NFTs
-                    </h1>
-                    <p className="welcome__info-text" style={{ color: theme === "light" ? "#565656" : "#fff" }}>
+                    <h1 className="welcome__info-title">Discover, and collect Digital Art NFTs</h1>
+                    <p className="welcome__info-text">
                         Digital marketplace for crypto collectibles and non-fungible tokens (NFTs). Buy, Sell, and
                         discover exclusive digital assets.
                     </p>
@@ -50,6 +49,16 @@ function Home() {
                 </div>
                 <div className="welcome__library">
                     <div className="welcome__library-item welcome__library-item-1">
+                        {/* <div className="welcome__library-item-circle">
+                            <div class="welcome__library-item-circle-circular">
+                                <svg viewBox="0 0 170 170">
+                                    <path d="M 0,50 a 50,50 0 1,1 0,1 z" id="circle" />
+                                    <text>
+                                        <textPath xlinkHref="#circle">Live auction · Live auction ·</textPath>
+                                    </text>
+                                </svg>
+                            </div>
+                        </div> */}
                         <img className="welcome__library-item-bg" src="./img/card/card-bg.svg" alt="Card background" />
                         <h6 className="welcome__library-item-title">Abstr Gradient NFT</h6>
                         <div className="welcome__library-item-user">
@@ -197,100 +206,49 @@ function Home() {
                     </div>
                 </div>
             </section>
-            <section
-                className="popular"
-                style={{ background: theme === "light" ? "#fff" : "#15191E" }}>
-                <h2 class="popular__title" style={{ color: theme === "light" ? "#000" : "#fff" }}>
-                    Popular NFTs
-                </h2>
+            <section className={`popular ${changeTheme("", "popular--dark")} ${popularFilter === "nft" ? "popular--nft" : ""}`}>
+                <h2 class="popular__title">Popular NFTs</h2>
                 <div class="popular__categories">
                     <button
                         onClick={() => setPopularFilter("nft")}
                         className={`popular__categories-nfts ${
                             popularFilter === "nft" ? "popular__categories-nfts--active" : ""
-                        } ${popularFilter !== "nft" ? "popular__categories-nfts--hoverMe" : ""}`}
-                        style={{
-                            color: theme === "light" && popularFilter !== "nft" ? "#000" : "#fff",
-                            background: theme === "light" ? "rgba(220, 220, 220, 0.5)" : "#2B3239",
-                        }}>
+                        }`}>
                         NFTs
                     </button>
                     <button
                         onClick={() => setPopularFilter("collection")}
                         className={`popular__categories-collections ${
                             popularFilter === "collection" ? "popular__categories-collections--active" : ""
-                        } ${popularFilter !== "collection" ? "popular__categories-collections--hoverMe" : ""}`}
-                        style={{
-                            color: theme === "light" && popularFilter !== "collection" ? "#000" : "#fff",
-                            background: theme === "light" ? "rgba(220, 220, 220, 0.5)" : "#2B3239",
-                        }}>
+                        }`}>
                         Collections
                     </button>
                 </div>
                 <Slider class="popular__list" {...settingsForSlider}>
-                    {[1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map(() => (
-                        <Card />
-                    ))}
+                    {[1, 2, 3, 4, 5, 6, 7, 8].map(() => (popularFilter === "nft" ? <Card /> : <CollectionCard />))}
                 </Slider>
             </section>
-            <section
-                className="recent"
-                style={{
-                    background:
-                        theme === "light"
-                            ? "conic-gradient(from 138.04deg at 49.21% 52.37%,#2442ad 0deg,#2240e0 105.21deg,#1fbdeb 203.25deg,#f39475 313.87deg,#2442ad 360deg)"
-                            : "#15191E",
-                }}>
+            <section className={`recent ${changeTheme("", "recent--dark")}`}>
                 <div class="recent__bg"></div>
                 <h2 class="recent__title">Recent added</h2>
                 <div class="recent__categories">
                     <button
                         className={`recent__categories-nfts ${
                             recentFilter === "nft" ? "recent__categories-nfts--active" : ""
-                        } ${recentFilter !== "nft" ? "recent__categories-nfts--hoverMe" : ""}`}
-                        onClick={() => setRecentFilter("nft")}
-                        style={{
-                            color:
-                                theme === "light" && recentFilter !== "nft"
-                                    ? "#fff"
-                                    : theme === "dark" && recentFilter !== "nft"
-                                    ? "#fff"
-                                    : "#000",
-                            background:
-                                theme === "light" && recentFilter !== "nft"
-                                    ? "#ff4500"
-                                    : theme === "dark" && recentFilter !== "nft"
-                                    ? "#2B3239"
-                                    : "#fff",
-                        }}>
+                        }`}
+                        onClick={() => setRecentFilter("nft")}>
                         NFTs
                     </button>
                     <button
                         className={`recent__categories-collections ${
                             recentFilter === "collection" ? "recent__categories-collections--active" : ""
-                        } ${recentFilter !== "collection" ? "recent__categories-collections--hoverMe" : ""}`}
-                        onClick={() => setRecentFilter("collection")}
-                        style={{
-                            color:
-                                theme === "light" && recentFilter !== "collection"
-                                    ? "#fff"
-                                    : theme === "dark" && recentFilter !== "collection"
-                                    ? "#fff"
-                                    : "#000",
-                            background:
-                                theme === "light" && recentFilter !== "collection"
-                                    ? "#ff4500"
-                                    : theme === "dark" && recentFilter !== "collection"
-                                    ? "#2B3239"
-                                    : "#fff",
-                        }}>
+                        }`}
+                        onClick={() => setRecentFilter("collection")}>
                         Collections
                     </button>
                 </div>
                 <Slider class="recent__list" {...settingsForSlider}>
-                    {[1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map(() => (
-                        <Card />
-                    ))}
+                    {[1, 2, 3, 4, 5, 6, 7].map(() => (recentFilter === "nft" ? <Card /> : <CollectionCard />))}
                 </Slider>
                 <div class="recent__all">
                     <button className="recent__all-btn">View all</button>

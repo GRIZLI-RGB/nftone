@@ -3,14 +3,14 @@ import { ContextApp } from "../../Context";
 import "./Footer.scss";
 
 function Footer() {
-    const globalContext = useContext(ContextApp);
+    const { changeTheme } = useContext(ContextApp);
     return (
-        <footer className="footer" style={{ backgroundColor: globalContext.theme === "light" ? "#004f87" : "#1C2026" }}>
+        <footer className="footer" style={{ backgroundColor: changeTheme("#004f87", "#1C2026") }}>
             <div className="footer__info">
                 <div className="footer__info-about">
                     <img src="./img/footer/footer-logo.svg" alt="Logo" className="footer__info-about-logo" />
                     <p className="footer__info-about-text">
-                        The world’s first and largest digital marketplace for crypto collectibles and non-fungible
+                        The world's first and largest digital marketplace for crypto collectibles and non-fungible
                         tokens (NFTs). Buy, sell, and discover exclusive digital items.
                     </p>
                 </div>
@@ -30,13 +30,13 @@ function Footer() {
                     <ul className="footer__info-box-list">
                         <li className="footer__info-box-list-title">My Account</li>
                         <li className="footer__info-box-list-item">
-                            <a href="#">Profile</a>
+                            <a href="/my-nft">Profile</a>
                         </li>
                         <li className="footer__info-box-list-item">
-                            <a href="#">My Collections</a>
+                            <a href="/my-nft">My Collections</a>
                         </li>
                         <li className="footer__info-box-list-item">
-                            <a href="#">My NFTs</a>
+                            <a href="/my-nft">My NFTs</a>
                         </li>
                     </ul>
                 </div>

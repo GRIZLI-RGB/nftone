@@ -1,0 +1,150 @@
+.adminPanel__header {
+    background: #004f87;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 13px 80px;
+    &-logo {
+        padding-bottom: 13px;
+    }
+    &-btns {
+        display: flex;
+        align-items: center;
+        column-gap: 44px;
+        button {
+            display: flex;
+            align-items: center;
+            column-gap: 8px;
+            font: 700 16px/20px "Montserrat";
+            color: #fff;
+            transition: all .2s;
+            &:hover {
+                opacity: .75;
+            }
+        }
+        &-theme {
+            width: 28px;
+            cursor: pointer;
+        }
+    }
+}
+
+.adminPanel {
+    background-color: #f4f6fa;
+    min-height: 100vh;
+    min-width: 100vw;
+    padding: 0 80px 45px;
+    display: flex;
+    column-gap: 20px;
+    align-items: flex-start;
+    &__menu {
+        background-color: #fff;
+        display: flex;
+        flex-direction: column;
+        max-width: 180px;
+        padding: 26px 0 26px 20px;
+        &--low {
+            width: 84px;
+            .adminPanel__menu-burger {
+                margin-left: 15px;
+            }
+        }
+        & > div {
+            display: flex;
+            align-items: center;
+            column-gap: 17px;
+            padding: 13px;
+            cursor: pointer;
+            &:hover {
+                background: #f5f7fb;
+                border-radius: 37px 0px 0px 37px;
+            }
+        }
+        &--active {
+            background: #f5f7fb;
+            border-radius: 37px 0px 0px 37px;
+            position: relative;
+            & > img {
+                filter: invert(32%) sepia(88%) saturate(1331%) hue-rotate(174deg) brightness(99%) contrast(101%);
+            }
+            a {
+                color: #0088cc !important;
+                opacity: 1 !important;
+            }
+            &::after {
+                content: "";
+                position: absolute;
+                background: #0088cc;
+                height: 26px;
+                width: 5px;
+                left: -20px;
+            }
+        }
+        &-burger {
+            transition: all .25s;
+            width: 22px;
+            cursor: pointer;
+            margin-bottom: 22px;
+            // margin-left: 5px;
+        }
+        a {
+            font: 700 14px/18px "DM Sans";
+            color: #373f4b;
+            opacity: 0.5;
+        }
+    }
+    &__content {
+        margin-top: 30px;
+        width: 100%;
+        &-table {
+            border-radius: 16px;
+            background-color: #fff;
+            &-header {
+                padding: 18px;
+                display: flex;
+                align-items: center;
+                justify-content: space-between;
+                &-title {
+                    font: 700 16px/21px "DM Sans";
+                }
+                &-show {
+                    display: flex;
+                    align-items: center;
+                    column-gap: 4px;
+                    font: 700 14px/18px "DM Sans";
+                    color: #3b72ff;
+                    transition: all .2s;
+            &:hover {
+                opacity: .75;
+            }
+                }
+            }
+            &-search {
+                position: relative;
+                border-top: 1px solid #F4F5F7;
+                border-bottom: 1px solid #F4F5F7;
+                &-input {
+                    padding: 18px 56px;
+                    border: none;
+                    width: 100%;
+                    font: 600 14px/18px "DM Sans", sans-serif;
+                    &::placeholder {
+                        font: 600 14px/18px "DM Sans", sans-serif;
+                        color: #8992A9;
+                    }
+                }
+                & > img {
+                    position: absolute;
+                    left: 17px;
+                    top: 50%;
+                    transform: translateY(-50%);
+                }
+            }
+            &-main {
+                font: 700 36px/100% "Roboto", Arial, sans-serif;
+                text-align: center;
+                padding: 50px 0;
+            }
+        }
+    }
+}

@@ -93,14 +93,22 @@ function Marketplace() {
                             </div>
                         </div>
                         <div class="catalog__container-content-items">
-                            <CollectionCard />
-                            <CollectionCard />
-                            <CollectionCard />
-                            <DefaultCard />
-                            <DefaultCard />
-                            <DefaultCard />
-                            <DefaultCard />
-                            <DefaultCard />
+                            {filter === "collection" ? (
+                                <>
+                                    <CollectionCard />
+                                    <CollectionCard />
+                                    <CollectionCard />
+                                </>
+                            ) : (
+                                <>
+                                    <DefaultCard />
+                                    <DefaultCard />
+                                    <DefaultCard />
+                                    <DefaultCard />
+                                    <DefaultCard />
+                                    <DefaultCard />
+                                </>
+                            )}
                         </div>
                         <div className="catalog__container-content-more">
                             <button
