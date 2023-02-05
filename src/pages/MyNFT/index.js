@@ -12,6 +12,8 @@ function MyNFT() {
     const { theme, changeTheme } = useContext(ContextApp);
     const [windowView, setWindowView] = useState("nft");
     const [sortView, setSortView] = useState("not-sale");
+    const [pricePopup, setPricePopup] = useState(false);
+    const [priceCurrent, setPriceCurrent] = useState("Low to High");
     /*
         Drag-and-drop files (acceptedFiles - массив со всеми файлами,
             обнуляется при перезагрузке страницы)
@@ -130,9 +132,23 @@ function MyNFT() {
                             />
                         </div>
                         <div className="myContent__right-settings-box">
-                            <button className="myContent__right-settings-box-price">
-                                Price: Low to High
-                                <img src={`./img/sections/collection/arrow-up-${theme}.svg`} alt="" />
+                            <button className="myContent__right-settings-box-price" onClick={() => setPricePopup(!pricePopup)}>
+                                Price: {priceCurrent}
+                                <img src={`./img/sections/collection/arrow-up-${theme}.svg`} alt="" style={{ transform: pricePopup ? "rotate(-180deg)" : "rotate(0deg)" }} />
+                                {pricePopup && (
+                                        <ul className="catalog__container-content-options-sorting-popup">
+                                            <li
+                                                className="catalog__container-content-options-sorting-popup-item"
+                                                onClick={e => setPriceCurrent(e.target.innerText)}>
+                                                Low to High
+                                            </li>
+                                            <li
+                                                className="catalog__container-content-options-sorting-popup-item"
+                                                onClick={e => setPriceCurrent(e.target.innerText)}>
+                                                High to Low
+                                            </li>
+                                        </ul>
+                                    )}
                             </button>
                             {windowView !== "favorite" && (
                                 <button className="myContent__right-settings-box-add">

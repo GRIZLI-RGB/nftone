@@ -1,4 +1,4 @@
-import { useContext, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import Slider from "react-slick";
 import Card from "../../components/Card";
 import CollectionCard from "../../components/CollectionCard";
@@ -6,6 +6,7 @@ import "./Home.scss";
 import { ContextApp } from "./../../Context";
 import Header from "./../../components/Header";
 import Footer from "./../../components/Footer";
+import $ from "jquery";
 
 function Home() {
     const [popularFilter, setPopularFilter] = useState("nft");
@@ -34,6 +35,22 @@ function Home() {
             },
         ],
     };
+
+    /*
+        Плавная прокрутка для кнопки Explore Now
+    */
+    useEffect(() => {
+        $("#popular-btn").on("click", function () {
+            $("html, body").animate({
+                scrollTop: $("#popular-section").offset().top
+            }, {
+                duration: 400,
+                easing: "linear"
+            });
+        
+            return false;
+        });
+    });
     return (
         <>
             <Header currentPage={"zero"} />
@@ -45,7 +62,9 @@ function Home() {
                         Digital marketplace for crypto collectibles and non-fungible tokens (NFTs). Buy, Sell, and
                         discover exclusive digital assets.
                     </p>
-                    <button className="welcome__info-btn">Explore Now</button>
+                    <button className="welcome__info-btn" id="popular-btn">
+                        Explore Now
+                    </button>
                 </div>
                 <div className="welcome__library">
                     <div className="welcome__library-item welcome__library-item-1">
@@ -206,7 +225,11 @@ function Home() {
                     </div>
                 </div>
             </section>
-            <section className={`popular ${changeTheme("", "popular--dark")} ${popularFilter === "nft" ? "popular--nft" : ""}`}>
+            <section
+                id="popular-section"
+                className={`popular ${changeTheme("", "popular--dark")} ${
+                    popularFilter === "nft" ? "popular--nft" : ""
+                }`}>
                 <h2 class="popular__title">Popular NFTs</h2>
                 <div class="popular__categories">
                     <button
@@ -251,7 +274,9 @@ function Home() {
                     {[1, 2, 3, 4, 5, 6, 7].map(() => (recentFilter === "nft" ? <Card /> : <CollectionCard />))}
                 </Slider>
                 <div class="recent__all">
-                    <button className="recent__all-btn">View all</button>
+                    <a href="/marketplace" className="recent__all-btn">
+                        View all
+                    </a>
                 </div>
             </section>
             <Footer />

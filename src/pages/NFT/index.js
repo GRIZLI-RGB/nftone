@@ -1,7 +1,8 @@
-import { useContext, useEffect, useState } from "react";
+import { useContext, useState } from "react";
 import Draggable from "react-draggable";
 import Slider from "react-slick";
 import Card from "../../components/Card";
+import CollectionCard from "../../components/CollectionCard";
 import Footer from "../../components/Footer";
 import Header from "../../components/Header";
 import { ContextApp } from "../../Context";
@@ -42,6 +43,15 @@ function NFT() {
                     <div class="nft__up-left">
                         <div class="nft__up-left-card">
                             <img src="./img/sections/NFT/nft-photo.svg" alt="NFT" />
+                            <ul className="nft__up-left-card-menuEmoji">
+                                <li className="nft__up-left-card-menuEmoji-item">❤️</li>
+                                <li className="nft__up-left-card-menuEmoji-item">🤣</li>
+                                <li className="nft__up-left-card-menuEmoji-item">😍</li>
+                                <li className="nft__up-left-card-menuEmoji-item">😡</li>
+                                <li className="nft__up-left-card-menuEmoji-item">🙀</li>
+                                <li className="nft__up-left-card-menuEmoji-item">🥴</li>
+                                <li className="nft__up-left-card-menuEmoji-item">🤑</li>
+                            </ul>
                             <div
                                 className={`nft__up-left-card-favourite ${
                                     favorite ? "nft__up-left-card-favourite--true" : ""
@@ -237,7 +247,7 @@ function NFT() {
                     </div>
                 </div>
                 {window.innerWidth <= 768 ? (
-                    <Draggable axis="x">
+                    <Draggable bounds={{right: 0}} axis="x">
                         <div>
                             <div class="nft__history" id="nft-history">
                                 <h6 class="nft__history-title">Owners history</h6>
@@ -402,12 +412,12 @@ function NFT() {
                     </button>
                 </div>
                 <Slider class="also__list" {...settingsForSlider}>
-                    {[1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map(() => (
-                        <Card />
-                    ))}
+                    {[1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map(() =>
+                        alsoFilter === "nft" ? <Card /> : <CollectionCard />,
+                    )}
                 </Slider>
                 <div class="also__all">
-                    <button className="recent__all-btn">View all</button>
+                    <a className="recent__all-btn" href='/marketplace'>View all</a>
                 </div>
             </section>
             <Footer />

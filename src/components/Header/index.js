@@ -1,4 +1,4 @@
-import { useContext, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { ContextApp } from "../../Context";
 import "./Header.scss";
 
@@ -9,6 +9,18 @@ function Header({ currentPage }) {
     const [popup, setPopup] = useState(false);
     const [userMenu, setUserMenu] = useState(false);
     const { theme, setTheme, changeTheme, auth, setAuth } = useContext(ContextApp);
+    useEffect(() => {
+        if (popup) {
+            document.body.style.overflow = "hidden";
+        } else {
+            document.body.style.overflow = "unset";
+            document.body.style.overflowX = "hidden";
+        }
+    }, [popup, setPopup]);
+    useEffect(() => {
+        setTheme(localStorage.getItem("theme") === null ? "light" : localStorage.getItem("theme"));
+        setAuth(localStorage.getItem("auth"));
+    },[]);
     return (
         <header className="header" style={{ backgroundColor: theme === "light" ? "#004f87" : "#1C2026" }}>
             {!openSearch && (
@@ -38,11 +50,11 @@ function Header({ currentPage }) {
                         borderColor: theme === "light" ? "#efefef" : "#373F4A",
                     }}
                 />
-                <img src="./img/header/search.svg" alt=""/>
+                <img src="./img/header/search.svg" alt="" />
             </div>
             {!openSearch && (
                 <div class="header__buttons">
-                    {!auth ? (
+                    {!auth || auth === "false" ? (
                         <button onClick={() => setPopup(true)} className="header__buttons-connect">
                             {window.innerWidth <= 1440 ? "Connect" : "Connect wallet"}
                         </button>
@@ -98,6 +110,7 @@ function Header({ currentPage }) {
                                         className="header__buttons-userMenu-item"
                                         onClick={() => {
                                             setAuth(false);
+                                            localStorage.setItem("auth", false);
                                             setUserMenu(false);
                                         }}>
                                         <img src={`./img/header/exit-${theme}.svg`} alt="" />
@@ -111,7 +124,10 @@ function Header({ currentPage }) {
                     )}
                     <button className="header__buttons-theme">
                         <img
-                            onClick={() => setTheme(theme === "light" ? "dark" : "light")}
+                            onClick={() => {
+                                setTheme(theme === "light" ? "dark" : "light");
+                                localStorage.setItem("theme", theme === "light" ? "dark" : "light");
+                            }}
                             src={`./img/header/${theme}-theme.png`}
                             alt={`${theme} theme`}
                         />
@@ -236,7 +252,10 @@ function Header({ currentPage }) {
                 <div className="connect">
                     <div class="connect__popup" style={{ backgroundColor: theme === "light" ? "#fff" : "#1C2026" }}>
                         <img
-                            onClick={() => setPopup(false)}
+                            onClick={() => {
+                                // document.body.style.overflowX = "hidden";
+                                setPopup(false);
+                            }}
                             className="connect__popup-img"
                             src={`./img/header/${theme === "light" ? "close" : "close-white"}.png`}
                             alt="Close"
@@ -255,6 +274,7 @@ function Header({ currentPage }) {
                             onClick={() => {
                                 setPopup(false);
                                 setAuth(true);
+                                localStorage.setItem("auth", true);
                             }}
                             style={{
                                 color: theme === "light" ? "#000" : "#fff",
@@ -267,6 +287,7 @@ function Header({ currentPage }) {
                             onClick={() => {
                                 setPopup(false);
                                 setAuth(true);
+                                localStorage.setItem("auth", true);
                             }}
                             style={{
                                 color: theme === "light" ? "#000" : "#fff",

@@ -1,7 +1,6 @@
 import { useContext, useState } from "react";
 import "./AdminPanel.scss";
 import { ContextApp } from "../../Context";
-import { logDOM } from "@testing-library/react";
 
 function AdminPanel() {
     const { theme, setTheme } = useContext(ContextApp);

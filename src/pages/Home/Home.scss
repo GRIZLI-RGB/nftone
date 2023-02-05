@@ -391,8 +391,6 @@
                 opacity: 0.75;
             }
         }
-        &-nfts {
-        }
         &-collections {
             margin-left: 12px;
         }
@@ -410,6 +408,7 @@
             padding: 20px 40px;
             margin-top: 62px;
             transition: all 0.2s;
+            display: inline-block;
             &:hover {
                 background-color: #ff6c35;
             }
@@ -431,6 +430,47 @@
             }
             &-collections {
                 font-size: 20px;
+            }
+        }
+    }
+    .recent {
+        &__categories {
+            margin-bottom: 30px;
+        }
+    }
+    .collectionCard {
+        &__img {
+            width: 35vw !important;
+        }
+        &__tag {
+            padding: 1vw 1.6vw !important;
+            &-text {
+                font-size: 2vw !important;
+            }
+        }
+        &__info {
+            height: 6vw !important;
+            &-text {
+                font-size: 2.4vw !important;
+                padding: 1vw !important;
+            }
+        }
+        &__menuEmoji {
+            transition: all 0.2s;
+            position: absolute;
+            left: 0;
+            bottom: -50px;
+            z-index: 999;
+            background: #ffffff;
+            border-radius: 100px 100px 20px 0px;
+            font-size: 2.30vw !important;
+            padding: 1.43vw !important;
+            opacity: 0;
+            pointer-events: none;
+            &-item {
+                & + & {
+                    margin-top: 0.78vw;
+                }
             }
         }
     }
@@ -527,77 +567,8 @@
         &__all {
             max-width: 342px;
             &-btn {
+                margin-top: 45px;
                 width: 100%;
-            }
-        }
-    }
-}
-
-.connect {
-    background: rgba(0, 0, 0, 0.5);
-    position: absolute;
-    left: 0;
-    top: 0;
-    bottom: 0;
-    right: 0;
-    z-index: 1000;
-    &__popup {
-        text-align: center;
-        margin: 30vh auto;
-        background: #ffffff;
-        border-radius: 20px;
-        padding: 59px 29px 39px 29px;
-        max-width: 343px;
-        position: relative;
-        &-img {
-            position: absolute;
-            right: 21px;
-            top: 25px;
-            cursor: pointer;
-        }
-        &-title {
-            font: 700 32px/42px "DM Sans";
-        }
-        &-text {
-            font: 400 16px/21px "DM Sans";
-            margin: 6px 0 24px;
-        }
-        &-btn {
-            border-radius: 10px;
-            position: relative;
-            font: 700 20px/26px "DM Sans";
-            width: 100%;
-            padding: 10px 0;
-            transition: all 0.2s;
-            &:nth-child(4) {
-                padding-left: 42px;
-                &::after {
-                    left: 74px;
-                    width: 32px;
-                    height: 32px;
-                    background: url("./../../../public/img/sections/connect/diamond-big.png");
-                }
-            }
-            &:nth-child(5) {
-                padding-left: 40px;
-                &::after {
-                    left: 90px;
-                    width: 33px;
-                    height: 33px;
-                    background: url("./../../../public/img/sections/connect/crystal.png");
-                }
-            }
-            & + & {
-                margin-top: 10px;
-            }
-            &::after {
-                position: absolute;
-                content: "";
-                top: 50%;
-                transform: translateY(-50%);
-            }
-            &:hover {
-                opacity: 0.7;
             }
         }
     }
@@ -1494,6 +1465,69 @@
 }
 
 @media (max-width: 530px) {
+    .collectionCard {
+        &__img {
+            width: 53vw !important;
+        }
+        &__tag {
+            padding: 1.8vw 2.5vw !important;
+            &-text {
+                font-size: 3vw !important;
+            }
+        }
+        &__info {
+            height: 10vw !important;
+            &-text {
+                font-size: 4vw !important;
+                padding: 3vw !important;
+            }
+        }
+        &__emoji {
+        position: absolute;
+        top: 2vw;
+        right: 2vw;
+        display: flex;
+        column-gap: 0.26vw;
+        &-item {
+            &-light,
+            &-dark {
+                width: 3.8vw;
+                text-align: center;
+                border-radius: 100px;
+                padding: 0.6vw 0;
+                font-size: 2.2vw;
+                transition: all 0.2s;
+                span {
+                    margin-top: 1vw;
+                    display: block;
+                    color: #000;
+                    font-family: "DM Sans";
+                    font-weight: 400;
+                    line-height: 0.94vw;
+                    letter-spacing: -0.03em;
+                }
+            }
+        }
+        } 
+        &__menuEmoji {
+            transition: all 0.2s;
+            position: absolute;
+            left: 0;
+            bottom: -50px;
+            z-index: 999;
+            background: #ffffff;
+            border-radius: 100px 100px 20px 0px;
+            font-size: 4vw !important;
+            padding: 1.43vw !important;
+            opacity: 0;
+            pointer-events: none;
+            &-item {
+                & + & {
+                    margin-top: 0.78vw;
+                }
+            }
+        }
+    }
     .card {
         &__info {
             &-right {

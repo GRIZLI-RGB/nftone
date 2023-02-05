@@ -89,6 +89,9 @@
                 width: 2.31vw;
                 height: 2.31vw;
             }
+            &-arrow {
+                transition: all .2s;
+            }
         }
         &-userMenu {
             overflow: hidden;
@@ -152,6 +155,79 @@
     }
 }
 
+.connect {
+    background: rgba(0, 0, 0, 0.5);
+    position: absolute;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    top: 0;
+    bottom: 0;
+    right: 0;
+    z-index: 9999;
+    &__popup {
+        text-align: center;
+        margin: 30vh auto;
+        background: #ffffff;
+        border-radius: 20px;
+        padding: 59px 29px 39px 29px;
+        max-width: 343px;
+        position: relative;
+        z-index: 9999;
+        &-img {
+            position: absolute;
+            right: 21px;
+            top: 25px;
+            cursor: pointer;
+        }
+        &-title {
+            font: 700 32px/42px "DM Sans";
+        }
+        &-text {
+            font: 400 16px/21px "DM Sans";
+            margin: 6px 0 24px;
+        }
+        &-btn {
+            border-radius: 10px;
+            position: relative;
+            font: 700 20px/26px "DM Sans";
+            width: 100%;
+            padding: 10px 0;
+            transition: all 0.2s;
+            &:nth-child(4) {
+                padding-left: 42px;
+                &::after {
+                    left: 74px;
+                    width: 32px;
+                    height: 32px;
+                    background: url("./../../../public/img/sections/connect/diamond-big.png");
+                }
+            }
+            &:nth-child(5) {
+                padding-left: 40px;
+                &::after {
+                    left: 90px;
+                    width: 33px;
+                    height: 33px;
+                    background: url("./../../../public/img/sections/connect/crystal.png");
+                }
+            }
+            & + & {
+                margin-top: 10px;
+            }
+            &::after {
+                position: absolute;
+                content: "";
+                top: 50%;
+                transform: translateY(-50%);
+            }
+            &:hover {
+                opacity: 0.7;
+            }
+        }
+    }
+}
+
 @media (max-width: 768px) {
     .header {
         padding: 21px 16px;
@@ -171,6 +247,52 @@
             display: none;
         }
         &__buttons {
+            &-user {
+                display: flex;
+                align-items: center;
+                column-gap: 1.6vw;
+                font: 700 2.3vw/100% "Montserrat";
+                &-avatar {
+                    width: 4.3vw;
+                    height: 4.3vw;
+                }
+                &-arrow {
+                    width: 3vw;
+                }
+            }
+            &-userMenu {
+                overflow: hidden;
+                &--dark {
+                    color: #fff;
+                    background-color: #1C2026;
+                }
+                z-index: 1000;
+                border-radius: 20px;
+                position: absolute;
+                left: 0;
+                right: 0;
+                bottom: -32vw;
+                font: 500 3vw/100% "DM Sans";
+                color: #000;
+                background-color: #fff;
+                display: flex;
+                flex-direction: column;
+                &-item {
+                    display: flex;
+                    align-items: center;
+                    column-gap: 1.2vw;
+                    padding: 0.8vw 2vw 0.8vw 2.3vw;
+                    cursor: pointer;
+                    &:hover {
+                        background: rgba(#000, 0.1);
+                    }
+                    img {
+                        width: 3.16vw;
+                    }
+                    &-link {
+                    }
+                }
+            }
             &-connect {
                 font-size: 14px;
                 line-height: 17px;
@@ -315,7 +437,7 @@
                 border-radius: 100px;
                 height: 100%;
                 width: 100%;
-                font: 500 16px/21px "DM Sans";
+                font: 500 16px/21px "DM Sans", sans-serif;
                 color: #2d333e;
             }
             &-back {

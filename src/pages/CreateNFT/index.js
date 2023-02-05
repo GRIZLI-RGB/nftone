@@ -90,18 +90,35 @@ function CreateNFT() {
                         }}>
                         <h6 className="createNFT__left-attr-title">Attributes</h6>
                         <div className="createNFT__left-attr-box">
-                            <div className="createNFT__left-attr-box-name">
-                                <label>Name</label>
-                                {attrs.map((item, index) => (
-                                    <input type="text" placeholder={`${!index ? "Price" : ""}`} />
-                                ))}
-                            </div>
-                            <div className="createNFT__left-attr-box-value">
-                                <label>Value</label>
-                                {attrs.map((item, index) => (
-                                    <input type="text" placeholder={`${!index ? "10$" : ""}`} />
-                                ))}
-                            </div>
+                            {window.innerWidth <= 768 ? (
+                                attrs.map((item, index) => (
+                                    <>
+                                        <div className="createNFT__left-attr-box-name">
+                                            <label>Name</label>
+                                            <input type="text" placeholder={`${!index ? "Price" : ""}`} />
+                                        </div>
+                                        <div className="createNFT__left-attr-box-value">
+                                            <label>Value</label>
+                                            <input type="text" placeholder={`${!index ? "10$" : ""}`} />
+                                        </div>
+                                    </>
+                                ))
+                            ) : (
+                                <>
+                                    <div className="createNFT__left-attr-box-name">
+                                        <label>Name</label>
+                                        {attrs.map((item, index) => (
+                                            <input type="text" placeholder={`${!index ? "Price" : ""}`} />
+                                        ))}
+                                    </div>
+                                    <div className="createNFT__left-attr-box-value">
+                                        <label>Value</label>
+                                        {attrs.map((item, index) => (
+                                            <input type="text" placeholder={`${!index ? "10$" : ""}`} />
+                                        ))}
+                                    </div>
+                                </>
+                            )}
                         </div>
                         <button
                             className="createNFT__left-attr-add"
@@ -127,10 +144,18 @@ function CreateNFT() {
                         </div>
                         <div className="createNFT__right-form-tags">
                             <label>Tags</label>
-                            <div className="createNFT__right-form-tags-box" style={{background: changeTheme("#fff", "#1C2026"), borderColor: changeTheme("", "#596577")}}>
+                            <div
+                                className="createNFT__right-form-tags-box"
+                                style={{
+                                    background: changeTheme("#fff", "#1C2026"),
+                                    borderColor: changeTheme("", "#596577"),
+                                }}>
                                 <div className="createNFT__right-form-tags-box-items">
                                     {tags.map((tag, index) => (
-                                        <div key={index} className="createNFT__right-form-tags-box-items-item" style={{backgroundColor: changeTheme("", "rgba(255, 255, 255, 0.13)")}}>
+                                        <div
+                                            key={index}
+                                            className="createNFT__right-form-tags-box-items-item"
+                                            style={{ backgroundColor: changeTheme("", "rgba(255, 255, 255, 0.13)") }}>
                                             {tag}
                                             <img
                                                 data-tag={tag}
@@ -143,7 +168,7 @@ function CreateNFT() {
                                         </div>
                                     ))}
                                     <input
-                                    id="tags-input"
+                                        id="tags-input"
                                         type="text"
                                         onChange={e => {
                                             onChangeTagInput(e);
@@ -181,7 +206,17 @@ function CreateNFT() {
                         </div>
                         <div className="createNFT__right-form-buttons">
                             <input className="createNFT__right-form-buttons-create" type="button" value="CREATE NFT" />
-                            <input className={`createNFT__right-form-buttons-reset ${changeTheme("", "createNFT__right-form-buttons-reset--dark")}`} type="button" value="RESET" />
+                            <input
+                                className={`createNFT__right-form-buttons-reset ${changeTheme(
+                                    "",
+                                    "createNFT__right-form-buttons-reset--dark",
+                                )}`}
+                                type="button"
+                                value="RESET"
+                                onClick={() => {
+                                    window.location.reload();
+                                }}
+                            />
                         </div>
                     </form>
                 </div>

@@ -196,6 +196,10 @@
                 width: 50%;
                 position: relative;
                 cursor: pointer;
+                transition: all .2s;
+                &:hover {
+                    opacity: .75;
+                }
                 &-title {
                     margin-bottom: 0.83vw;
                 }
@@ -217,6 +221,7 @@
             }
         }
         &-other {
+            
             &-title {
                 margin-bottom: 1.11vw;
             }
@@ -291,7 +296,7 @@
                         padding: 0 1.39vw;
                         border: 2px solid #efefef;
                         border-radius: 100px;
-                        font: 500 0.74vw/0.97vw "DM Sans";
+                        font: 500 0.74vw/0.97vw "DM Sans", sans-serif;
                         letter-spacing: 0.04em;
                         &::placeholder {
                             color: #757575;
@@ -332,6 +337,7 @@
                             background: #ffffff;
                             border-radius: 0.93vw;
                             padding: 1.25vw 1.04vw 1.25vw 1vw;
+                            font-weight: 500;
                             &-item {
                                 & + & {
                                     margin-top: 0.78vw;
@@ -346,6 +352,7 @@
                         img {
                             margin-left: 0.46vw;
                             padding-bottom: 0.05vw;
+                            transition: all .2s;
                         }
                     }
                 }
@@ -392,7 +399,6 @@
                 text-align: center;
                 position: absolute;
                 max-width: 343px;
-                color: #000;
                 bottom: -230px;
                 &-title {
                     font: 700 32px/39px "Montserrat";

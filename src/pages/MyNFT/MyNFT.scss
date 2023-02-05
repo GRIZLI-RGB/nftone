@@ -12,6 +12,7 @@
         }
     }
     &__download {
+        cursor: pointer;
         position: relative;
         left: 54%;
         background: rgba(255, 255, 255, 0.61);
@@ -135,6 +136,10 @@
         &-owner {
             position: relative;
             cursor: pointer;
+            transition: all .2s;
+            &:hover {
+                opacity: .75;
+            }
             &-title {
                 margin-bottom: 0.83vw;
             }
@@ -247,11 +252,10 @@
                     align-items: center;
                     column-gap: 0.46vw;
                     transition: all 0.2s;
+                    position: relative;
                     img {
                         width: 0.8vw;
-                    }
-                    &:hover {
-                        opacity: 0.75;
+                        transition: all .2s;
                     }
                 }
                 &-add {

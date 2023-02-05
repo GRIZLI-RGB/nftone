@@ -10,6 +10,16 @@ import Filters from "../../components/Filters";
 function Marketplace() {
     const [filter, setFilter] = useState("nft");
     const { theme, changeTheme } = useContext(ContextApp);
+    const [sortingPopup, setSortingPopup] = useState(false);
+    const [sortingCurrent, setSortingCurrent] = useState("Recently listed");
+    const [pricePopup, setPricePopup] = useState(false);
+    const [priceCurrent, setPriceCurrent] = useState("Low to High");
+
+    const [filtersMobile, setFiltersMobile] = useState(false);
+    const [sortMobile, setSortMobile] = useState(false);
+    const [priceMobile, setPriceMobile] = useState(false);
+
+    const [showMore, setShowMore] = useState(false);
     return (
         <>
             <Header currentPage={"marketplace"} />
@@ -25,21 +35,74 @@ function Marketplace() {
                             style={{ color: changeTheme("#000", "#fff") }}>
                             <button
                                 class="catalog__container-content-optionsMobile-filters"
-                                style={{ backgroundColor: changeTheme("rgba(220, 220, 220, 0.5)", "#2b3239") }}>
+                                style={{ backgroundColor: changeTheme("rgba(220, 220, 220, 0.5)", "#2b3239") }}
+                                onClick={() => setFiltersMobile(!filtersMobile)}>
                                 Filters
-                                <img src={`./img/sections/catalog/arrow-${theme}.png`} alt="" />
+                                <img
+                                    src={`./img/sections/catalog/arrow-${theme}.png`}
+                                    alt=""
+                                    style={{ transform: filtersMobile ? "rotate(180deg)" : "rotate(0deg)" }}
+                                />
                             </button>
                             <button
                                 class="catalog__container-content-optionsMobile-sort"
-                                style={{ backgroundColor: changeTheme("rgba(220, 220, 220, 0.5)", "#2b3239") }}>
+                                style={{ backgroundColor: changeTheme("rgba(220, 220, 220, 0.5)", "#2b3239") }}
+                                onClick={() => setSortMobile(!sortMobile)}>
                                 Sort
-                                <img src={`./img/sections/catalog/arrow-${theme}.png`} alt="" />
+                                <img
+                                    src={`./img/sections/catalog/arrow-${theme}.png`}
+                                    alt=""
+                                    style={{ transform: sortMobile ? "rotate(180deg)" : "rotate(0deg)" }}
+                                />
+                                {sortMobile && (
+                                    <ul className="catalog__container-content-options-sorting-popup">
+                                        <li
+                                            className="catalog__container-content-options-sorting-popup-item"
+                                            onClick={e => setSortingCurrent(e.target.innerText)}>
+                                            Recently listed
+                                        </li>
+                                        <li
+                                            className="catalog__container-content-options-sorting-popup-item"
+                                            onClick={e => setSortingCurrent(e.target.innerText)}>
+                                            Recently created
+                                        </li>
+                                        <li
+                                            className="catalog__container-content-options-sorting-popup-item"
+                                            onClick={e => setSortingCurrent(e.target.innerText)}>
+                                            Recently sold
+                                        </li>
+                                        <li
+                                            className="catalog__container-content-options-sorting-popup-item"
+                                            onClick={e => setSortingCurrent(e.target.innerText)}>
+                                            Recently received
+                                        </li>
+                                    </ul>
+                                )}
                             </button>
                             <button
                                 class="catalog__container-content-optionsMobile-price"
-                                style={{ backgroundColor: changeTheme("rgba(220, 220, 220, 0.5)", "#2b3239") }}>
+                                style={{ backgroundColor: changeTheme("rgba(220, 220, 220, 0.5)", "#2b3239") }}
+                                onClick={() => setPriceMobile(!priceMobile)}>
                                 Price
-                                <img src={`./img/sections/catalog/arrow-${theme}.png`} alt="" />
+                                <img
+                                    src={`./img/sections/catalog/arrow-${theme}.png`}
+                                    alt=""
+                                    style={{ transform: priceMobile ? "rotate(180deg)" : "rotate(0deg)" }}
+                                />
+                                {priceMobile && (
+                                    <ul className="catalog__container-content-options-sorting-popup">
+                                        <li
+                                            className="catalog__container-content-options-sorting-popup-item"
+                                            onClick={e => setPriceCurrent(e.target.innerText)}>
+                                            Low to High
+                                        </li>
+                                        <li
+                                            className="catalog__container-content-options-sorting-popup-item"
+                                            onClick={e => setPriceCurrent(e.target.innerText)}>
+                                            High to Low
+                                        </li>
+                                    </ul>
+                                )}
                             </button>
                         </div>
                         <div class="catalog__container-content-options">
@@ -82,13 +145,63 @@ function Marketplace() {
                             <div
                                 class="catalog__container-content-options-sorting"
                                 style={{ color: changeTheme("#000", "#fff") }}>
-                                <button style={{ backgroundColor: changeTheme("rgba(220, 220, 220, 0.5)", "#2b3239") }}>
-                                    Sorting: Recenly Listed
-                                    <img src={`./img/sections/catalog/arrow-${theme}.png`} alt="" />
+                                <button
+                                    style={{ backgroundColor: changeTheme("rgba(220, 220, 220, 0.5)", "#2b3239") }}
+                                    onClick={() => setSortingPopup(!sortingPopup)}>
+                                    Sorting: {sortingCurrent}
+                                    <img
+                                        src={`./img/sections/catalog/arrow-${theme}.png`}
+                                        alt=""
+                                        style={{ transform: sortingPopup ? "rotate(-180deg)" : "rotate(0deg)" }}
+                                    />
+                                    {sortingPopup && (
+                                        <ul className="catalog__container-content-options-sorting-popup">
+                                            <li
+                                                className="catalog__container-content-options-sorting-popup-item"
+                                                onClick={e => setSortingCurrent(e.target.innerText)}>
+                                                Recently listed
+                                            </li>
+                                            <li
+                                                className="catalog__container-content-options-sorting-popup-item"
+                                                onClick={e => setSortingCurrent(e.target.innerText)}>
+                                                Recently created
+                                            </li>
+                                            <li
+                                                className="catalog__container-content-options-sorting-popup-item"
+                                                onClick={e => setSortingCurrent(e.target.innerText)}>
+                                                Recently sold
+                                            </li>
+                                            <li
+                                                className="catalog__container-content-options-sorting-popup-item"
+                                                onClick={e => setSortingCurrent(e.target.innerText)}>
+                                                Recently received
+                                            </li>
+                                        </ul>
+                                    )}
                                 </button>
-                                <button style={{ backgroundColor: changeTheme("rgba(220, 220, 220, 0.5)", "#2b3239") }}>
-                                    Price: Low to High
-                                    <img src={`./img/sections/catalog/arrow-${theme}.png`} alt="" />
+                                <button
+                                    style={{ backgroundColor: changeTheme("rgba(220, 220, 220, 0.5)", "#2b3239") }}
+                                    onClick={() => setPricePopup(!pricePopup)}>
+                                    Price: {priceCurrent}
+                                    <img
+                                        src={`./img/sections/catalog/arrow-${theme}.png`}
+                                        alt=""
+                                        style={{ transform: pricePopup ? "rotate(-180deg)" : "rotate(0deg)" }}
+                                    />
+                                    {pricePopup && (
+                                        <ul className="catalog__container-content-options-sorting-popup">
+                                            <li
+                                                className="catalog__container-content-options-sorting-popup-item"
+                                                onClick={e => setPriceCurrent(e.target.innerText)}>
+                                                Low to High
+                                            </li>
+                                            <li
+                                                className="catalog__container-content-options-sorting-popup-item"
+                                                onClick={e => setPriceCurrent(e.target.innerText)}>
+                                                High to Low
+                                            </li>
+                                        </ul>
+                                    )}
                                 </button>
                             </div>
                         </div>
@@ -101,12 +214,28 @@ function Marketplace() {
                                 </>
                             ) : (
                                 <>
-                                    <DefaultCard />
-                                    <DefaultCard />
-                                    <DefaultCard />
-                                    <DefaultCard />
-                                    <DefaultCard />
-                                    <DefaultCard />
+                                    {!showMore ? (
+                                        <>
+                                            <DefaultCard />
+                                            <DefaultCard />
+                                            <DefaultCard />
+                                            <DefaultCard />
+                                            <DefaultCard />
+                                            <DefaultCard />
+                                        </>
+                                    ) : <>
+                                            <DefaultCard />
+                                            <DefaultCard />
+                                            <DefaultCard />
+                                            <DefaultCard />
+                                            <DefaultCard />
+                                            <DefaultCard />
+                                            <DefaultCard />
+                                            <DefaultCard />
+                                            <DefaultCard />
+                                            <DefaultCard />
+                                            <DefaultCard />
+                                        </>}
                                 </>
                             )}
                         </div>
@@ -115,8 +244,9 @@ function Marketplace() {
                                 style={{
                                     borderColor: changeTheme("#004d8c", "#fff"),
                                     color: changeTheme("#004d8c", "#fff"),
-                                }}>
-                                Show more
+                                }}
+                                onClick={() => setShowMore(!showMore)}>
+                                {!showMore ? "Show more" : "Hide"}
                             </button>
                         </div>
                     </div>
