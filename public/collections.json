@@ -1,0 +1,38 @@
+[
+    {
+        "name": "So low and many",
+        "tag": "Standart",
+        "img": "1",
+        "emotions": [253, 8, 150, 15, 25, 25, 25]
+    },
+    {
+        "name": "Very good item",
+        "tag": "Rarity",
+        "img": "2",
+        "emotions": [2, 13, 14, 25, 12, 9, 132]
+    },
+    {
+        "name": "PowerMustSuper",
+        "tag": "Standart",
+        "img": "3",
+        "emotions": [250, 25, 250, 35, 19, 78, 25]
+    },
+    {
+        "name": "DobbiyLight Edition",
+        "tag": "Legendary",
+        "img": "4",
+        "emotions": [33, 25, 56, 25, 35, 19, 745]
+    },
+    {
+        "name": "Card Diller Fake",
+        "tag": "Standart",
+        "img": "5",
+        "emotions": [25, 23, 219, 85, 25, 42, 13]
+    },
+    {
+        "name": "Kingdom Rush Mid",
+        "tag": "Rarity",
+        "img": "6",
+        "emotions": [6, 5, 14, 32, 25, 967, 25]
+    }
+]

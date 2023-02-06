@@ -3,15 +3,52 @@ import Footer from "../../components/Footer";
 import Header from "../../components/Header";
 import { ContextApp } from "../../Context";
 import "./Collection.scss";
+import { Chart as ChartJS, CategoryScale, LinearScale, PointElement, LineElement } from "chart.js";
 import Checkbox from "../../components/Checkbox";
 import Filters from "../../components/Filters";
 import SimpleCard from "../../components/SimpleCard";
+import { Line } from "react-chartjs-2";
+import Skeleton from "react-loading-skeleton";
+
+ChartJS.register(CategoryScale, LinearScale, PointElement, LineElement);
+
+export const optionsVolumeAndFloor = {
+    responsive: true,
+    maintainAspectRatio: false,
+};
+
+export const dataVolume = {
+    labels: ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul"],
+    datasets: [
+        {
+            data: [26.8, 27, 27.9, 26.5, 26.3, 26.8, 26.1],
+            borderColor: "#004d8C",
+            backgroundColor: "#004d8C",
+            tension: 0.5,
+            pointRadius: 0,
+        },
+    ],
+};
+
+export const dataFloor = {
+    labels: ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul"],
+    datasets: [
+        {
+            data: [25.8, 23, 26.4, 24.5, 25.8, 26.5, 25.9],
+            borderColor: "#004d8C",
+            backgroundColor: "#004d8C",
+            tension: 0.5,
+            pointRadius: 0,
+        },
+    ],
+};
 
 function Collection() {
     const { theme, changeTheme } = useContext(ContextApp);
     const [graphView, setGraphView] = useState("volume");
     const [sortingPopup, setSortingPopup] = useState(false);
     const [pricePopup, setPricePopup] = useState(false);
+    const [graphPopup, setGraphPopup] = useState(false);
     return (
         <>
             <Header />
@@ -169,8 +206,10 @@ function Collection() {
             </section>
             <section className={`collection ${changeTheme("", "collection--dark")}`}>
                 <Filters />
-                <button className="collection__filtersMobile">Filters
-                <img src={`./img/sections/collection/filters-${theme}.svg`} alt=""/></button>
+                <button className="collection__filtersMobile">
+                    Filters
+                    <img src={`./img/sections/collection/filters-${theme}.svg`} alt="" />
+                </button>
                 <div class="collection__main">
                     <div class="collection__main-info">
                         <div class="collection__main-info-box">
@@ -281,14 +320,17 @@ function Collection() {
                                     className="collection__main-graph-up-settings-resize"
                                     src={`./img/sections/nft/resize-${theme}.svg`}
                                     alt=""
+                                    onClick={() => setGraphPopup(!graphPopup)}
                                 />
                             </div>
                         </div>
-                        <img
-                            class="collection__main-graph-down"
-                            src={`./img/sections/collection/graphic-${theme}.svg`}
-                            alt=""
-                        />
+                        <div className="collection__main-graph-down">
+                            {graphView === "volume" ? (
+                                <Line options={optionsVolumeAndFloor} data={dataVolume} />
+                            ) : (
+                                <Line options={optionsVolumeAndFloor} data={dataFloor} />
+                            )}
+                        </div>
                     </div>
                     <div class="collection__main-cards">
                         <div class="collection__main-cards-options">
@@ -313,9 +355,7 @@ function Collection() {
                                 <div
                                     class="collection__main-cards-options-filters-sort"
                                     onClick={() => setSortingPopup(!sortingPopup)}>
-                                    {
-                                        window.innerWidth <= 768 ? "Sort" : "Sorting: New"
-                                    }
+                                    {window.innerWidth <= 768 ? "Sort" : "Sorting: New"}
                                     {sortingPopup && (
                                         <ul className="collection__main-cards-options-filters-sort-popup">
                                             <li className="collection__main-cards-options-filters-sort-popup-item">
@@ -341,10 +381,7 @@ function Collection() {
                                 <div
                                     class="collection__main-cards-options-filters-price"
                                     onClick={() => setPricePopup(!pricePopup)}>
-                                    
-                                    {
-                                        window.innerWidth <= 768 ? "Price" : "Price: Low to High"
-                                    }
+                                    {window.innerWidth <= 768 ? "Price" : "Price: Low to High"}
                                     {pricePopup && (
                                         <ul className="collection__main-cards-options-filters-price-popup">
                                             <li className="collection__main-cards-options-filters-price-popup-item">
@@ -371,6 +408,15 @@ function Collection() {
                     </div>
                 </div>
             </section>
+            {graphPopup && (
+                <div className="graph-popup" onClick={(e) => e.target.getAttribute("class") === "graph-popup" && setGraphPopup(!graphPopup)}>
+                    <div className="graph-popup-two">
+                        {
+                            graphView === "volume" ? <Line options={optionsVolumeAndFloor} data={dataVolume} /> : <Line options={optionsVolumeAndFloor} data={dataFloor} />
+                        }
+                    </div>
+                </div>
+            )}
             <Footer />
         </>
     );

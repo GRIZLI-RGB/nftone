@@ -2,7 +2,7 @@ import { useContext, useState } from "react";
 import "./Card.scss";
 import { ContextApp } from "../../Context";
 
-function Card() {
+function Card({nft}) {
     const [diamond, setDiamond] = useState("dark");
     const { theme, changeTheme } = useContext(ContextApp);
     return (
@@ -10,41 +10,41 @@ function Card() {
             className={changeTheme("card", "card card--dark")}
             onMouseOver={() => setDiamond('light')}
             onMouseOut={() => setDiamond('dark')}>
-            <img className="card__photo" src="./img/card/photo-1.svg" alt="Card" />
+            <img className="card__photo" src={`./img/card/photo-${nft?.img}.svg`} alt="Card" />
             <div className="card__info">
                 <div className="card__info-left">
-                    <h6 className="card__info-left-title">KingCrypto</h6>
+                    <h6 className="card__info-left-title">{nft?.name}</h6>
                     <p className="card__info-left-price">
                         <img src={`./img/card/diamond-${diamond}.png`} alt="Price" />
-                        0.25 TON
+                        {nft?.price} TON
                     </p>
                 </div>
                 <div className="card__info-right">
                     <div class="card__info-right-user">
                         <img className="card__info-right-user-avatar" src="./img/card/avatar.png" alt="Avatar" />
-                        <p className="card__info-right-user-name">by Arkhan</p>
+                        <p className="card__info-right-user-name">by {nft?.creator}</p>
                     </div>
                     <ul className="card__info-right-emoji">
                         <li className={"card__info-right-emoji-item-" + theme}>
-                            ❤️<span>250</span>
+                            ❤️<span>{nft?.emotions[0]}</span>
                         </li>
                         <li className={"card__info-right-emoji-item-" + theme}>
-                            🤣<span>25</span>
+                            🤣<span>{nft?.emotions[1]}</span>
                         </li>
                         <li className={"card__info-right-emoji-item-" + theme}>
-                            😍<span>250</span>
+                            😍<span>{nft?.emotions[2]}</span>
                         </li>
                         <li className={"card__info-right-emoji-item-" + theme}>
-                            😡<span>25</span>
+                            😡<span>{nft?.emotions[3]}</span>
                         </li>
                         <li className={"card__info-right-emoji-item-" + theme}>
-                            🙀<span>25</span>
+                            🙀<span>{nft?.emotions[4]}</span>
                         </li>
                         <li className={"card__info-right-emoji-item-" + theme}>
-                            🥴<span>25</span>
+                            🥴<span>{nft?.emotions[5]}</span>
                         </li>
                         <li className={"card__info-right-emoji-item-" + theme}>
-                            🤑<span>25</span>
+                            🤑<span>{nft?.emotions[6]}</span>
                         </li>
                     </ul>
                 </div>

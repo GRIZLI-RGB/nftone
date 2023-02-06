@@ -7,11 +7,19 @@ import { ContextApp } from "./../../Context";
 import Header from "./../../components/Header";
 import Footer from "./../../components/Footer";
 import $ from "jquery";
+import Skeleton, { SkeletonTheme } from "react-loading-skeleton";
+import "react-loading-skeleton/dist/skeleton.css";
 
 function Home() {
+    const [popularNFT, setPopularNFT] = useState([]);
+    const [popularCollection, setPopularCollection] = useState([]);
+    const [isLoadingNFT, setIsLoadingNFT] = useState(true);
+    const [isLoadingCollection, setIsLoadingCollection] = useState(true);
+
     const [popularFilter, setPopularFilter] = useState("nft");
     const [recentFilter, setRecentFilter] = useState("nft");
     const { changeTheme } = useContext(ContextApp);
+
     const settingsForSlider = {
         infinite: true,
         speed: 500,
@@ -36,21 +44,47 @@ function Home() {
         ],
     };
 
+    /* 
+        Отсюда прокидываются два fetch-запроса на бэкенд для получения популярных NFTs и популярных Collections
+    */
+    useEffect(() => {
+        fetch("/nfts.json")
+            .then(res => {
+                return res.json();
+            })
+            .then(json => {
+                setPopularNFT(json);
+                setIsLoadingNFT(false);
+            });
+        fetch("/collections.json")
+            .then(res => {
+                return res.json();
+            })
+            .then(json => {
+                setPopularCollection(json);
+                setIsLoadingCollection(false);
+            });
+    }, []);
+
     /*
         Плавная прокрутка для кнопки Explore Now
     */
     useEffect(() => {
         $("#popular-btn").on("click", function () {
-            $("html, body").animate({
-                scrollTop: $("#popular-section").offset().top
-            }, {
-                duration: 400,
-                easing: "linear"
-            });
-        
+            $("html, body").animate(
+                {
+                    scrollTop: $("#popular-section").offset().top,
+                },
+                {
+                    duration: 400,
+                    easing: "linear",
+                },
+            );
+
             return false;
         });
     });
+
     return (
         <>
             <Header currentPage={"zero"} />
@@ -247,9 +281,19 @@ function Home() {
                         Collections
                     </button>
                 </div>
-                <Slider class="popular__list" {...settingsForSlider}>
-                    {[1, 2, 3, 4, 5, 6, 7, 8].map(() => (popularFilter === "nft" ? <Card /> : <CollectionCard />))}
-                </Slider>
+
+                {isLoadingNFT && isLoadingCollection ? (
+                    <Skeleton height="24.21vw" style={{marginTop: "47px"}} count={1} />
+                ) : (
+                    <Slider class="popular__list" {...settingsForSlider}>
+                        {popularFilter === "nft"
+                            ? popularNFT.map(nft => <Card nft={nft} />)
+                            : popularCollection.map(collection => <CollectionCard collection={collection} />)}
+                    </Slider>
+                )}
+                {/* <Slider class="popular__list" {...settingsForSlider}>
+                        {!isLoadingNFT ?  : popularFilter === "nft" ? popularNFT.map(nft => <Card nft={nft}/>) : popularCollection.map(collection => <CollectionCard collection={collection}/>)}
+                    </Slider> */}
             </section>
             <section className={`recent ${changeTheme("", "recent--dark")}`}>
                 <div class="recent__bg"></div>
@@ -270,9 +314,15 @@ function Home() {
                         Collections
                     </button>
                 </div>
-                <Slider class="recent__list" {...settingsForSlider}>
-                    {[1, 2, 3, 4, 5, 6, 7].map(() => (recentFilter === "nft" ? <Card /> : <CollectionCard />))}
-                </Slider>
+                {isLoadingNFT && isLoadingCollection ? (
+                    <Skeleton height="24.21vw" style={{marginTop: "47px"}} count={1} />
+                ) : (
+                    <Slider class="popular__list" {...settingsForSlider}>
+                        {recentFilter === "nft"
+                            ? popularNFT.map(nft => <Card nft={nft} />)
+                            : popularCollection.map(collection => <CollectionCard collection={collection} />)}
+                    </Slider>
+                )}
                 <div class="recent__all">
                     <a href="/marketplace" className="recent__all-btn">
                         View all
