@@ -8,7 +8,6 @@ import Checkbox from "../../components/Checkbox";
 import Filters from "../../components/Filters";
 import SimpleCard from "../../components/SimpleCard";
 import { Line } from "react-chartjs-2";
-import Skeleton from "react-loading-skeleton";
 
 ChartJS.register(CategoryScale, LinearScale, PointElement, LineElement);
 
@@ -31,10 +30,10 @@ export const dataVolume = {
 };
 
 export const dataFloor = {
-    labels: ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul"],
+    labels: ["Jan", "Feb", "Mar", "Apr"],
     datasets: [
         {
-            data: [25.8, 23, 26.4, 24.5, 25.8, 26.5, 25.9],
+            data: [25.8, 23, 26.4, 24.5],
             borderColor: "#004d8C",
             backgroundColor: "#004d8C",
             tension: 0.5,
