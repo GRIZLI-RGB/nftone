@@ -68,7 +68,6 @@ function Marketplace() {
                 score += elem.emotions[6];
             }
         })
-        console.log(score);
         return score;
     }
 
@@ -80,7 +79,8 @@ function Marketplace() {
                     Catalog
                 </h1>
                 <div class="catalog__container">
-                    <Filters />
+                    {window.innerWidth > 768 && <Filters />}
+                    {window.innerWidth <= 768 && filtersMobile && <Filters/>}
                     <div class="catalog__container-content">
                         <div
                             class="catalog__container-content-optionsMobile"

@@ -362,6 +362,158 @@
             }
         }
     }
+    .filters {
+        display: block !important;
+        position: absolute !important;
+        top: 210px !important;
+        z-index: 1000 !important;
+        left: 16px !important;
+        width: 300px !important;
+        background: #fff !important;
+        border-radius: 12px !important;
+        padding: 20px !important;
+        &__status,
+        &__quantity,
+        &__price,
+        &__rarity,
+        &__emotional,
+        &__category {
+            margin-bottom: 18px !important;
+            font: 400 14px/100% "DM Sans" !important;
+            div {
+                margin-bottom: 8px !important;
+                position: relative;
+                h6 {
+                    font: 700 15px/100% "DM Sans" !important;
+                    cursor: pointer;
+                }
+                img {
+                    position: absolute;
+                    right: 0;
+                    top: 50%;
+                    transform: translateY(-50%);
+                    cursor: pointer;
+                }
+            }
+        }
+        .checkbox {
+            &__input {
+                &:checked {
+                    & + label {
+                        &::before {
+                            border: 3px solid #fff;
+                            outline: 0.05vw solid #bbb;
+                            background-color: #004f87;
+                        }
+                    }
+                }
+                &:not(:checked) {
+                    & + label {
+                        &::before {
+                            border: 0.05vw solid #bbb;
+                            background-color: transparent;
+                        }
+                    }
+                }
+                &:checked,
+                &:not(:checked) {
+                    position: absolute;
+                    left: -9999px;
+                    & + label {
+                        display: inline-block;
+                        position: relative;
+                        padding-left: 24px;
+                        line-height: 0.93vw;
+                        cursor: pointer;
+                        &::before {
+                            content: "";
+                            position: absolute;
+                            left: 0;
+                            top: -7px;
+                            width: 16px;
+                            height: 16px;
+                            border-radius: 4px;
+                        }
+                    }
+                }
+            }
+        }
+        .radiobutton {
+            &__input {
+                &:checked {
+                    & + label {
+                        &::before {
+                            border: 3px solid #fff;
+                            outline: 0.05vw solid #bbb;
+                            background-color: #004F87;
+                        }
+                    }
+                }
+                &:not(:checked) {
+                    & + label {
+                        &::before {
+                            border: 0.05vw solid #bbb;
+                            background-color: transparent;
+                        }
+                    }
+                }
+                &:checked,
+                &:not(:checked) {
+                    position: absolute;
+                    left: -9999px;
+                    & + label {
+                        display: inline-block;
+                        position: relative;
+                        padding-left: 24px;
+                        line-height: 0.93vw;
+                        cursor: pointer;
+                        &::before {
+                            content: "";
+                            position: absolute;
+                            left: 0;
+                            top: -7px;
+                            width: 16px;
+                            height: 16px;
+                            border-radius: 100%;
+                        }
+                    }
+                }
+            }
+        }
+        &__price {
+            &-content {
+                display: flex;
+                justify-content: space-between;
+                input[type="number"] {
+                    background: transparent;
+                    border: 1px solid #d9d9d9;
+                    border-radius: 50px !important;
+                    padding: 10px !important;
+                    width: 125px !important;
+                    height: 30px !important;
+                }
+                p {
+                    font: 700 14px/100% "DM Sans" !important;
+                    margin-bottom: 10px !important;
+                }
+            }
+        }
+        &__apply {
+            font: 400 14px/100% "Montserrat" !important;
+            color: #fff;
+            border-radius: 100px !important;
+            padding: 10px !important;
+            width: 100% !important;
+            transition: all 0.3s;
+            background: linear-gradient(90deg, var(--c1, #004d8c), var(--c2, #0088cc) 51%, var(--c1, #004d8c)) var(--x, 0) /
+                200%;
+            --с1: #004d8c;
+            --c2: #0088cc;
+            &:hover {
+                --x: 100%;
+            }
+        }
+    }
 }
 
 @media (min-width: 631px) and (max-width: 768px) {
