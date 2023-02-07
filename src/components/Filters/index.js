@@ -6,7 +6,17 @@ import "./Filters.scss";
 
 function Filters() {
     const [popups, setPopups] = useState([true, true, true, true, true, true]);
-    const { theme, changeTheme } = useContext(ContextApp);
+    
+    const [buyCheck, setBuyCheck] = useState(false);
+    const [auctionCheck, setAuctionCheck] = useState(false);
+    const [quantityCheck, setQuantityCheck] = useState("all");
+    const [priceAt, setPriceAt] = useState("");
+    const [priceTo, setPriceTo] = useState("");
+    const [rarityCheck, setRarityCheck] = useState([]);
+    const [categoryCheck, setCategoryCheck] = useState([]);
+    const [emotionalCheck, setEmotionalCheck] = useState([]);
+
+    const { theme, changeTheme, setFilterStatus, setFilterQuantity, setFilterPriceAt, setFilterPriceTo, setFilterRarity, setFilterCategory, setFilterEmotional } = useContext(ContextApp);
     const categories = [
         "Art",
         "Collectibles",
@@ -19,6 +29,41 @@ function Filters() {
         "Virtual",
         "Worlds",
     ];
+
+    function applyFilters() {
+        setFilterStatus((buyCheck && auctionCheck) || (!buyCheck && !auctionCheck) ? "all" : buyCheck ? "Buy now" : "In auction")
+        setFilterQuantity(quantityCheck);
+        setFilterPriceAt(priceAt);
+        setFilterPriceTo(priceTo);
+        setFilterRarity(rarityCheck);
+        setFilterCategory(categoryCheck);
+        setFilterEmotional(emotionalCheck);
+    }
+
+    function addOrRemoveRarityCheck(rarity) {
+        if(rarityCheck.includes(rarity)) {
+            setRarityCheck(rarityCheck.filter(rar => rar !== rarity))
+        } else {
+            setRarityCheck([...rarityCheck, rarity])
+        }
+    }
+
+    function addOrRemoveCategoryCheck(category) {
+        if(categoryCheck.includes(category)) {
+            setCategoryCheck(categoryCheck.filter(cat => cat !== category))
+        } else {
+            setCategoryCheck([...categoryCheck, category])
+        }
+    }
+
+    function addOrRemoveEmotionalCheck(emotion) {
+        if(emotionalCheck.includes(emotion)) {
+            setEmotionalCheck(emotionalCheck.filter(emot => emot !== emotion))
+        } else {
+            setEmotionalCheck([...emotionalCheck, emotion])
+        }
+    }
+
     return (
         <div
             class="filters"
@@ -38,8 +83,8 @@ function Filters() {
                 </div>
                 {popups[0] && (
                     <div>
-                        <Checkbox text={"Buy Now"} />
-                        <Checkbox text={"On Auction"} />
+                        <Checkbox text={"Buy Now"} onClick={() => setBuyCheck(!buyCheck)}/>
+                        <Checkbox text={"On Auction"} onClick={() => setAuctionCheck(!auctionCheck)}/>
                     </div>
                 )}
             </div>
@@ -58,9 +103,9 @@ function Filters() {
                 </div>
                 {popups[1] && (
                     <div>
-                        <Radiobutton text={"All items"} group={"quantity"} />
-                        <Radiobutton text={"Single items"} group={"quantity"} />
-                        <Radiobutton text={"Bundles"} group={"quantity"} />
+                        <Radiobutton text={"All items"} group={"quantity"} onClick={() => setQuantityCheck("all")} />
+                        <Radiobutton text={"Single items"} group={"quantity"} onClick={() => setQuantityCheck("single")} />
+                        <Radiobutton text={"Bundles"} group={"quantity"} onClick={() => setQuantityCheck("bundles")} />
                     </div>
                 )}
             </div>
@@ -81,11 +126,11 @@ function Filters() {
                     <div className="filters__price-content">
                         <div>
                             <p>From</p>
-                            <input type="number" />
+                            <input min="0" type="number" value={priceAt} onChange={e => setPriceAt(e.target.value)}/>
                         </div>
                         <div>
                             <p>To</p>
-                            <input type="number" />
+                            <input min="0" type="number" value={priceTo} onChange={e => setPriceTo(e.target.value)} />
                         </div>
                     </div>
                 )}
@@ -105,8 +150,9 @@ function Filters() {
                 </div>
                 {popups[3] && (
                     <>
-                        <Checkbox text={"Mutant Hound Collar"} />
-                        <Checkbox text={"Mega Collar"} />
+                        <Checkbox text={"Common"} onClick={(e) => addOrRemoveRarityCheck(e.target.innerText.toLowerCase())}/>
+                        <Checkbox text={"Epic"} onClick={(e) => addOrRemoveRarityCheck(e.target.innerText.toLowerCase())}/>
+                        <Checkbox text={"Legendary"} onClick={(e) => addOrRemoveRarityCheck(e.target.innerText.toLowerCase())}/>
                     </>
                 )}
             </div>
@@ -125,8 +171,13 @@ function Filters() {
                 </div>
                 {popups[4] && (
                     <>
-                        <Checkbox text={"Mutant Hound Collar"} />
-                        <Checkbox text={"Mega Collar"} />
+                        <Checkbox text={"Red Heart"} onClick={(e) => addOrRemoveEmotionalCheck(e.target.innerText)}/>
+                        <Checkbox text={"Rolling on the Floor Laughing"} onClick={(e) => addOrRemoveEmotionalCheck(e.target.innerText)}/>
+                        <Checkbox text={"Smiling Face with Heart-Eyes"} onClick={(e) => addOrRemoveEmotionalCheck(e.target.innerText)}/>
+                        <Checkbox text={"Enraged Face"} onClick={(e) => addOrRemoveEmotionalCheck(e.target.innerText)}/>
+                        <Checkbox text={"Weary Cat"} onClick={(e) => addOrRemoveEmotionalCheck(e.target.innerText)}/>
+                        <Checkbox text={"Woozy Face"} onClick={(e) => addOrRemoveEmotionalCheck(e.target.innerText)}/>
+                        <Checkbox text={"Money-Mouth Face"} onClick={(e) => addOrRemoveEmotionalCheck(e.target.innerText)}/>
                     </>
                 )}
             </div>
@@ -146,12 +197,12 @@ function Filters() {
                 {popups[5] && (
                     <div>
                         {categories.map(category => (
-                            <Checkbox text={category} />
+                            <Checkbox text={category} onClick={(e) => addOrRemoveCategoryCheck(e.target.innerText.toLowerCase())}/>
                         ))}
                     </div>
                 )}
             </div>
-            <button className="filters__apply">Apply filters</button>
+            <button className="filters__apply" onClick={() => applyFilters()}>Apply filters</button>
         </div>
     );
 }
