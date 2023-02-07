@@ -111,22 +111,12 @@ function Marketplace() {
                                         <li
                                             className="catalog__container-content-options-sorting-popup-item"
                                             onClick={e => setSortingCurrent(e.target.innerText)}>
-                                            Recently listed
-                                        </li>
-                                        <li
-                                            className="catalog__container-content-options-sorting-popup-item"
-                                            onClick={e => setSortingCurrent(e.target.innerText)}>
                                             Recently created
                                         </li>
                                         <li
                                             className="catalog__container-content-options-sorting-popup-item"
                                             onClick={e => setSortingCurrent(e.target.innerText)}>
                                             Recently sold
-                                        </li>
-                                        <li
-                                            className="catalog__container-content-options-sorting-popup-item"
-                                            onClick={e => setSortingCurrent(e.target.innerText)}>
-                                            Recently received
                                         </li>
                                     </ul>
                                 )}
