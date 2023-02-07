@@ -282,7 +282,7 @@ function Home() {
                     </button>
                 </div>
 
-                {isLoadingNFT && isLoadingCollection ? (
+                {(isLoadingNFT && isLoadingCollection) ? (
                     <Skeleton height="24.21vw" style={{marginTop: "47px"}} count={1} />
                 ) : (
                     <Slider class="popular__list" {...settingsForSlider}>
