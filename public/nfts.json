@@ -76,5 +76,44 @@
         "category": "photography",
         "created": "2021-01-26T13:51:50.417+03:00",
         "sold": "2023-01-26T13:51:50.417+03:00"
+    },
+    {
+        "name": "Dobbiy",
+        "creator": "Luiy",
+        "price": 6.1,
+        "img": "4",
+        "emotions": [33, 25, 56, 25, 35, 19, 745],
+        "status": "Buy now",
+        "quantity": "bundles",
+        "rarity": "legendary",
+        "category": "music",
+        "created": "2023-01-26T13:51:50.417+03:00",
+        "sold": "2022-01-26T13:51:50.417+03:00"
+    },
+    {
+        "name": "RedGreenBlue",
+        "creator": "Misha",
+        "price": 5.25,
+        "img": "5",
+        "emotions": [25, 23, 219, 85, 25, 42, 13],
+        "status": "In auction",
+        "quantity": "bundles",
+        "rarity": "epic",
+        "category": "music",
+        "created": "2023-01-26T13:51:50.417+03:00",
+        "sold": "2023-01-26T13:51:50.417+03:00"
+    },
+    {
+        "name": "RussianForever",
+        "creator": "Katya",
+        "price": 0.49,
+        "img": "6",
+        "emotions": [6, 5, 14, 32, 25, 967, 25],
+        "status": "Buy now",
+        "quantity": "single",
+        "rarity": "legendary",
+        "category": "photography",
+        "created": "2021-01-26T13:51:50.417+03:00",
+        "sold": "2023-01-26T13:51:50.417+03:00"
     }
 ]

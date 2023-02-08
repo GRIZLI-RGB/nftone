@@ -16,7 +16,7 @@ function Card({nft}) {
                     <h6 className="card__info-left-title">{nft?.name}</h6>
                     <p className="card__info-left-price">
                         <img src={`./img/card/diamond-${diamond}.png`} alt="Price" />
-                        {nft?.price} TON
+                        {nft?.price}
                     </p>
                 </div>
                 <div className="card__info-right">

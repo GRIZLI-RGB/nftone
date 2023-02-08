@@ -19,7 +19,7 @@ function DefaultCard({nft}) {
                         className="cardDefault__info-left-price"
                         style={{ color: theme === "light" ? "#0088cc" : "#fff" }}>
                         <img src={`./img/card/diamond-${diamond}.png`} alt="Price" />
-                        {nft?.price} TON
+                        {nft?.price}
                     </p>
                 </div>
                 <div className="cardDefault__info-right">

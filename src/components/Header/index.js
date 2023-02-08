@@ -7,8 +7,30 @@ function Header({ currentPage }) {
     const [openSearch, setOpenSearch] = useState(false);
     const [searchQuery, setSearchQuery] = useState("");
     const [popup, setPopup] = useState(false);
+    const [searchPopup, setSearchPopup] = useState(false);
     const [userMenu, setUserMenu] = useState(false);
+    const [searchFilter, setSearchFilter] = useState("nft");
+    const [NFTs, setNFTs] = useState([]);
+    const [collections, setCollections] = useState([]);
+    const [focus, setFocus] = useState(false);
     const { theme, setTheme, changeTheme, auth, setAuth } = useContext(ContextApp);
+
+    useEffect(() => {
+        fetch("/nfts.json")
+            .then(res => {
+                return res.json();
+            })
+            .then(json => {
+                setNFTs(json);
+            });
+        fetch("/collections.json")
+            .then(res => {
+                return res.json();
+            })
+            .then(json => {
+                setCollections(json);
+            });
+    }, []);
     useEffect(() => {
         if (popup) {
             document.body.style.overflow = "hidden";
@@ -20,7 +42,8 @@ function Header({ currentPage }) {
     useEffect(() => {
         setTheme(localStorage.getItem("theme") === null ? "light" : localStorage.getItem("theme"));
         setAuth(localStorage.getItem("auth"));
-    },[]);
+    }, []);
+
     return (
         <header className="header" style={{ backgroundColor: theme === "light" ? "#004f87" : "#1C2026" }}>
             {!openSearch && (
@@ -43,6 +66,11 @@ function Header({ currentPage }) {
             </nav>
             <div className="header__search">
                 <input
+                    onFocus={() => {setFocus(true)
+                    setSearchPopup(true)}}
+                    onBlur={() => setFocus(false)}
+                    value={searchQuery}
+                    onChange={(e) => setSearchQuery(e.target.value)}
                     type="text"
                     placeholder="Search"
                     style={{
@@ -50,7 +78,51 @@ function Header({ currentPage }) {
                         borderColor: theme === "light" ? "#efefef" : "#373F4A",
                     }}
                 />
-                <img src="./img/header/search.svg" alt="" />
+                <img src={`./img/header/${searchQuery !== "" ? "clear" : "search"}.svg`} alt="" onClick={() => setSearchQuery("")}/>
+                {searchQuery !== "" && (
+                    <div class="header__search-popup">
+                        <div class="header__search-popup-btns">
+                            <button
+                                onClick={() => {
+                                    setSearchFilter("nft")
+                                }}
+                                className={`header__search-popup-btns-nfts ${
+                                    searchFilter === "nft" ? "header__search-popup-btns-nfts--active" : ""
+                                }`}>
+                                NFTs
+                            </button>
+                            <button
+                                onClick={() => setSearchFilter("collection")}
+                                className={`header__search-popup-btns-collections ${
+                                    searchFilter === "collection" ? "header__search-popup-btns-collections--active" : ""
+                                }`}>
+                                Collections
+                            </button>
+                        </div>
+                        <ul class="header__search-popup-list">
+                            {searchFilter === "nft"
+                                ? NFTs
+                                .filter(nft => nft.name.toLowerCase().includes(searchQuery.toLowerCase()) && searchQuery !== "")
+                                .map(nft => (
+                                      <li class="header__search-popup-list-item">
+                                          <img src={`./img/card/photo-${nft?.img}.svg`} alt="" />
+                                          <p>{nft?.name}</p>
+                                      </li>
+                                  ))
+                                : collections
+                                .filter(collection => (collection.name.toLowerCase().includes(searchQuery.toLowerCase()) && searchQuery !== ""))
+                                .map(collection => (
+                                      <li class="header__search-popup-list-item">
+                                          <img src={`./img/card/photo-${collection?.img}.svg`} alt="" />
+                                          <p>{collection?.name}</p>
+                                      </li>
+                                  ))}
+                        </ul>
+                        <a className="header__search-popup-all" href="/marketplace">
+                            See all results
+                        </a>
+                    </div>
+                )}
             </div>
             {!openSearch && (
                 <div class="header__buttons">
@@ -247,6 +319,50 @@ function Header({ currentPage }) {
                     alt="Clear"
                     onClick={() => setSearchQuery("")}
                 />
+                {searchQuery !== "" && (
+                    <div class="header__search-popup">
+                        <div class="header__search-popup-btns">
+                            <button
+                                onClick={() => {
+                                    setSearchFilter("nft")
+                                }}
+                                className={`header__search-popup-btns-nfts ${
+                                    searchFilter === "nft" ? "header__search-popup-btns-nfts--active" : ""
+                                }`}>
+                                NFTs
+                            </button>
+                            <button
+                                onClick={() => setSearchFilter("collection")}
+                                className={`header__search-popup-btns-collections ${
+                                    searchFilter === "collection" ? "header__search-popup-btns-collections--active" : ""
+                                }`}>
+                                Collections
+                            </button>
+                        </div>
+                        <ul class="header__search-popup-list">
+                            {searchFilter === "nft"
+                                ? NFTs
+                                .filter(nft => nft.name.toLowerCase().includes(searchQuery.toLowerCase()) && searchQuery !== "")
+                                .map(nft => (
+                                      <li class="header__search-popup-list-item">
+                                          <img src={`./img/card/photo-${nft?.img}.svg`} alt="" />
+                                          <p>{nft?.name}</p>
+                                      </li>
+                                  ))
+                                : collections
+                                .filter(collection => (collection.name.toLowerCase().includes(searchQuery.toLowerCase()) && searchQuery !== ""))
+                                .map(collection => (
+                                      <li class="header__search-popup-list-item">
+                                          <img src={`./img/card/photo-${collection?.img}.svg`} alt="" />
+                                          <p>{collection?.name}</p>
+                                      </li>
+                                  ))}
+                        </ul>
+                        <a className="header__search-popup-all" href="/marketplace">
+                            See all results
+                        </a>
+                    </div>
+                )}
             </div>
             {popup && (
                 <div className="connect">

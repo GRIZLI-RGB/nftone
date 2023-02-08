@@ -19,6 +19,9 @@ body {
     overflow-x: hidden;
     max-width: 100vw;
     height: 100%;
+    &::-webkit-scrollbar {
+        display: none;
+    }
 }
 
 ul,
@@ -52,9 +55,9 @@ textarea:focus {
     outline: none;
 }
 
-::-webkit-scrollbar {
-    display: none;
-}
+// ::-webkit-scrollbar {
+//     display: none;
+// }
 
 .slick-slide > div {
     margin: 0 10px;
