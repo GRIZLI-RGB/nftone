@@ -76,6 +76,7 @@ function Header({ currentPage }) {
                     style={{
                         backgroundColor: theme === "light" ? "#fff" : "#272E37",
                         borderColor: theme === "light" ? "#efefef" : "#373F4A",
+                        color: changeTheme("", "#fff")
                     }}
                 />
                 <img src={`./img/header/${searchQuery !== "" ? "clear" : "search"}.svg`} alt="" onClick={() => setSearchQuery("")}/>

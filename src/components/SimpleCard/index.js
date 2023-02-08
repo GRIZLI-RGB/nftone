@@ -17,7 +17,7 @@ function SimpleCard() {
                     <h6 className="simpleCard__info-left-title">KingCrypto</h6>
                     <p className="simpleCard__info-left-price" style={{ color: theme === "light" ? "#0088cc" : "#fff" }}>
                         <img src={`./img/card/diamond-${diamond}.png`} alt="Price" />
-                        0.25 TON
+                        0.25
                     </p>
                 </div>
                 <div className="simpleCard__info-right">
