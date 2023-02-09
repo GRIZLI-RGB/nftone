@@ -1,4 +1,4 @@
-import { useContext, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import Footer from "../../components/Footer";
 import Header from "../../components/Header";
 import { ContextApp } from "../../Context";
@@ -43,11 +43,69 @@ export const dataFloor = {
 };
 
 function Collection() {
-    const { theme, changeTheme } = useContext(ContextApp);
+    const { theme, changeTheme, filterStatus, filterQuantity, filterCategory, filterPriceAt, filterPriceTo, filterRarity, filterEmotional } = useContext(ContextApp);
     const [graphView, setGraphView] = useState("volume");
+    const [sortingCurrent, setSortingCurrent] = useState("Recently created");
     const [sortingPopup, setSortingPopup] = useState(false);
+    const [priceCurrent, setPriceCurrent] = useState("Low to High");
     const [pricePopup, setPricePopup] = useState(false);
     const [graphPopup, setGraphPopup] = useState(false);
+    const [checkes, setCheckes] = useState([]);
+
+    const [searchQuery, setSearchQuery] = useState("");
+
+    const [NFTs, setNFTs] = useState([]);
+
+    function addOrRemoveCheck(status) {
+        if (checkes.includes(status)) {
+            setCheckes(checkes.filter(rar => rar !== status));
+        } else {
+            setCheckes([...checkes, status]);
+        }
+    }
+
+    function OneOrMinusOne(a, b) {
+        return a > b ? 1 : a < b ? -1 : 0;
+    }
+
+    function CompareSmiles(elem) {
+        let score = 0;
+        filterEmotional?.forEach((emot) => {
+            if(emot === "Red Heart") {
+                score += elem.emotions[0];
+            }
+            if(emot === "Rolling on the Floor Laughing") {
+                score += elem.emotions[1];
+            }
+            if(emot === "Smiling Face with Heart-Eyes") {
+                score += elem.emotions[2];
+            }
+            if(emot === "Enraged Face") {
+                score += elem.emotions[3];
+            }
+            if(emot === "Weary Cat") {
+                score += elem.emotions[4];
+            }
+            if(emot === "Woozy Face") {
+                score += elem.emotions[5];
+            }
+            if(emot === "Money-Mouth Face") {
+                score += elem.emotions[6];
+            }
+        })
+        return score;
+    }
+
+    useEffect(() => {
+        fetch("/nfts.json")
+            .then(res => {
+                return res.json();
+            })
+            .then(json => {
+                setNFTs(json);
+            });
+    }, []);
+
     return (
         <>
             <Header />
@@ -336,6 +394,8 @@ function Collection() {
                             <div class="collection__main-cards-options-search">
                                 <input
                                     placeholder="Search"
+                                    value={searchQuery}
+                                    onChange={e => setSearchQuery(e.target.value)}
                                     type="text"
                                     class="collection__main-cards-options-search-input"
                                 />
@@ -346,28 +406,22 @@ function Collection() {
                                 />
                             </div>
                             <div class="collection__main-cards-options-checkboxes">
-                                <Checkbox text={"Not for sale"} />
-                                <Checkbox text={"Buy now"} />
-                                <Checkbox text={"On auction"} />
+                                <Checkbox text={"Not for sale"} onClick={(e) => addOrRemoveCheck(e.target.innerText)} />
+                                <Checkbox text={"Buy now"} onClick={(e) => addOrRemoveCheck(e.target.innerText)} />
+                                <Checkbox text={"On auction"} onClick={(e) => addOrRemoveCheck(e.target.innerText)} />
                             </div>
                             <div class="collection__main-cards-options-filters">
                                 <div
                                     class="collection__main-cards-options-filters-sort"
                                     onClick={() => setSortingPopup(!sortingPopup)}>
-                                    {window.innerWidth <= 768 ? "Sort" : "Sorting: New"}
+                                    {window.innerWidth <= 768 ? "Sort" : `Sorting: ${sortingCurrent}`}
                                     {sortingPopup && (
                                         <ul className="collection__main-cards-options-filters-sort-popup">
-                                            <li className="collection__main-cards-options-filters-sort-popup-item">
-                                                Recently listed
-                                            </li>
-                                            <li className="collection__main-cards-options-filters-sort-popup-item">
+                                            <li className="collection__main-cards-options-filters-sort-popup-item" onClick={(e) => setSortingCurrent(e.target.innerText)}>
                                                 Recently created
                                             </li>
-                                            <li className="collection__main-cards-options-filters-sort-popup-item">
+                                            <li className="collection__main-cards-options-filters-sort-popup-item" onClick={(e) => setSortingCurrent(e.target.innerText)}>
                                                 Recently sold
-                                            </li>
-                                            <li className="collection__main-cards-options-filters-sort-popup-item">
-                                                Recently received
                                             </li>
                                         </ul>
                                     )}
@@ -380,10 +434,13 @@ function Collection() {
                                 <div
                                     class="collection__main-cards-options-filters-price"
                                     onClick={() => setPricePopup(!pricePopup)}>
-                                    {window.innerWidth <= 768 ? "Price" : "Price: Low to High"}
+                                    {window.innerWidth <= 768 ? "Price" : `Price: ${priceCurrent}`}
                                     {pricePopup && (
                                         <ul className="collection__main-cards-options-filters-price-popup">
-                                            <li className="collection__main-cards-options-filters-price-popup-item">
+                                            <li className="collection__main-cards-options-filters-price-popup-item" onClick={(e) => setPriceCurrent(e.target.innerText)} >
+                                                Low to High
+                                            </li>
+                                            <li className="collection__main-cards-options-filters-price-popup-item" onClick={(e) => setPriceCurrent(e.target.innerText)}>
                                                 Hign to Low
                                             </li>
                                         </ul>
@@ -397,22 +454,51 @@ function Collection() {
                             </div>
                         </div>
                         <div class="collection__main-cards-items">
-                            <SimpleCard />
-                            <SimpleCard />
-                            <SimpleCard />
-                            <SimpleCard />
-                            <SimpleCard />
-                            <SimpleCard />
+                            {NFTs
+                            .filter(nft =>
+                                searchQuery !== "" ? nft.name.toLowerCase().includes(searchQuery.toLowerCase()) : nft,
+                            )
+                            .filter(nft =>
+                                      filterStatus === "all"
+                                          ? nft
+                                          : filterStatus === "Buy now"
+                                          ? nft.status === "Buy now"
+                                          : nft.status === "In auction",
+                                  )
+                            .filter(nft =>
+                                filterQuantity === "all"
+                                    ? nft
+                                    : filterQuantity === "single"
+                                    ? nft.quantity === "single"
+                                    : nft.quantity === "bundles",
+                            )
+                            .filter(nft => filterPriceAt !== "" ? nft.price >= filterPriceAt : nft)
+                            .filter(nft => filterPriceTo !== "" ? nft.price <= filterPriceTo : nft)
+                            .filter(nft => filterRarity.length === 0 ? nft : filterRarity.includes(nft.rarity))
+                            .filter(nft => filterCategory.length === 0 ? nft : filterCategory.includes(nft.category))
+                            .filter(nft => checkes.length === 0 ? nft : checkes.includes(nft.collectionDo))
+                            .sort((a, b) => sortingCurrent === "Recently created" ? new Date(b.created) - new Date(a.created) : new Date(b.sold) - new Date(a.sold))
+                            .sort((a, b) =>
+                                          priceCurrent === "Low to High" ? a.price - b.price : b.price - a.price,
+                                      )
+                            .sort((a, b) => OneOrMinusOne(CompareSmiles(b), CompareSmiles(a)))
+                            .map(nft => (
+                                <SimpleCard nft={nft} />
+                            ))}
                         </div>
                     </div>
                 </div>
             </section>
             {graphPopup && (
-                <div className="graph-popup" onClick={(e) => e.target.getAttribute("class") === "graph-popup" && setGraphPopup(!graphPopup)}>
+                <div
+                    className="graph-popup"
+                    onClick={e => e.target.getAttribute("class") === "graph-popup" && setGraphPopup(!graphPopup)}>
                     <div className="graph-popup-two">
-                        {
-                            graphView === "volume" ? <Line options={optionsVolumeAndFloor} data={dataVolume} /> : <Line options={optionsVolumeAndFloor} data={dataFloor} />
-                        }
+                        {graphView === "volume" ? (
+                            <Line options={optionsVolumeAndFloor} data={dataVolume} />
+                        ) : (
+                            <Line options={optionsVolumeAndFloor} data={dataFloor} />
+                        )}
                     </div>
                 </div>
             )}

@@ -9,7 +9,7 @@ import Filters from "../../components/Filters";
 
 function Marketplace() {
     const [filter, setFilter] = useState("nft");
-    const { theme, changeTheme, NFTs, collections, setNFTs, setCollections, filterStatus, filterQuantity, filterPriceAt, filterPriceTo, filterRarity, filterCategory, filterEmotional } =
+    const { theme, changeTheme, NFTs, collections, setNFTs, setCollections, filterStatus, filterQuantity, filterPriceAt, filterPriceTo, filterRarity, filterCategory, filterEmotional, setFilterStatus, setFilterQuantity, setFilterPriceAt, setFilterPriceTo, setFilterCategory, setFilterEmotional, setFilterRarity } =
         useContext(ContextApp);
     const [sortingPopup, setSortingPopup] = useState(false);
     const [sortingCurrent, setSortingCurrent] = useState("Recently created");
@@ -71,6 +71,16 @@ function Marketplace() {
         return score;
     }
 
+    function resetFilters() {
+        setFilterStatus("all");
+        setFilterQuantity("all");
+        setFilterPriceAt("");
+        setFilterPriceTo("");
+        setFilterRarity([]);
+        setFilterEmotional();
+        setFilterCategory([]);
+    }
+
     return (
         <>
             <Header currentPage={"marketplace"} />
@@ -79,8 +89,8 @@ function Marketplace() {
                     Catalog
                 </h1>
                 <div class="catalog__container">
-                    {window.innerWidth > 768 && <Filters />}
-                    {window.innerWidth <= 768 && filtersMobile && <Filters/>}
+                    {window.innerWidth > 768 && <Filters example={filter === "nft" ? "nft" : "collection"} />}
+                    {window.innerWidth <= 768 && filtersMobile && <Filters example={filter === "nft" ? "nft" : "collection"}/>}
                     <div class="catalog__container-content">
                         <div
                             class="catalog__container-content-optionsMobile"
@@ -150,7 +160,10 @@ function Marketplace() {
                         <div class="catalog__container-content-options">
                             <div class="catalog__container-content-options-categories">
                                 <button
-                                    onClick={() => setFilter("nft")}
+                                    onClick={() => {
+                                        // resetFilters();
+                                        setFilter("nft");
+                                    }}
                                     className={`catalog__container-content-options-categories-nfts ${
                                         filter === "nft"
                                             ? "catalog__container-content-options-categories-nfts--active"
@@ -167,7 +180,10 @@ function Marketplace() {
                                     NFTs
                                 </button>
                                 <button
-                                    onClick={() => setFilter("collection")}
+                                    onClick={() => {
+                                        // resetFilters();
+                                        setFilter("collection");
+                                    }}
                                     className={`catalog__container-content-options-categories-collections ${
                                         filter === "collection"
                                             ? "catalog__container-content-options-categories-collections--active"
@@ -206,7 +222,7 @@ function Marketplace() {
                                             <li
                                                 className="catalog__container-content-options-sorting-popup-item"
                                                 onClick={e => setSortingCurrent(e.target.innerText)}>
-                                                Recently sold
+                                                {filter === "nft" ? "Recently sold" : "Most popular"}
                                             </li>
                                         </ul>
                                     )}
@@ -214,7 +230,7 @@ function Marketplace() {
                                 <button
                                     style={{ backgroundColor: changeTheme("rgba(220, 220, 220, 0.5)", "#2b3239") }}
                                     onClick={() => setPricePopup(!pricePopup)}>
-                                    Price: {priceCurrent}
+                                    {filter === "nft" ? "Price" : "Floor price"}: {priceCurrent}
                                     <img
                                         src={`./img/sections/catalog/arrow-${theme}.png`}
                                         alt=""
@@ -239,7 +255,16 @@ function Marketplace() {
                         </div>
                         <div class="catalog__container-content-items">
                             {filter === "collection"
-                                ? collections.map(collection => <CollectionCard collection={collection} />)
+                                ? collections
+                                .filter(collection => filterCategory.length === 0 ? collection : filterCategory.includes(collection.category))
+                                .sort((a, b) => OneOrMinusOne(CompareSmiles(b), CompareSmiles(a)))
+                                .sort((a, b) =>
+                                          priceCurrent === "Low to High" ? a.price - b.price : b.price - a.price,
+                                )
+                                .sort((a, b) =>
+                                          sortingCurrent === "Most popular" ? OneOrMinusOne(a.popular, b.popular) : OneOrMinusOne(b.popular, a.popular),
+                                )
+                                .map(collection => <CollectionCard collection={collection} />)
                                 : NFTs.filter(nft =>
                                       filterStatus === "all"
                                           ? nft

@@ -1,38 +1,56 @@
 [
     {
         "name": "So low and many",
-        "tag": "Standart",
+        "tag": "Collection",
         "img": "1",
-        "emotions": [253, 8, 150, 15, 25, 25, 25]
+        "emotions": [253, 8, 150, 15, 25, 25, 25],
+        "category": "music",
+        "price": 0.5,
+        "popular": 0.95
     },
     {
         "name": "Very good item",
-        "tag": "Rarity",
+        "tag": "Collection",
         "img": "2",
-        "emotions": [2, 13, 14, 25, 12, 9, 132]
+        "emotions": [2, 13, 14, 25, 12, 9, 132],
+        "category": "music",
+        "price": 0.8,
+        "popular": 0.42
     },
     {
         "name": "PowerMustSuper",
-        "tag": "Standart",
+        "tag": "Collection",
         "img": "3",
-        "emotions": [250, 25, 250, 35, 19, 78, 25]
+        "emotions": [250, 25, 250, 35, 19, 78, 25],
+        "category": "photography",
+        "price": 0.3,
+        "popular": 0.1
     },
     {
         "name": "DobbiyLight Edition",
-        "tag": "Legendary",
+        "tag": "Collection",
         "img": "4",
-        "emotions": [33, 25, 56, 25, 35, 19, 745]
+        "emotions": [33, 25, 56, 25, 35, 19, 745],
+        "category": "sports",
+        "price": 0.86,
+        "popular": 0.5
     },
     {
         "name": "Card Diller Fake",
-        "tag": "Standart",
+        "tag": "Collection",
         "img": "5",
-        "emotions": [25, 23, 219, 85, 25, 42, 13]
+        "emotions": [25, 23, 219, 85, 25, 42, 13],
+        "category": "music",
+        "price": 0.31,
+        "popular": 0.16
     },
     {
         "name": "Kingdom Rush Mid",
-        "tag": "Rarity",
+        "tag": "Collection",
         "img": "6",
-        "emotions": [6, 5, 14, 32, 25, 967, 25]
+        "emotions": [6, 5, 14, 32, 25, 967, 25],
+        "category": "music",
+        "price": 0.42,
+        "popular": 0.8
     }
 ]

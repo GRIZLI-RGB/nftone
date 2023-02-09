@@ -9,6 +9,7 @@
         "quantity": "single",
         "rarity": "common",
         "category": "art",
+        "collectionDo": "Not for sale",
         "created": "2022-01-26T13:51:50.417+03:00",
         "sold": "2023-01-26T13:51:50.417+03:00"
     },
@@ -22,6 +23,7 @@
         "quantity": "single",
         "rarity": "legendary",
         "category": "trading",
+        "collectionDo": "Not for sale",
         "created": "2022-01-26T13:51:50.417+03:00",
         "sold": "2021-01-26T13:51:50.417+03:00"
     },
@@ -35,6 +37,7 @@
         "quantity": "bundles",
         "rarity": "common",
         "category": "art",
+        "collectionDo": "Not for sale",
         "created": "2022-01-26T13:51:50.417+03:00",
         "sold": "2023-05-26T13:51:50.417+03:00"
     },
@@ -48,6 +51,7 @@
         "quantity": "single",
         "rarity": "epic",
         "category": "sports",
+        "collectionDo": "Not for sale",
         "created": "2023-01-26T13:51:50.417+03:00",
         "sold": "2022-01-26T13:51:50.417+03:00"
     },
@@ -61,6 +65,7 @@
         "quantity": "bundles",
         "rarity": "epic",
         "category": "music",
+        "collectionDo": "Not for sale",
         "created": "2023-01-26T13:51:50.417+03:00",
         "sold": "2023-01-26T13:51:50.417+03:00"
     },
@@ -74,6 +79,7 @@
         "quantity": "single",
         "rarity": "legendary",
         "category": "photography",
+        "collectionDo": "On auction",
         "created": "2021-01-26T13:51:50.417+03:00",
         "sold": "2023-01-26T13:51:50.417+03:00"
     },
@@ -87,6 +93,7 @@
         "quantity": "bundles",
         "rarity": "legendary",
         "category": "music",
+        "collectionDo": "Buy now",
         "created": "2023-01-26T13:51:50.417+03:00",
         "sold": "2022-01-26T13:51:50.417+03:00"
     },
@@ -100,6 +107,7 @@
         "quantity": "bundles",
         "rarity": "epic",
         "category": "music",
+        "collectionDo": "Buy now",
         "created": "2023-01-26T13:51:50.417+03:00",
         "sold": "2023-01-26T13:51:50.417+03:00"
     },
@@ -113,6 +121,7 @@
         "quantity": "single",
         "rarity": "legendary",
         "category": "photography",
+        "collectionDo": "Not for sale",
         "created": "2021-01-26T13:51:50.417+03:00",
         "sold": "2023-01-26T13:51:50.417+03:00"
     }

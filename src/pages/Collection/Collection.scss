@@ -315,7 +315,7 @@
                 &-checkboxes {
                     font: 400 0.83vw/1.06vw "DM Sans";
                     display: flex;
-                    column-gap: 1.39vw;
+                    column-gap: 1vw;
                 }
                 &-filters {
                     display: flex;
@@ -425,6 +425,7 @@
                 position: absolute;
                 max-width: 343px;
                 bottom: -230px;
+                color: #000;
                 &-title {
                     font: 700 32px/39px "Montserrat";
                 }
@@ -455,6 +456,9 @@
         padding: 550px 16px 30px 16px;
         align-items: center;
         flex-direction: column;
+        &.filters {
+            display: none;
+        }
         &__filtersMobile {
             display: block;
             font: 700 18px/17px "DM Sans";
