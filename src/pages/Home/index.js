@@ -7,7 +7,7 @@ import { ContextApp } from "./../../Context";
 import Header from "./../../components/Header";
 import Footer from "./../../components/Footer";
 import $ from "jquery";
-import Skeleton, { SkeletonTheme } from "react-loading-skeleton";
+import Skeleton from "react-loading-skeleton";
 import "react-loading-skeleton/dist/skeleton.css";
 
 function Home() {

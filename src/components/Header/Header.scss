@@ -325,16 +325,17 @@
                 display: flex;
                 align-items: center;
                 column-gap: 1.6vw;
-                font: 700 2.3vw/100% "Montserrat";
+                font: 700 3.8vw/100% "Montserrat";
                 &-avatar {
-                    width: 4.3vw;
-                    height: 4.3vw;
+                    width: 4.5vw;
+                    height: 4.5vw;
                 }
                 &-arrow {
-                    width: 3vw;
+                    width: 4vw;
                 }
             }
             &-userMenu {
+                padding: 2vw 1vw;
                 overflow: hidden;
                 &--dark {
                     color: #fff;
@@ -345,8 +346,8 @@
                 position: absolute;
                 left: 0;
                 right: 0;
-                bottom: -32vw;
-                font: 500 3vw/100% "DM Sans";
+                bottom: -55vw;
+                font: 500 4.4vw/100% "DM Sans";
                 color: #000;
                 background-color: #fff;
                 display: flex;
@@ -354,14 +355,14 @@
                 &-item {
                     display: flex;
                     align-items: center;
-                    column-gap: 1.2vw;
-                    padding: 0.8vw 2vw 0.8vw 2.3vw;
+                    column-gap: 1.6vw;
+                    padding: 1.5vw 2.2vw 1.5vw 2.6vw;
                     cursor: pointer;
                     &:hover {
                         background: rgba(#000, 0.1);
                     }
                     img {
-                        width: 3.16vw;
+                        width: 4vw;
                     }
                     &-link {
                     }

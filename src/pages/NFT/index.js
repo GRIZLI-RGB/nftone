@@ -1,4 +1,5 @@
-import { useContext, useState } from "react";
+import { useContext, useEffect, useState } from "react";
+import { Bar } from "react-chartjs-2";
 import Draggable from "react-draggable";
 import Slider from "react-slick";
 import Card from "../../components/Card";
@@ -7,11 +8,44 @@ import Footer from "../../components/Footer";
 import Header from "../../components/Header";
 import { ContextApp } from "../../Context";
 import "./NFT.scss";
+import {
+    Chart as ChartJS,
+    CategoryScale,
+    LinearScale,
+    BarElement,
+  } from 'chart.js';
+
+ChartJS.register(
+    CategoryScale,
+    LinearScale,
+    BarElement
+    );
+
+    export const options = {
+        responsive: true,
+        maintainAspectRatio: false,
+      };
+
+export const data = {
+    labels: ["Dec 22", "Dec 23", "Dec 24"],
+    datasets: [
+      {
+        data: [1.2, 1.5, 1.28],
+        backgroundColor: '#e9e9e9',
+        borderWidth: 1,
+        borderRadius: 8,
+        barPercentage: 0.1,
+      },
+    ],
+  };
 
 function NFT() {
     const [alsoFilter, setAlsoFilter] = useState("nft");
     const [favorite, setFavorite] = useState(false);
     const { changeTheme, theme } = useContext(ContextApp);
+    const [NFTs, setNFTs] = useState([]);
+    const [collections, setCollections] = useState([]);
+    const [graphPopup, setGraphPopup] = useState(false);
     const settingsForSlider = {
         infinite: true,
         speed: 500,
@@ -35,6 +69,23 @@ function NFT() {
             },
         ],
     };
+
+    useEffect(() => {
+        fetch("/nfts.json")
+            .then(res => {
+                return res.json();
+            })
+            .then(json => {
+                setNFTs(json);
+            });
+        fetch("/collections.json")
+            .then(res => {
+                return res.json();
+            })
+            .then(json => {
+                setCollections(json);
+            });
+    }, []);
     return (
         <>
             <Header />
@@ -214,34 +265,15 @@ function NFT() {
                         <div class="nft__up-right-history">
                             <h6 class="nft__up-right-history-title">Price history</h6>
                             <div class="nft__up-right-history-box">
-                                <div class="nft__up-right-history-box-prices">
-                                    <p>1.25 TON</p>
-                                    <p>1.20 TON</p>
-                                    <p>0</p>
-                                </div>
                                 <div class="nft__up-right-history-box-graph">
-                                    <img
-                                        class="nft__up-right-history-box-graph-line"
-                                        src="./img/sections/nft/max-line.svg"
-                                        alt=""
-                                    />
-                                    <div class="nft__up-right-history-box-graph-colums">
-                                        <div class="nft__up-right-history-box-graph-colums-column">
-                                            <p class="nft__up-right-history-box-graph-colums-column-text">Dec 22</p>
-                                        </div>
-                                        <div class="nft__up-right-history-box-graph-colums-column">
-                                            <p class="nft__up-right-history-box-graph-colums-column-text">Dec 23</p>
-                                        </div>
-                                        <div class="nft__up-right-history-box-graph-colums-column">
-                                            <p class="nft__up-right-history-box-graph-colums-column-text">Dec 24</p>
-                                        </div>
-                                    </div>
+                                    <Bar data={data} options={options}/>
                                 </div>
                             </div>
                             <img
                                 className="nft__up-right-history-resize"
                                 src={`./img/sections/nft/resize-${theme}.svg`}
                                 alt=""
+                                onClick={() => setGraphPopup(!graphPopup)}
                             />
                         </div>
                     </div>
@@ -356,7 +388,15 @@ function NFT() {
                     </div>
                 )}
             </section>
-
+            {graphPopup && (
+                <div
+                    className="graph-popup"
+                    onClick={e => e.target.getAttribute("class") === "graph-popup" && setGraphPopup(!graphPopup)}>
+                    <div className="graph-popup-two">
+                    <Bar data={data} options={options}/>
+                    </div>
+                </div>
+            )}
             <section
                 className="also"
                 style={{
@@ -413,7 +453,7 @@ function NFT() {
                 </div>
                 <Slider class="also__list" {...settingsForSlider}>
                     {[1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map(() =>
-                        alsoFilter === "nft" ? <Card /> : <CollectionCard />,
+                        alsoFilter === "nft" ? (NFTs.map(nft => <Card nft={nft}/>)) : (collections.map(collection => <CollectionCard collection={collection}/>)),
                     )}
                 </Slider>
                 <div class="also__all">

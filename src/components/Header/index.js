@@ -135,7 +135,7 @@ function Header({ currentPage }) {
                         <>
                             <button className="header__buttons-user" onClick={() => setUserMenu(!userMenu)}>
                                 <img className="header__buttons-user-avatar" src="./img/header/avatar.svg" alt="" />
-                                EQA8weLFddq...
+                                EQA8weLF...
                                 <img
                                     className="header__buttons-user-arrow"
                                     src="./img/header/arrow.svg"
@@ -157,7 +157,7 @@ function Header({ currentPage }) {
                                     </li>
                                     <li className="header__buttons-userMenu-item">
                                         <img src={`./img/header/collections-${theme}.svg`} alt="" />
-                                        <a className="header__buttons-userMenu-item-link" href="/my-nft">
+                                        <a className="header__buttons-userMenu-item-link" href="/my-nft#collection">
                                             My Collections
                                         </a>
                                     </li>
@@ -169,7 +169,7 @@ function Header({ currentPage }) {
                                     </li>
                                     <li className="header__buttons-userMenu-item">
                                         <img src={`./img/header/favorite-${theme}.svg`} alt="" />
-                                        <a className="header__buttons-userMenu-item-link" href="/my-nft">
+                                        <a className="header__buttons-userMenu-item-link" href="/my-nft#favorite">
                                             Favorites
                                         </a>
                                     </li>

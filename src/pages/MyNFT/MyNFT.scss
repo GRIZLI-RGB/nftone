@@ -140,9 +140,9 @@
         &-owner {
             position: relative;
             cursor: pointer;
-            transition: all .2s;
+            transition: all 0.2s;
             &:hover {
-                opacity: .75;
+                opacity: 0.75;
             }
             &-title {
                 margin-bottom: 0.83vw;
@@ -186,7 +186,7 @@
                     transition: all 0.2s;
                     cursor: pointer;
                     &:hover {
-                        opacity: .6;
+                        opacity: 0.6;
                     }
                 }
             }
@@ -259,7 +259,7 @@
                     position: relative;
                     img {
                         width: 0.8vw;
-                        transition: all .2s;
+                        transition: all 0.2s;
                     }
                 }
                 &-add {
@@ -392,6 +392,9 @@
             flex-direction: column;
             row-gap: 20px;
             position: relative;
+            .filters {
+                margin-top: 450px;
+            }
             &-user {
                 border-radius: 20px;
                 padding: 26px;
@@ -558,6 +561,7 @@
                     justify-content: space-between;
                     column-gap: 16px;
                     button {
+                        position: relative;
                         font: 700 18px/17px "DM Sans";
                         padding: 15px 40px;
                         background: rgba(220, 220, 220, 0.5);
@@ -565,10 +569,6 @@
                         display: flex;
                         align-items: center;
                         column-gap: 5px;
-                        transition: all 0.2s;
-                        &:hover {
-                            opacity: 0.75;
-                        }
                     }
                 }
             }
@@ -634,8 +634,8 @@
                         z-index: 999;
                         background: #ffffff;
                         border-radius: 100px 100px 20px 0px;
-                        font-size: 24px;
-                        padding: 12px;
+                        font-size: 24px !important;
+                        padding: 12px !important;
                         opacity: 0;
                         pointer-events: none;
                         &-item {
@@ -646,22 +646,52 @@
                     }
                 }
                 .collectionCard {
-                    border-radius: 20px;
-                    width: 343px;
+                    width: 343px !important;
+                    &__emoji {
+                        position: absolute;
+                        top: 16px;
+                        right: 16px;
+                        display: flex;
+                        column-gap: 5px;
+                        &-item {
+                            &-light,
+                            &-dark {
+                                width: 22px;
+                                text-align: center;
+                                border-radius: 100px;
+                                padding: 2px 0;
+                                font-size: 12px;
+                                span {
+                                    margin-top: 0.1vw;
+                                    display: block;
+                                    color: #000;
+                                    font-family: "DM Sans";
+                                    font-weight: 400;
+                                    line-height: 100%;
+                                    letter-spacing: -0.03em;
+                                }
+                            }
+                        }
+                    }
                     &__img {
-                        width: 343px;
+                        width: 343px !important;
                     }
                     &__tag {
-                        padding: 10px;
+                        left: 16px !important;
+                        top: 16px !important;
+                        padding: 10px !important;
                         &-text {
-                            font-size: 14px;
+                            font-size: 14px !important;
                         }
                     }
                     &__info {
-                        height: 50px;
+                        height: 70px !important;
+                        bottom: 16px !important;
+                        left: 16px !important;
+                        right: 16px !important;
                         &-text {
-                            font-size: 22px;
-                            padding: 10px;
+                            font-size: 24px !important;
+                            padding: 25px !important;
                         }
                     }
                     &__menuEmoji {
@@ -672,13 +702,13 @@
                         z-index: 999;
                         background: #ffffff;
                         border-radius: 100px 100px 20px 0px;
-                        font-size: 24px;
-                        padding: 12px;
+                        font-size: 24px !important;
+                        padding: 12px !important;
                         opacity: 0;
                         pointer-events: none;
                         &-item {
                             & + & {
-                                margin-top: 0.78vw;
+                                margin-top: 0.78vw !important;
                             }
                         }
                     }

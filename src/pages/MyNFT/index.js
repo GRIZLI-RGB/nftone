@@ -4,16 +4,85 @@ import Footer from "./../../components/Footer";
 import Filters from "./../../components/Filters";
 import SimpleCard from "./../../components/SimpleCard";
 import CollectionCard from "./../../components/CollectionCard";
-import { useContext, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { ContextApp } from "../../Context";
 import { useDropzone } from "react-dropzone";
 
 function MyNFT() {
-    const { theme, changeTheme } = useContext(ContextApp);
+    const {
+        theme,
+        changeTheme,
+        filterStatus,
+        filterQuantity,
+        filterPriceAt,
+        filterPriceTo,
+        filterRarity,
+        filterCategory,
+        filterEmotional,
+    } = useContext(ContextApp);
     const [windowView, setWindowView] = useState("nft");
     const [sortView, setSortView] = useState("not-sale");
     const [pricePopup, setPricePopup] = useState(false);
     const [priceCurrent, setPriceCurrent] = useState("Low to High");
+    const [NFTs, setNFTs] = useState([]);
+    const [collections, setCollections] = useState([]);
+    const [searchQuery, setSearchQuery] = useState("");
+    const [sortingPopup, setSortingPopup] = useState(false);
+    const [filtersMobile, setFiltersMobile] = useState(false);
+
+    useEffect(() => {
+        let currentTab = window.location.href.split("#")[1];
+        setWindowView(currentTab ? currentTab : "nft");
+    }, []);
+
+    useEffect(() => {
+        fetch("/nfts.json")
+            .then(res => {
+                return res.json();
+            })
+            .then(json => {
+                setNFTs(json);
+            });
+        fetch("/collections.json")
+            .then(res => {
+                return res.json();
+            })
+            .then(json => {
+                setCollections(json);
+            });
+    }, []);
+
+    function OneOrMinusOne(a, b) {
+        return a > b ? 1 : a < b ? -1 : 0;
+    }
+
+    function CompareSmiles(elem) {
+        let score = 0;
+        filterEmotional?.forEach(emot => {
+            if (emot === "Red Heart") {
+                score += elem.emotions[0];
+            }
+            if (emot === "Rolling on the Floor Laughing") {
+                score += elem.emotions[1];
+            }
+            if (emot === "Smiling Face with Heart-Eyes") {
+                score += elem.emotions[2];
+            }
+            if (emot === "Enraged Face") {
+                score += elem.emotions[3];
+            }
+            if (emot === "Weary Cat") {
+                score += elem.emotions[4];
+            }
+            if (emot === "Woozy Face") {
+                score += elem.emotions[5];
+            }
+            if (emot === "Money-Mouth Face") {
+                score += elem.emotions[6];
+            }
+        });
+        return score;
+    }
     /*
         Drag-and-drop files (acceptedFiles - массив со всеми файлами,
             обнуляется при перезагрузке страницы)
@@ -60,7 +129,7 @@ function MyNFT() {
                         </p>
                         <button className="myContent__left-user-edit">Edit profile</button>
                     </div>
-                    {windowView === "collection" && (
+                    {(windowView === "collection" && window.innerWidth > 768) && (
                         <>
                             <div class="myContent__left-owner">
                                 <h6 class="myContent__left-owner-title">Owner</h6>
@@ -92,7 +161,9 @@ function MyNFT() {
                             </div>
                         </>
                     )}
-                    <Filters />
+                    {
+                    window.innerWidth <= 768 ? filtersMobile && <Filters example={windowView === "nft" || windowView === "favorite" ? "nft" : "collection"}/> : <Filters example={windowView === "nft" || windowView === "favorite" ? "nft" : "collection"}/>
+                }
                 </div>
                 <div class="myContent__right">
                     <div className="myContent__right-window">
@@ -121,6 +192,8 @@ function MyNFT() {
                     <div className="myContent__right-settings">
                         <div className="myContent__right-settings-search">
                             <input
+                                value={searchQuery}
+                                onChange={e => setSearchQuery(e.target.value)}
                                 placeholder="Search"
                                 className="myContent__right-settings-search-input"
                                 type="text"
@@ -132,23 +205,29 @@ function MyNFT() {
                             />
                         </div>
                         <div className="myContent__right-settings-box">
-                            <button className="myContent__right-settings-box-price" onClick={() => setPricePopup(!pricePopup)}>
+                            <button
+                                className="myContent__right-settings-box-price"
+                                onClick={() => setPricePopup(!pricePopup)}>
                                 Price: {priceCurrent}
-                                <img src={`./img/sections/collection/arrow-up-${theme}.svg`} alt="" style={{ transform: pricePopup ? "rotate(-180deg)" : "rotate(0deg)" }} />
+                                <img
+                                    src={`./img/sections/collection/arrow-up-${theme}.svg`}
+                                    alt=""
+                                    style={{ transform: pricePopup ? "rotate(-180deg)" : "rotate(0deg)" }}
+                                />
                                 {pricePopup && (
-                                        <ul className="catalog__container-content-options-sorting-popup">
-                                            <li
-                                                className="catalog__container-content-options-sorting-popup-item"
-                                                onClick={e => setPriceCurrent(e.target.innerText)}>
-                                                Low to High
-                                            </li>
-                                            <li
-                                                className="catalog__container-content-options-sorting-popup-item"
-                                                onClick={e => setPriceCurrent(e.target.innerText)}>
-                                                High to Low
-                                            </li>
-                                        </ul>
-                                    )}
+                                    <ul className="catalog__container-content-options-sorting-popup">
+                                        <li
+                                            className="catalog__container-content-options-sorting-popup-item"
+                                            onClick={e => setPriceCurrent(e.target.innerText)}>
+                                            Low to High
+                                        </li>
+                                        <li
+                                            className="catalog__container-content-options-sorting-popup-item"
+                                            onClick={e => setPriceCurrent(e.target.innerText)}>
+                                            High to Low
+                                        </li>
+                                    </ul>
+                                )}
                             </button>
                             {windowView !== "favorite" && (
                                 <button className="myContent__right-settings-box-add">
@@ -157,13 +236,24 @@ function MyNFT() {
                             )}
                         </div>
                         <div class="myContent__right-settings-boxMobile">
-                            <button className="myContent__right-settings-boxMobile-filters">
+                            <button className="myContent__right-settings-boxMobile-filters" onClick={() => setFiltersMobile(!filtersMobile)}>
                                 Filters
+                                
                                 <img src={`./img/sections/collection/filters-${theme}.svg`} alt="" />
                             </button>
-                            <button className="myContent__right-settings-boxMobile-sort">
+                            <button className="myContent__right-settings-boxMobile-sort"  onClick={() => setSortingPopup(!sortingPopup)}>
                                 Sort
                                 <img src={`./img/sections/collection/arrow-up-${theme}.svg`} alt="" />
+                                {sortingPopup && (
+                                        <ul className="collection__main-cards-options-filters-sort-popup">
+                                            <li className="collection__main-cards-options-filters-sort-popup-item" onClick={(e) => setPriceCurrent(e.target.innerText)}>
+                                                Low to High
+                                            </li>
+                                            <li className="collection__main-cards-options-filters-sort-popup-item" onClick={(e) => setPriceCurrent(e.target.innerText)}>
+                                                High to Low
+                                            </li>
+                                        </ul>
+                                    )}
                             </button>
                         </div>
                     </div>
@@ -195,21 +285,110 @@ function MyNFT() {
                     <div className="myContent__right-items">
                         {windowView === "nft" ? (
                             <>
-                                <SimpleCard />
-                                <SimpleCard />
-                                <SimpleCard />
+                                {NFTs.filter(nft =>
+                                    filterStatus === "all"
+                                        ? nft
+                                        : filterStatus === "Buy now"
+                                        ? nft.status === "Buy now"
+                                        : nft.status === "In auction",
+                                )
+                                    .filter(nft =>
+                                        filterQuantity === "all"
+                                            ? nft
+                                            : filterQuantity === "single"
+                                            ? nft.quantity === "single"
+                                            : nft.quantity === "bundles",
+                                    )
+                                    .filter(nft => (filterPriceAt !== "" ? nft.price >= filterPriceAt : nft))
+                                    .filter(nft => (filterPriceTo !== "" ? nft.price <= filterPriceTo : nft))
+                                    .filter(nft =>
+                                        filterRarity.length === 0 ? nft : filterRarity.includes(nft.rarity),
+                                    )
+                                    .filter(nft =>
+                                        filterCategory.length === 0 ? nft : filterCategory.includes(nft.category),
+                                    )
+                                    .filter(nft =>
+                                        sortView === "not-sale"
+                                            ? nft.collectionDo === "Not for sale"
+                                            : sortView === "now"
+                                            ? nft.collectionDo === "Buy now"
+                                            : nft.collectionDo === "On auction",
+                                    )
+                                    .filter(nft =>
+                                        searchQuery !== ""
+                                            ? nft.name.toLowerCase().includes(searchQuery.toLowerCase())
+                                            : nft,
+                                    )
+                                    .sort((a, b) =>
+                                        priceCurrent === "Low to High" ? a.price - b.price : b.price - a.price,
+                                    )
+                                    .sort((a, b) => OneOrMinusOne(CompareSmiles(b), CompareSmiles(a)))
+                                    .map(nft => (
+                                        <SimpleCard nft={nft} />
+                                    ))}
                             </>
                         ) : windowView === "collection" ? (
                             <>
-                                <CollectionCard />
-                                <CollectionCard />
-                                <CollectionCard />
+                                {collections
+                                    .filter(nft =>
+                                        searchQuery !== ""
+                                            ? nft.name.toLowerCase().includes(searchQuery.toLowerCase())
+                                            : nft,
+                                    )
+                                    .filter(nft =>
+                                        filterCategory.length === 0 ? nft : filterCategory.includes(nft.category),
+                                    )
+                                    .sort((a, b) =>
+                                        priceCurrent === "Low to High" ? a.price - b.price : b.price - a.price,
+                                    )
+                                    .sort((a, b) => OneOrMinusOne(CompareSmiles(b), CompareSmiles(a)))
+                                    .map(collection => (
+                                        <CollectionCard collection={collection} />
+                                    ))}
                             </>
                         ) : (
                             <>
-                                <SimpleCard />
-                                <SimpleCard />
-                                <SimpleCard />
+                                {NFTs.filter(nft =>
+                                    filterStatus === "all"
+                                        ? nft
+                                        : filterStatus === "Buy now"
+                                        ? nft.status === "Buy now"
+                                        : nft.status === "In auction",
+                                )
+                                    .filter(nft =>
+                                        filterQuantity === "all"
+                                            ? nft
+                                            : filterQuantity === "single"
+                                            ? nft.quantity === "single"
+                                            : nft.quantity === "bundles",
+                                    )
+                                    .filter(nft => (filterPriceAt !== "" ? nft.price >= filterPriceAt : nft))
+                                    .filter(nft => (filterPriceTo !== "" ? nft.price <= filterPriceTo : nft))
+                                    .filter(nft =>
+                                        filterRarity.length === 0 ? nft : filterRarity.includes(nft.rarity),
+                                    )
+                                    .filter(nft =>
+                                        filterCategory.length === 0 ? nft : filterCategory.includes(nft.category),
+                                    )
+                                    .filter(nft =>
+                                        sortView === "not-sale"
+                                            ? nft.collectionDo === "Not for sale"
+                                            : sortView === "now"
+                                            ? nft.collectionDo === "Buy now"
+                                            : nft.collectionDo === "On auction",
+                                    )
+                                    .filter(nft =>
+                                        searchQuery !== ""
+                                            ? nft.name.toLowerCase().includes(searchQuery.toLowerCase())
+                                            : nft,
+                                    )
+                                    .sort((a, b) =>
+                                        priceCurrent === "Low to High" ? a.price - b.price : b.price - a.price,
+                                    )
+                                    .sort((a, b) => OneOrMinusOne(CompareSmiles(b), CompareSmiles(a)))
+                                    .map(nft => (
+                                        <SimpleCard nft={nft} />
+                                    ))}
                             </>
                         )}
                     </div>

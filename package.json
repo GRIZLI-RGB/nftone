@@ -5,6 +5,7 @@
   "dependencies": {
     "@emotion/react": "^11.10.5",
     "@emotion/styled": "^11.10.5",
+    "@fullpage/react-fullpage": "^0.1.32",
     "@mui/material": "^5.11.7",
     "@testing-library/jest-dom": "^5.16.5",
     "@testing-library/react": "^13.4.0",
@@ -13,6 +14,7 @@
     "chart.js": "^4.2.0",
     "circletype": "^2.3.0",
     "faker": "^6.6.6",
+    "fullpage.js": "^4.0.16",
     "jquery": "^3.6.3",
     "react": "^18.2.0",
     "react-chartjs-2": "^5.2.0",

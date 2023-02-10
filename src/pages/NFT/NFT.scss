@@ -192,14 +192,14 @@
                 &-item {
                     &-light,
                     &-dark {
-                        width: 1.56vw;
+                        width: 2.2vw;
                         text-align: center;
                         border-radius: 100px;
-                        padding: 0.26vw 0;
-                        font-size: 0.74vw;
+                        padding: 0.35vw 0;
+                        font-size: 0.9vw;
                         transition: all 0.2s;
                         span {
-                            margin-top: 0.1vw;
+                            margin-top: 0.2vw;
                             display: block;
                             color: #000;
                             font-family: "DM Sans";
@@ -406,52 +406,8 @@
                     margin-bottom: 1.99vw;
                 }
                 &-box {
-                    display: flex;
-                    align-items: flex-end;
-                    column-gap: 1.94vw;
-                    &-prices {
-                        font: 500 0.93vw/1.11vw "Montserrat";
-                        display: flex;
-                        flex-direction: column;
-                        row-gap: 2.41vw;
-                    }
                     &-graph {
-                        display: flex;
-                        flex-direction: column;
-                        &-line {
-                            margin-bottom: 0.23vw;
-                            width: 39.49vw;
-                        }
-                        &-colums {
-                            display: flex;
-                            align-items: flex-end;
-                            column-gap: 3vw;
-                            &-column {
-                                background: #e9e9e9;
-                                border-radius: 0.37vw;
-                                width: 2.13vw;
-                                position: relative;
-                                &:nth-child(1) {
-                                    height: 2.69vw;
-                                }
-                                &:nth-child(2) {
-                                    height: 6.57vw;
-                                }
-                                &:nth-child(3) {
-                                    height: 4.54vw;
-                                }
-                                &-text {
-                                    font: 500 0.65vw/0.93vw "DM Sans";
-                                    color: #525252;
-                                    letter-spacing: -0.05em;
-                                    position: absolute;
-                                    bottom: -1.11vw;
-                                    right: 0;
-                                    left: 0;
-                                    text-align: center;
-                                }
-                            }
-                        }
+                        width: 100%;
                     }
                 }
                 &-resize {

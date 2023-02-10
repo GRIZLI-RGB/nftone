@@ -69,6 +69,27 @@
                 margin: 1.76vw 0;
                 display: flex;
                 column-gap: 0.93vw;
+                &-value {
+                    div + div {
+                        margin-top: 0.35vw;
+                        position: relative;
+                    }
+                    &-minus {
+                        position: absolute;
+                        width: 0.83vw;
+                        height: 0.16vw;
+                        border-radius: 100px;
+                        background-color: red;
+                        right: -1.46vw;
+                        cursor: pointer;
+                        top: 50%;
+                        transform: translateY(-50%);
+                        transition: all .2s;
+                        &:hover {
+                            opacity: .75;
+                        }
+                    }
+                }
                 &-name,
                 &-value {
                     display: flex;
@@ -465,6 +486,17 @@
                     display: flex;
                     row-gap: 5vw;
                     flex-direction: column;
+                    &-value {
+                        & > div {
+                            position: relative;
+                        }
+                        &-minus {
+                            position: absolute;
+                            width: 4.6vw;
+                            height: 0.6vw;
+                            right: 1vw;
+                        }
+                    }
                     &-name,
                     &-value {
                         label {
@@ -475,7 +507,7 @@
                         input {
                             height: 12vw;
                             padding: 5.6vw 6vw;
-                            width: 100%;
+                            width: 90%;
                             font: 400 4vw/100% "DM Sans";
                         }
                     }

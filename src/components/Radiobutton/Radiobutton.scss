@@ -1,4 +1,9 @@
 .radiobutton {
+    &--dark {
+        .radiobutton__input:checked + label::before {
+            outline: none;
+        }
+    }
     &__input {
         &:checked {
             & + label {

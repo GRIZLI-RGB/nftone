@@ -1,4 +1,9 @@
 .checkbox {
+    &--dark {
+        .checkbox__input:checked + label::before {
+            outline: none;
+        }
+    }
     &__input {
         &:checked {
             & + label {

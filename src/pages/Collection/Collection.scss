@@ -283,7 +283,6 @@
             }
             &-down {
                 height: 10vw;
-                // width: 66vw;
                 width: 100%;
             }
         }
@@ -457,12 +456,23 @@
             }
         }
     }
+    .simpleCard {
+        &__menuEmoji {
+            font-size: 7.8vw !important;
+            padding: 3vw !important;
+            &-item {
+                & + & {
+                    margin-top: 1.5vw !important;
+                }
+            }
+        }
+    }
     .collection {
         padding: 550px 16px 30px 16px;
         align-items: center;
         flex-direction: column;
-        &.filters {
-            display: none;
+        .filters {
+            margin-top: 1020px;
         }
         &__filtersMobile {
             display: block;
@@ -595,7 +605,8 @@
                     }
                 }
                 &-down {
-                    width: 270px;
+                    // width: 270px;
+                    height: 120px;
                 }
             }
             &-cards {
@@ -669,11 +680,11 @@
                         &-sort,
                         &-price {
                             position: relative;
-                            padding: 15px 50px;
+                            padding: 10px 20px;
                             font: 700 18px/17px "DM Sans";
                             &-popup {
                                 border-radius: 16px;
-                                padding: 16px;
+                                padding: 12px;
                                 &-item {
                                     & + & {
                                         margin-top: 12px;
@@ -766,6 +777,23 @@
                             }
                         }
                     }
+                }
+            }
+        }
+    }
+}
+
+@media(max-width: 430px) {
+    .banner {
+        &__social {
+            gap: 12px;
+            position: absolute;
+            bottom: -505px;
+            padding: 0 16px;
+            &-link {
+                border: 5px solid #e3e3e3;
+                &-img {
+                    width: 40px;
                 }
             }
         }

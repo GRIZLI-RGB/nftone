@@ -51,6 +51,7 @@ function Collection() {
     const [pricePopup, setPricePopup] = useState(false);
     const [graphPopup, setGraphPopup] = useState(false);
     const [checkes, setCheckes] = useState([]);
+    const [filtersMobile, setFiltersMobile] = useState(false);
 
     const [searchQuery, setSearchQuery] = useState("");
 
@@ -262,8 +263,10 @@ function Collection() {
                 </div>
             </section>
             <section className={`collection ${changeTheme("", "collection--dark")}`}>
-                <Filters />
-                <button className="collection__filtersMobile">
+                {
+                    window.innerWidth <= 768 ? filtersMobile && <Filters /> : <Filters />
+                }
+                <button className="collection__filtersMobile" onClick={() => setFiltersMobile(!filtersMobile)}>
                     Filters
                     <img src={`./img/sections/collection/filters-${theme}.svg`} alt="" />
                 </button>

@@ -43,6 +43,12 @@ function CreateNFT() {
         setTags(tags.filter(tag => e.target.getAttribute("data-tag") !== tag));
     }
 
+    function deleteAttr() {
+        let newMas = [...attrs];
+        newMas.pop();
+        setAttrs(newMas)
+    }
+
     return (
         <>
             <Header />
@@ -99,7 +105,14 @@ function CreateNFT() {
                                         </div>
                                         <div className="createNFT__left-attr-box-value">
                                             <label>Value</label>
+                                            <div>
                                             <input type="text" placeholder={`${!index ? "10$" : ""}`} />
+                                            {
+                                                index !== 0 && (
+                                                    <div className="createNFT__left-attr-box-value-minus" onClick={() => deleteAttr()}></div>
+                                                )
+                                            }
+                                            </div>
                                         </div>
                                     </>
                                 ))
@@ -114,7 +127,14 @@ function CreateNFT() {
                                     <div className="createNFT__left-attr-box-value">
                                         <label>Value</label>
                                         {attrs.map((item, index) => (
+                                            <div>
                                             <input type="text" placeholder={`${!index ? "10$" : ""}`} />
+                                            {
+                                                index !== 0 && (
+                                                    <div className="createNFT__left-attr-box-value-minus" onClick={() => deleteAttr()}></div>
+                                                )
+                                            }
+                                            </div>
                                         ))}
                                     </div>
                                 </>
