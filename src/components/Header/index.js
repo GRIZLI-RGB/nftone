@@ -1,6 +1,10 @@
 import { useContext, useEffect, useState } from "react";
 import { ContextApp } from "../../Context";
 import "./Header.scss";
+import axios from "axios";
+import { QRCodeSVG } from "qrcode.react";
+
+import TonConnect from "@tonconnect/sdk";
 
 function Header({ currentPage }) {
     const [openMobileMenu, setOpenMobileMenu] = useState(false);
@@ -14,6 +18,107 @@ function Header({ currentPage }) {
     const [collections, setCollections] = useState([]);
     const [focus, setFocus] = useState(false);
     const { theme, setTheme, changeTheme, auth, setAuth } = useContext(ContextApp);
+
+    const [tonkeeperToken, setTonkeeperToken] = useState("");
+    const [tonkeeperQR, setTonkeeperQR] = useState(false);
+    const [tonkeeperUniversalLink, setTonkeeperUniversalLink] = useState("");
+
+    const [tonhubData, setTonhubData] = useState({});
+    const [tonhubQR, setTonhubQR] = useState(false);
+
+
+    const tonkeeperAuthClick = () => {
+        const connector = new TonConnect({ manifestUrl: 'https://ratingers.pythonanywhere.com/ratelance/tonconnect-manifest.json' });
+        connector.restoreConnection();
+        setTonkeeperQR(true);
+        const walletConnectionSource = {
+            universalLink: "https://app.tonkeeper.com/ton-connect",
+            bridgeUrl: "https://bridge.tonapi.io/bridge",
+        };
+        setTonkeeperUniversalLink(connector.connect(walletConnectionSource, { tonProof: tonkeeperToken }));
+        connector.onStatusChange(walletInfo => {
+                    console.log("Статус подключения Tonkeeper: ", walletInfo);
+                    // setAuth(true);
+                    // localStorage.setItem("auth", true);
+                    setPopup(false);
+                    setAuth(true);
+                    localStorage.setItem("auth", true);
+        })
+    };
+
+    const tonhubAuthClick = () => {
+        setTonhubQR(true);
+        const checkTonhubAuth = setInterval(() => {
+            axios
+            .post(
+                "https://nft-one.art/api/auth/check_tonhub",
+                {},
+                {
+                    headers: {
+                        Token: tonhubData.token
+                    },
+                    auth: {
+                        username: "odmen",
+                        password: "NFTflsy",
+                    },
+                },
+            )
+            .then(function (response) {
+                if(response.data.ok) {
+                    clearInterval(checkTonhubAuth);
+                    setPopup(false);
+                    setAuth(true);
+                    localStorage.setItem("auth", true);
+                }
+            })
+            .catch(function (error) {
+                console.log("Ошибка аутентификации: ", error);
+            });
+        }, 3000)
+    };
+
+    // auth/start_tonkeeper
+    useEffect(() => {
+        axios
+            .post(
+                "https://nft-one.art/api/auth/start_tonkeeper",
+                {},
+                {
+                    auth: {
+                        username: "odmen",
+                        password: "NFTflsy",
+                    },
+                },
+            )
+            .then(function (response) {
+                setTonkeeperToken(response.data.token);
+                console.log(response.data);
+            })
+            .catch(function (error) {
+                console.log("Ошибка аутентификации: ", error);
+            });
+    }, []);
+
+    // auth/start_tonhub
+    useEffect(() => {
+        axios
+            .post(
+                "https://nft-one.art/api/auth/start_tonhub",
+                {},
+                {
+                    auth: {
+                        username: "odmen",
+                        password: "NFTflsy",
+                    },
+                },
+            )
+            .then(function (response) {
+                setTonhubData(response.data);
+            })
+            .catch(function (error) {
+                console.log("Ошибка аутентификации: ", error);
+            });
+    }, []);
 
     useEffect(() => {
         fetch("/nfts.json")
@@ -41,21 +146,22 @@ function Header({ currentPage }) {
     }, [popup, setPopup]);
     useEffect(() => {
         setTheme(localStorage.getItem("theme") === null ? "light" : localStorage.getItem("theme"));
-        setAuth(localStorage.getItem("auth"));
+        // setAuth(localStorage.getItem("auth"));
     }, []);
 
     return (
         <header className="header" style={{ backgroundColor: theme === "light" ? "#004f87" : "#1C2026" }}>
             {!openSearch && (
-                <div class="header__logo">
+                <div className="header__logo">
                     <a href="/">
                         <img src="./img/header/header-logo.svg" alt="Logo" />
                     </a>
                 </div>
             )}
-            <nav class="header__menu">
-                {["Marketplace", "Catalog", "FAQ"].map(item => (
+            <nav className="header__menu">
+                {["Marketplace", "Catalog", "FAQ"].map((item, index) => (
                     <a
+                        key={index}
                         href={`/${item.toLowerCase()}`}
                         className={`header__menu-link ${theme === "light" ? "" : "header__menu-link--dark"} ${
                             currentPage === item.toLocaleLowerCase() ? "header__menu-link--active" : ""
@@ -66,26 +172,32 @@ function Header({ currentPage }) {
             </nav>
             <div className="header__search">
                 <input
-                    onFocus={() => {setFocus(true)
-                    setSearchPopup(true)}}
+                    onFocus={() => {
+                        setFocus(true);
+                        setSearchPopup(true);
+                    }}
                     onBlur={() => setFocus(false)}
                     value={searchQuery}
-                    onChange={(e) => setSearchQuery(e.target.value)}
+                    onChange={e => setSearchQuery(e.target.value)}
                     type="text"
                     placeholder="Search"
                     style={{
                         backgroundColor: theme === "light" ? "#fff" : "#272E37",
                         borderColor: theme === "light" ? "#efefef" : "#373F4A",
-                        color: changeTheme("", "#fff")
+                        color: changeTheme("", "#fff"),
                     }}
                 />
-                <img src={`./img/header/${searchQuery !== "" ? "clear" : "search"}.svg`} alt="" onClick={() => setSearchQuery("")}/>
+                <img
+                    src={`./img/header/${searchQuery !== "" ? "clear" : "search"}.svg`}
+                    alt=""
+                    onClick={() => setSearchQuery("")}
+                />
                 {searchQuery !== "" && (
-                    <div class="header__search-popup">
-                        <div class="header__search-popup-btns">
+                    <div className="header__search-popup">
+                        <div className="header__search-popup-btns">
                             <button
                                 onClick={() => {
-                                    setSearchFilter("nft")
+                                    setSearchFilter("nft");
                                 }}
                                 className={`header__search-popup-btns-nfts ${
                                     searchFilter === "nft" ? "header__search-popup-btns-nfts--active" : ""
@@ -100,24 +212,30 @@ function Header({ currentPage }) {
                                 Collections
                             </button>
                         </div>
-                        <ul class="header__search-popup-list">
+                        <ul className="header__search-popup-list">
                             {searchFilter === "nft"
-                                ? NFTs
-                                .filter(nft => nft.name.toLowerCase().includes(searchQuery.toLowerCase()) && searchQuery !== "")
-                                .map(nft => (
-                                      <li class="header__search-popup-list-item">
+                                ? NFTs.filter(
+                                      nft =>
+                                          nft.name.toLowerCase().includes(searchQuery.toLowerCase()) &&
+                                          searchQuery !== "",
+                                  ).map(nft => (
+                                      <li className="header__search-popup-list-item">
                                           <img src={`./img/card/photo-${nft?.img}.svg`} alt="" />
                                           <p>{nft?.name}</p>
                                       </li>
                                   ))
                                 : collections
-                                .filter(collection => (collection.name.toLowerCase().includes(searchQuery.toLowerCase()) && searchQuery !== ""))
-                                .map(collection => (
-                                      <li class="header__search-popup-list-item">
-                                          <img src={`./img/card/photo-${collection?.img}.svg`} alt="" />
-                                          <p>{collection?.name}</p>
-                                      </li>
-                                  ))}
+                                      .filter(
+                                          collection =>
+                                              collection.name.toLowerCase().includes(searchQuery.toLowerCase()) &&
+                                              searchQuery !== "",
+                                      )
+                                      .map(collection => (
+                                          <li className="header__search-popup-list-item">
+                                              <img src={`./img/card/photo-${collection?.img}.svg`} alt="" />
+                                              <p>{collection?.name}</p>
+                                          </li>
+                                      ))}
                         </ul>
                         <a className="header__search-popup-all" href="/marketplace">
                             See all results
@@ -126,7 +244,7 @@ function Header({ currentPage }) {
                 )}
             </div>
             {!openSearch && (
-                <div class="header__buttons">
+                <div className="header__buttons">
                     {!auth || auth === "false" ? (
                         <button onClick={() => setPopup(true)} className="header__buttons-connect">
                             {window.innerWidth <= 1440 ? "Connect" : "Connect wallet"}
@@ -208,19 +326,19 @@ function Header({ currentPage }) {
                 </div>
             )}
             {!openSearch && (
-                <div class="header__mobile">
-                    <button class="header__mobile-search" onClick={() => setOpenSearch(true)}>
+                <div className="header__mobile">
+                    <button className="header__mobile-search" onClick={() => setOpenSearch(true)}>
                         <img src="./img/header/search-white.svg" alt="Search" />
                     </button>
-                    <div class="header__mobile-hamburger" onClick={() => setOpenMobileMenu(true)}>
-                        <div class="header__mobile-hamburger-line"></div>
-                        <div class="header__mobile-hamburger-line"></div>
-                        <div class="header__mobile-hamburger-line"></div>
+                    <div className="header__mobile-hamburger" onClick={() => setOpenMobileMenu(true)}>
+                        <div className="header__mobile-hamburger-line"></div>
+                        <div className="header__mobile-hamburger-line"></div>
+                        <div className="header__mobile-hamburger-line"></div>
                     </div>
                 </div>
             )}
             <div
-                class="header__mobileMenu"
+                className="header__mobileMenu"
                 style={{
                     right: openMobileMenu ? "0" : "-600px",
                     color: theme === "light" ? "#000" : "#fff",
@@ -232,36 +350,36 @@ function Header({ currentPage }) {
                     alt="Close"
                     onClick={() => setOpenMobileMenu(false)}
                 />
-                <ul class="header__mobileMenu-list">
-                    <li class="header__mobileMenu-list-item">
+                <ul className="header__mobileMenu-list">
+                    <li className="header__mobileMenu-list-item">
                         <a className="header__mobileMenu-list-item-link" href="/marketplace">
                             Marketplace
                         </a>
                     </li>
-                    <li class="header__mobileMenu-list-item">
+                    <li className="header__mobileMenu-list-item">
                         <a className="header__mobileMenu-list-item-link" href="/catalog">
                             Catalog
                         </a>
                     </li>
-                    <li class="header__mobileMenu-list-item">
+                    <li className="header__mobileMenu-list-item">
                         <a className="header__mobileMenu-list-item-link" href="/faq">
                             FAQ
                         </a>
                     </li>
-                    <li class="header__mobileMenu-list-item header__mobileMenu-list-item-mode">
+                    <li className="header__mobileMenu-list-item header__mobileMenu-list-item-mode">
                         <a className="header__mobileMenu-list-item-link" href="#">
                             Dark mode
                         </a>
                         <div className="header__mobileMenu-list-item-switch">
                             <input type="checkbox" id="switch" />
-                            <label onClick={() => setTheme(theme === "light" ? "dark" : "light")} for="switch">
+                            <label onClick={() => setTheme(theme === "light" ? "dark" : "light")} htmlFor="switch">
                                 Toggle
                             </label>
                         </div>
                     </li>
                 </ul>
                 <div className="header__mobileMenu-down">
-                    <button class="header__mobileMenu-connect" onClick={() => setPopup(true)}>
+                    <button className="header__mobileMenu-connect" onClick={() => setPopup(true)}>
                         Connect
                     </button>
                     <div className="header__mobileMenu-items">
@@ -295,7 +413,7 @@ function Header({ currentPage }) {
                     </div>
                 </div>
             </div>
-            <div class="header__mobileSearch" style={{ left: openSearch ? "58px" : "958px" }}>
+            <div className="header__mobileSearch" style={{ left: openSearch ? "58px" : "958px" }}>
                 <input
                     className="header__mobileSearch-enter"
                     type="text"
@@ -321,11 +439,11 @@ function Header({ currentPage }) {
                     onClick={() => setSearchQuery("")}
                 />
                 {searchQuery !== "" && (
-                    <div class="header__search-popup">
-                        <div class="header__search-popup-btns">
+                    <div className="header__search-popup">
+                        <div className="header__search-popup-btns">
                             <button
                                 onClick={() => {
-                                    setSearchFilter("nft")
+                                    setSearchFilter("nft");
                                 }}
                                 className={`header__search-popup-btns-nfts ${
                                     searchFilter === "nft" ? "header__search-popup-btns-nfts--active" : ""
@@ -340,24 +458,30 @@ function Header({ currentPage }) {
                                 Collections
                             </button>
                         </div>
-                        <ul class="header__search-popup-list">
+                        <ul className="header__search-popup-list">
                             {searchFilter === "nft"
-                                ? NFTs
-                                .filter(nft => nft.name.toLowerCase().includes(searchQuery.toLowerCase()) && searchQuery !== "")
-                                .map(nft => (
-                                      <li class="header__search-popup-list-item">
+                                ? NFTs.filter(
+                                      nft =>
+                                          nft.name.toLowerCase().includes(searchQuery.toLowerCase()) &&
+                                          searchQuery !== "",
+                                  ).map(nft => (
+                                      <li className="header__search-popup-list-item">
                                           <img src={`./img/card/photo-${nft?.img}.svg`} alt="" />
                                           <p>{nft?.name}</p>
                                       </li>
                                   ))
                                 : collections
-                                .filter(collection => (collection.name.toLowerCase().includes(searchQuery.toLowerCase()) && searchQuery !== ""))
-                                .map(collection => (
-                                      <li class="header__search-popup-list-item">
-                                          <img src={`./img/card/photo-${collection?.img}.svg`} alt="" />
-                                          <p>{collection?.name}</p>
-                                      </li>
-                                  ))}
+                                      .filter(
+                                          collection =>
+                                              collection.name.toLowerCase().includes(searchQuery.toLowerCase()) &&
+                                              searchQuery !== "",
+                                      )
+                                      .map(collection => (
+                                          <li className="header__search-popup-list-item">
+                                              <img src={`./img/card/photo-${collection?.img}.svg`} alt="" />
+                                              <p>{collection?.name}</p>
+                                          </li>
+                                      ))}
                         </ul>
                         <a className="header__search-popup-all" href="/marketplace">
                             See all results
@@ -366,54 +490,108 @@ function Header({ currentPage }) {
                 )}
             </div>
             {popup && (
-                <div className="connect">
-                    <div class="connect__popup" style={{ backgroundColor: theme === "light" ? "#fff" : "#1C2026" }}>
-                        <img
-                            onClick={() => {
-                                // document.body.style.overflowX = "hidden";
-                                setPopup(false);
-                            }}
-                            className="connect__popup-img"
-                            src={`./img/header/${theme === "light" ? "close" : "close-white"}.png`}
-                            alt="Close"
-                        />
-                        <h6 className="connect__popup-title" style={{ color: theme === "light" ? "#000" : "#fff" }}>
-                            Connect Wallet
-                        </h6>
-                        <p
-                            className="connect__popup-text"
-                            style={{ color: theme === "light" ? "rgba(0, 0, 0, 0.5)" : "rgba(255, 255, 255, 0.7)" }}>
-                            A wallet is a simple, anonymous way to log in. To create ('mint') or buy an NFT, you must
-                            connect a wallet or create a new one.
-                        </p>
-                        <button
-                            class="connect__popup-btn"
-                            onClick={() => {
-                                setPopup(false);
-                                setAuth(true);
-                                localStorage.setItem("auth", true);
-                            }}
-                            style={{
-                                color: theme === "light" ? "#000" : "#fff",
-                                backgroundColor: theme === "light" ? "#f4f4f4" : "#272E37",
-                            }}>
-                            Tonkeeper
-                        </button>
-                        <button
-                            class="connect__popup-btn"
-                            onClick={() => {
-                                setPopup(false);
-                                setAuth(true);
-                                localStorage.setItem("auth", true);
-                            }}
-                            style={{
-                                color: theme === "light" ? "#000" : "#fff",
-                                backgroundColor: theme === "light" ? "#f4f4f4" : "#272E37",
-                            }}>
-                            Tonhub
-                        </button>
+                <>
+                    <div className="connect">
+                        <div
+                            className="connect__popup"
+                            style={{ backgroundColor: theme === "light" ? "#fff" : "#1C2026", padding: `${tonhubQR ? "65px" : ""}` }}>
+                            {tonhubQR ? (
+                                <>
+                                    <img
+                                        onClick={() => {
+                                            setPopup(false);
+                                            setTonhubQR(false);
+                                        }}
+                                        className="connect__popup-img"
+                                        src={`./img/header/${theme === "light" ? "close" : "close-white"}.png`}
+                                        alt="Close"
+                                    />
+                                    <h6
+                                        className="connect__popup-title-qr"
+                                        style={{ color: theme === "light" ? "#000" : "#fff" }}>
+                                        Scan this QR-code in the Tonhub app
+                                    </h6>
+                                    <QRCodeSVG 
+                                    value={tonhubData?.link}
+                                    size={200}
+                                    imageSettings={{src: "./img/sections/connect/crystal.png"}}
+                                    />
+                                </>
+                            ) : 
+                            tonkeeperQR ? (
+                                <>
+                                    <img
+                                        onClick={() => {
+                                            setPopup(false);
+                                            setTonkeeperQR(false);
+                                        }}
+                                        className="connect__popup-img"
+                                        src={`./img/header/${theme === "light" ? "close" : "close-white"}.png`}
+                                        alt="Close"
+                                    />
+                                    <h6
+                                        className="connect__popup-title-qr"
+                                        style={{ color: theme === "light" ? "#000" : "#fff" }}>
+                                        Scan this QR-code in the Tonkeeper app
+                                    </h6>
+                                    <QRCodeSVG 
+                                    value={tonkeeperUniversalLink}
+                                    size={200}
+                                    imageSettings={{src: "./img/sections/connect/diamond-big.png"}}
+                                    />
+                                </>
+                            ) :
+                             (
+                                <>
+                                    <img
+                                        onClick={() => {
+                                            setPopup(false);
+                                        }}
+                                        className="connect__popup-img"
+                                        src={`./img/header/${theme === "light" ? "close" : "close-white"}.png`}
+                                        alt="Close"
+                                    />
+                                    <h6
+                                        className="connect__popup-title"
+                                        style={{ color: theme === "light" ? "#000" : "#fff" }}>
+                                        Connect Wallet
+                                    </h6>
+                                    <p
+                                        className="connect__popup-text"
+                                        style={{
+                                            color:
+                                                theme === "light" ? "rgba(0, 0, 0, 0.5)" : "rgba(255, 255, 255, 0.7)",
+                                        }}>
+                                        A wallet is a simple, anonymous way to log in. To create ('mint') or buy an NFT,
+                                        you must connect a wallet or create a new one.
+                                    </p>
+                                    <button
+                                        className="connect__popup-btn"
+                                        onClick={() => {
+                                            tonkeeperAuthClick();
+                                        }}
+                                        style={{
+                                            color: theme === "light" ? "#000" : "#fff",
+                                            backgroundColor: theme === "light" ? "#f4f4f4" : "#272E37",
+                                        }}>
+                                        Tonkeeper
+                                    </button>
+                                    <button
+                                        className="connect__popup-btn"
+                                        onClick={() => {
+                                            tonhubAuthClick();
+                                        }}
+                                        style={{
+                                            color: theme === "light" ? "#000" : "#fff",
+                                            backgroundColor: theme === "light" ? "#f4f4f4" : "#272E37",
+                                        }}>
+                                        Tonhub
+                                    </button>
+                                </>
+                            )}
+                        </div>
                     </div>
-                </div>
+                </>
             )}
         </header>
     );

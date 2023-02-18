@@ -256,6 +256,10 @@
         }
         &-title {
             font: 700 32px/42px "DM Sans";
+            &-qr {
+                font: 700 20px/100% "DM Sans";
+                margin-bottom: 20px;
+            }
         }
         &-text {
             font: 400 16px/21px "DM Sans";
