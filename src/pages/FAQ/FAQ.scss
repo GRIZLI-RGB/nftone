@@ -1,0 +1,82 @@
+.faq {
+    padding: 5.21vw;
+    &__box {
+        max-width: 48vw;
+        margin: 0 auto;
+        &-title {
+            font: 600 1.67vw/100% "Montserrat";
+            margin-bottom: 1.56vw;
+            color: #515566;
+        }
+        &-items {
+            font: 400 1.35vw/100% "DM Sans";
+            &-item {
+                color: #878a95;
+                border-bottom: 0.10vw solid #878a95;
+                &-question {
+                    &-btn {
+                        font-weight: 500;
+                        padding: 0.83vw;
+                        cursor: pointer;
+                        position: relative;
+                        &--dark {
+                            &:hover {
+                                background-color: rgba(#fff, .05) !important;
+                            }
+                        }
+                        & > img {
+                            position: absolute;
+                            top: 50%;
+                            transform: translateY(-50%);
+                            width: 2.08vw;
+                            right: 0;
+                        }
+                        &:hover {
+                            background-color: rgba(#000, .05);
+                        }
+                    }
+                }
+                &-answer {
+                    font-size: 80%;
+                    padding: 0.31vw 0.83vw 0.83vw 0.83vw;
+                }
+            }
+        }
+    }
+}
+
+@media(max-width: 768px) {
+    .faq {
+        padding: 60px 20px;
+        &__box {
+            max-width: 100%;
+            &-title {
+                font: 600 22px/100% "Montserrat";
+                margin-bottom: 12px;
+                color: #515566;
+            }
+            &-items {
+                font: 400 18px/100% "DM Sans";
+                &-item {
+                    border-bottom: 1px solid #878a95;
+                    &-question {
+                        &-btn {
+                            padding: 12px;
+                            & > img {
+                                position: absolute;
+                                top: 50%;
+                                transform: translateY(-50%);
+                                width: 28px;
+                                right: 0;
+                            }
+                        }
+                    }
+                    &-answer {
+                        font-size: 80%;
+                        padding: 3px 12px 12px 12px;
+                    }
+                }
+            }
+        }
+    }
+}

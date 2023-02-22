@@ -4,7 +4,7 @@ import "./Header.scss";
 import axios from "axios";
 import { QRCodeSVG } from "qrcode.react";
 
-import TonConnect from "@tonconnect/sdk";
+import TonConnect, { toUserFriendlyAddress } from "@tonconnect/sdk";
 
 function Header({ currentPage }) {
     const [openMobileMenu, setOpenMobileMenu] = useState(false);
@@ -26,9 +26,37 @@ function Header({ currentPage }) {
     const [tonhubData, setTonhubData] = useState({});
     const [tonhubQR, setTonhubQR] = useState(false);
 
+    // Проверка при старте страницы на то, авторизован ли пользователь (отслеживаем наличие токенов в localStorage)
+    useEffect(() => {
+        if(localStorage.getItem("tonkeeperToken") || localStorage.getItem("tonhubToken")) {
+            setAuth(true);
+            localStorage.setItem("auth", true)
+        } else {
+            setAuth(false);
+            localStorage.setItem("auth", false);
+        }
+    }, [])
+
+    // Здесь ставим тему из localStorage (светлую или темную) и смотрим на auth
+    useEffect(() => {
+        setTheme(localStorage.getItem("theme") === null ? "light" : localStorage.getItem("theme"));
+        setAuth(localStorage.getItem("auth"));
+    }, []);
+
+    const userExit = () => {
+        setAuth(false);
+        localStorage.setItem("auth", false);
+        setUserMenu(false);
+        localStorage.removeItem("tonkeeperUsername");
+        localStorage.removeItem("tonkeeperToken");
+        localStorage.removeItem("tonhubUsername");
+        localStorage.removeItem("tonhubToken");
+        localStorage.removeItem("ton-connect-storage_http-bridge-gateway");
+        localStorage.removeItem("ton-connect-storage_bridge-connection");
+    }
 
     const tonkeeperAuthClick = () => {
-        const connector = new TonConnect({ manifestUrl: 'https://ratingers.pythonanywhere.com/ratelance/tonconnect-manifest.json' });
+        const connector = new TonConnect({ manifestUrl: 'https://grizli-rgb.github.io/meta-info-nftone/tonconnect-manifest.json' });
         connector.restoreConnection();
         setTonkeeperQR(true);
         const walletConnectionSource = {
@@ -37,12 +65,35 @@ function Header({ currentPage }) {
         };
         setTonkeeperUniversalLink(connector.connect(walletConnectionSource, { tonProof: tonkeeperToken }));
         connector.onStatusChange(walletInfo => {
-                    console.log("Статус подключения Tonkeeper: ", walletInfo);
-                    // setAuth(true);
-                    // localStorage.setItem("auth", true);
-                    setPopup(false);
-                    setAuth(true);
-                    localStorage.setItem("auth", true);
+            setPopup(false);
+            setTonkeeperQR(false);
+            setAuth(true);
+            localStorage.setItem("auth", true);
+            localStorage.setItem("tonkeeperToken", tonkeeperToken);
+            localStorage.setItem("tonkeeperUsername", toUserFriendlyAddress(walletInfo.account.address));
+            axios
+            .post(
+                "https://nft-one.art/api/auth/check_tonkeeper",
+                {
+                    ton_addr: walletInfo.account.address.toString(),
+                    signature:  walletInfo.connectItems.tonProof.proof.signature.toString()
+                },
+                {
+                    headers: {
+                        Token: tonkeeperToken
+                    },
+                    auth: {
+                        username: "odmen",
+                        password: "NFTflsy",
+                    },
+                },
+            )
+            .then(function (response) {
+                console.log("Удалось проверить Tonkeeper-кошелёк");
+            })
+            .catch(function (error) {
+                console.log("Ошибка: ", error);
+            });
         })
     };
 
@@ -65,16 +116,19 @@ function Header({ currentPage }) {
             )
             .then(function (response) {
                 if(response.data.ok) {
-                    clearInterval(checkTonhubAuth);
+                    localStorage.setItem("tonhubToken", tonhubData.token);
+                    localStorage.setItem("tonhubUsername", response.data.user.name);
                     setPopup(false);
+                    setTonhubQR(false);
                     setAuth(true);
                     localStorage.setItem("auth", true);
+                    clearInterval(checkTonhubAuth);
                 }
             })
             .catch(function (error) {
-                console.log("Ошибка аутентификации: ", error);
+                console.log("Ошибка: ", error);
             });
-        }, 3000)
+        }, 1200);
     };
 
     // auth/start_tonkeeper
@@ -92,10 +146,9 @@ function Header({ currentPage }) {
             )
             .then(function (response) {
                 setTonkeeperToken(response.data.token);
-                console.log(response.data);
             })
             .catch(function (error) {
-                console.log("Ошибка аутентификации: ", error);
+                console.log("Ошибка получения токена с сервера: ", error);
             });
     }, []);
 
@@ -116,7 +169,7 @@ function Header({ currentPage }) {
                 setTonhubData(response.data);
             })
             .catch(function (error) {
-                console.log("Ошибка аутентификации: ", error);
+                console.log("Ошибка получения токена с сервера: ", error);
             });
     }, []);
 
@@ -144,10 +197,6 @@ function Header({ currentPage }) {
             document.body.style.overflowX = "hidden";
         }
     }, [popup, setPopup]);
-    useEffect(() => {
-        setTheme(localStorage.getItem("theme") === null ? "light" : localStorage.getItem("theme"));
-        // setAuth(localStorage.getItem("auth"));
-    }, []);
 
     return (
         <header className="header" style={{ backgroundColor: theme === "light" ? "#004f87" : "#1C2026" }}>
@@ -253,7 +302,13 @@ function Header({ currentPage }) {
                         <>
                             <button className="header__buttons-user" onClick={() => setUserMenu(!userMenu)}>
                                 <img className="header__buttons-user-avatar" src="./img/header/avatar.svg" alt="" />
-                                EQA8weLF...
+                                {
+                                    localStorage.getItem("tonhubUsername")
+                                    ? localStorage.getItem("tonhubUsername").slice(0, 8)
+                                    : localStorage.getItem("tonkeeperUsername")
+                                    ? localStorage.getItem("tonkeeperUsername").slice(0, 8)
+                                    : "EQA8weLF"
+                                }...
                                 <img
                                     className="header__buttons-user-arrow"
                                     src="./img/header/arrow.svg"
@@ -300,9 +355,7 @@ function Header({ currentPage }) {
                                     <li
                                         className="header__buttons-userMenu-item"
                                         onClick={() => {
-                                            setAuth(false);
-                                            localStorage.setItem("auth", false);
-                                            setUserMenu(false);
+                                            userExit();
                                         }}>
                                         <img src={`./img/header/exit-${theme}.svg`} alt="" />
                                         <a className="header__buttons-userMenu-item-link" href="#">
@@ -495,7 +548,7 @@ function Header({ currentPage }) {
                         <div
                             className="connect__popup"
                             style={{ backgroundColor: theme === "light" ? "#fff" : "#1C2026", padding: `${tonhubQR ? "65px" : ""}` }}>
-                            {tonhubQR ? (
+                            {tonhubQR && window.innerWidth > 768 ? (
                                 <>
                                     <img
                                         onClick={() => {
@@ -518,7 +571,7 @@ function Header({ currentPage }) {
                                     />
                                 </>
                             ) : 
-                            tonkeeperQR ? (
+                            tonkeeperQR && window.innerWidth > 768 ? (
                                 <>
                                     <img
                                         onClick={() => {
@@ -541,6 +594,57 @@ function Header({ currentPage }) {
                                     />
                                 </>
                             ) :
+                            (window.innerWidth <= 768) ? (
+                                <>
+                                    <img
+                                        onClick={() => {
+                                            setPopup(false);
+                                        }}
+                                        className="connect__popup-img"
+                                        src={`./img/header/${theme === "light" ? "close" : "close-white"}.png`}
+                                        alt="Close"
+                                    />
+                                    <h6
+                                        className="connect__popup-title"
+                                        style={{ color: theme === "light" ? "#000" : "#fff" }}>
+                                        Connect Wallet
+                                    </h6>
+                                    <p
+                                        className="connect__popup-text"
+                                        style={{
+                                            color:
+                                                theme === "light" ? "rgba(0, 0, 0, 0.5)" : "rgba(255, 255, 255, 0.7)",
+                                        }}>
+                                        A wallet is a simple, anonymous way to log in. To create ('mint') or buy an NFT,
+                                        you must connect a wallet or create a new one.
+                                    </p>
+                                    <a
+                                        href={tonkeeperUniversalLink}
+                                        className="connect__popup-btn"
+                                        onClick={() => {
+                                            tonkeeperAuthClick();
+                                        }}
+                                        style={{
+                                            color: theme === "light" ? "#000" : "#fff",
+                                            backgroundColor: theme === "light" ? "#f4f4f4" : "#272E37",
+                                        }}>
+                                        Tonkeeper
+                                    </a>
+                                    <a
+                                        href={tonhubData.link}
+                                        className="connect__popup-btn"
+                                        onClick={() => {
+                                            tonhubAuthClick();
+                                        }}
+                                        style={{
+                                            color: theme === "light" ? "#000" : "#fff",
+                                            backgroundColor: theme === "light" ? "#f4f4f4" : "#272E37",
+                                        }}>
+                                        Tonhub
+                                    </a>
+                                </>
+                            )
+                            :
                              (
                                 <>
                                     <img

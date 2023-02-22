@@ -5,6 +5,52 @@ input[type="checkbox"] {
     z-index: -1;
 }
 
+.adminPanelAuth {
+    background-color: #f4f6fa;
+    width: 100vw;
+    height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    &__form {
+        background-color: #fff;
+        padding: 24px 30px;
+        border-radius: 20px;
+        box-shadow: 0 3px 5px -5px rgba(0, 0, 0, .5);
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        row-gap: 12px;
+        & > h1 {
+            font: 600 26px/100% "DM Sans";
+        }
+        & > input {
+            font: 400 14px/100% "DM Sans", Arial;
+            border-radius: 100px;
+            padding: 10px 16px;
+            border: 1px solid rgba(#000, .3);
+            &:focus {
+                border: 1px solid rgba(#000, .5);
+            }
+        }
+        & > button {
+            font: 500 18px/100% "DM Sans";
+            padding: 14px 18px;
+            width: 100%;
+            transition: all 0.3s;
+            color: #fff;
+            border-radius: 100px;
+            background: linear-gradient(90deg, var(--c1, #004d8c), var(--c2, #0088cc) 51%, var(--c1, #004d8c))
+                var(--x, 0) / 200%;
+            --с1: #004d8c;
+            --c2: #0088cc;
+            &:hover {
+                --x: 100%;
+            }
+        }
+    }
+}
+
 .adminPanel__header {
     background: #004f87;
     display: flex;
@@ -434,6 +480,93 @@ input[type="checkbox"] {
     }
 }
 
+.faqAdmin {
+    padding: 5.21vw;
+    &__box {
+        max-width: 48vw;
+        margin: 0 auto;
+        &-title {
+            font: 600 1.67vw/100% "Montserrat";
+            margin-bottom: 1.56vw;
+            color: #515566;
+        }
+        &-items {
+            font: 400 1.35vw/100% "DM Sans";
+            &-item {
+                color: #878a95;
+                border-bottom: 0.10vw solid #878a95;
+                position: relative;
+                &-edit {
+                    right: -2.60vw;
+                    &:hover {
+                        filter: invert(32%) sepia(88%) saturate(1331%) hue-rotate(174deg) brightness(99%)
+                            contrast(101%);
+                    }
+                }
+                &-delete {
+                    right: -4.69vw;
+                    &:hover {
+                        filter: invert(11%) sepia(81%) saturate(6890%) hue-rotate(7deg) brightness(99%) contrast(118%);
+                    }
+                }
+                &-edit, &-delete {
+                    cursor: pointer;
+                    top: 0.83vw;
+                    position: absolute;
+                    width: 1.25vw;
+                    transition: all .2s;
+                }
+                &-question {
+                    &-btn {
+                        font-weight: 500;
+                        padding: 0.83vw;
+                        cursor: pointer;
+                        position: relative;
+                        &--dark {
+                            &:hover {
+                                background-color: rgba(#fff, .05) !important;
+                            }
+                        }
+                        & > img {
+                            position: absolute;
+                            top: 50%;
+                            transform: translateY(-50%);
+                            width: 2.08vw;
+                            right: 0;
+                        }
+                        &:hover {
+                            background-color: rgba(#000, .05);
+                        }
+                    }
+                }
+                &-answer {
+                    font-size: 80%;
+                    padding: 0.31vw 0.83vw 0.83vw 0.83vw;
+                }
+            }
+        }
+        &-add {
+            font: 700 1.2vw/100% "DM Sans";
+            padding: 0.75vw 1.04vw;
+            transition: all 0.3s;
+            color: #fff;
+            margin-top: 1.04vw;
+            border-radius: 100px;
+            background: linear-gradient(90deg, var(--c1, #004d8c), var(--c2, #0088cc) 51%, var(--c1, #004d8c))
+                var(--x, 0) / 200%;
+            --с1: #004d8c;
+            --c2: #0088cc;
+            &:hover {
+                --x: 100%;
+            }
+        }
+        &-empty {
+            font: 500 16px/100% "DM Sans";
+            opacity: .6;
+        }
+    }
+}
+
 @media(max-width: 768px) {
     .adminPanel__header {
         padding: 10px 18px;
@@ -670,6 +803,54 @@ input[type="checkbox"] {
                         padding: 10px;
                     }
                 }
+            }
+        }
+    }
+    .faqAdmin {
+        padding: 60px 20px;
+        &__box {
+            max-width: 80%;
+            &-title {
+                font: 600 22px/100% "Montserrat";
+                margin-bottom: 12px;
+                color: #515566;
+            }
+            &-items {
+                font: 400 18px/100% "DM Sans";
+                &-item {
+                    border-bottom: 1px solid #878a95;
+                    &-edit {
+                        right: -32px;
+                    }
+                    &-delete {
+                        right: -59px;
+                    }
+                    &-edit, &-delete {
+                        top: 10px;
+                        width: 20px;
+                    }
+                    &-question {
+                        &-btn {
+                            padding: 12px;
+                            & > img {
+                                position: absolute;
+                                top: 50%;
+                                transform: translateY(-50%);
+                                width: 28px;
+                                right: 0;
+                            }
+                        }
+                    }
+                    &-answer {
+                        font-size: 80%;
+                        padding: 3px 12px 12px 12px;
+                    }
+                }
+            }
+            &-add {
+                font: 700 18px/100% "DM Sans";
+                padding: 10px 20px;
+                margin-top: 16px;
             }
         }
     }
