@@ -11,6 +11,7 @@ import {
     AccordionItemState,
 } from "react-accessible-accordion";
 import axios from "axios";
+import $ from "jquery";
 
 function AdminPanelAuth() {
     const [login, setLogin] = useState("");
@@ -224,12 +225,12 @@ function AdminPanelStatistics() {
 }
 
 function AdminPanelFAQ() {
+    const { changeTheme } = useContext(ContextApp);
+
     const [FAQs, setFAQs] = useState([]);
     const [updateFAQ, setUpdateFAQ] = useState(false);
 
-    const [adminToken, setAdminToken] = useState();
-
-    // Получаем список всех FAQ
+    // Получаем вопросы-ответы
     useEffect(() => {
         axios
             .post(
@@ -250,6 +251,7 @@ function AdminPanelFAQ() {
             });
     }, [updateFAQ]);
 
+    // Добавляем вопрос-ответ
     const addFAQ = () => {
         axios
             .post(
@@ -280,6 +282,7 @@ function AdminPanelFAQ() {
             });
     };
 
+    // Удаляем вопрос-ответ
     const deleteFAQ = (id) => {
         axios
             .post(
@@ -304,8 +307,6 @@ function AdminPanelFAQ() {
                 console.log("Ошибка при удалении FAQ:", error);
             });
     }
-
-    const { changeTheme } = useContext(ContextApp);
 
     return (
         <section className="faqAdmin" style={{ backgroundColor: changeTheme("#f4f6fa", "#15191E") }}>
@@ -346,7 +347,9 @@ function AdminPanelFAQ() {
                                 <AccordionItemPanel className="faqAdmin__box-items-item-answer">
                                     {faq.info}
                                 </AccordionItemPanel>
-                                <img className="faqAdmin__box-items-item-edit" src="./img/adminPanel/edit.svg" alt="" />
+                                <img className="faqAdmin__box-items-item-edit" src="./img/adminPanel/edit.svg" alt="" onClick={() => {
+                                    
+                                }}/>
                                 <img
                                     data-id={faq.id}
                                     onClick={(e) => {

@@ -27,6 +27,7 @@
     "react-double-range-slider": "^3.0.1",
     "react-draggable": "^4.4.5",
     "react-dropzone": "^14.2.3",
+    "react-hot-toast": "^2.4.0",
     "react-loading-skeleton": "^3.1.0",
     "react-router": "^6.8.0",
     "react-router-dom": "^6.8.0",

@@ -21,6 +21,8 @@ function Context(props) {
     const [NFTs, setNFTs] = useState([]);
     const [collections, setCollections] = useState([]);
 
+    const [currentCollection, setCurrentCollection] = useState(null);
+
     const changeTheme = (forLight, forDark) => {
         return theme === "light" ? forLight : forDark;
     };
@@ -28,6 +30,8 @@ function Context(props) {
     return (
         <ContextApp.Provider
             value={{
+                currentCollection,
+                setCurrentCollection,
                 theme,
                 setTheme,
                 popup,
