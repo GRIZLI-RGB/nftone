@@ -26,7 +26,7 @@ function CreateNFT() {
     const [priceNFT, setPriceNFT] = useState(); // Price
     const [royalties, setRoyalties] = useState(0); // Royalties
 
-    const { acceptedFiles, getRootProps } = useDropzone();
+    const { acceptedFiles, getRootProps, getInputProps } = useDropzone();
 
     useEffect(() => {
         setFilename(acceptedFiles[0]?.path);
@@ -219,8 +219,11 @@ function CreateNFT() {
                                 </p>
                             </>
                         )}
-                        <button type="file" className="createNFT__left-download-browse">
-                            Browse files
+                        {/* <input className="createNFT__left-download-browse" {...getInputProps} type="file"/> */}
+                        {/* Browse Files */}
+                        <button className="createNFT__left-download-browse">
+                            <input {...getInputProps}/>
+                            Browse Files
                         </button>
                     </div>
                     <div

@@ -55,8 +55,22 @@
                     var(--x, 0) / 200%;
                 --с1: #004d8c;
                 --c2: #0088cc;
+                position: relative;
+                z-index: 99;
                 &:hover {
                     --x: 100%;
+                }
+                & > input {
+                    background-color: #000;
+                    left: 0;
+                    right: 0;
+                    bottom: 0;
+                    top: 0;
+                    opacity: 0;
+                    z-index: 100;
+                    position: absolute;
+                    cursor: pointer;
+                    border-radius: inherit;
                 }
             }
         }
