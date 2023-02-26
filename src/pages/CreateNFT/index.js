@@ -222,7 +222,7 @@ function CreateNFT() {
                         {/* <input className="createNFT__left-download-browse" {...getInputProps} type="file"/> */}
                         {/* Browse Files */}
                         <button className="createNFT__left-download-browse">
-                            <input {...getInputProps}/>
+                            <input {...getInputProps} type="file"/>
                             Browse Files
                         </button>
                     </div>
