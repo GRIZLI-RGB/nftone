@@ -222,7 +222,7 @@ function CreateNFT() {
                         {/* <input className="createNFT__left-download-browse" {...getInputProps} type="file"/> */}
                         {/* Browse Files */}
                         <button className="createNFT__left-download-browse">
-                            <input {...getInputProps} type="file"/>
+                            <input {...getInputProps} type="file" onClick={e => e.stopPropagation()}/>
                             Browse Files
                         </button>
                     </div>
