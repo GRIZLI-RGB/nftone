@@ -4,7 +4,7 @@ import Header from "../../components/Header";
 function Catalog() {
     return (
         <>
-            <Header currentPage={"catalog"}/>
+            <Header currentPage={"marketplace"}/>
             <Footer />
         </>
     );

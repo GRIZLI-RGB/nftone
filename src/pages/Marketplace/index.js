@@ -83,7 +83,7 @@ function Marketplace() {
 
     return (
         <>
-            <Header currentPage={"marketplace"} />
+            <Header currentPage={"catalog"} />
             <section className="catalog" style={{ backgroundColor: changeTheme("#f4f6fa", "#15191E") }}>
                 <h1 className="catalog__title" style={{ color: changeTheme("#000", "#fff") }}>
                     Catalog

@@ -14,8 +14,8 @@ function App() {
         <>
             <Routes>
                 <Route exact path="/" element={<Home />} />
-                <Route exact path="/marketplace" element={<Marketplace />} />
-                <Route exact path="/catalog" element={<Catalog />} />
+                <Route exact path="/marketplace" element={<Catalog />} />
+                <Route exact path="/catalog" element={<Marketplace />} />
                 <Route exact path="/faq" element={<FAQ />} />
                 <Route exact path="/create-nft" element={<CreateNFT />} />
                 <Route exact path="/NFT" element={<NFT />} />

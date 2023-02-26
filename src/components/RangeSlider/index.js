@@ -2,7 +2,7 @@ import { useEffect } from "react";
 import "./RangeSlider.scss";
 import $ from "jquery";
 
-function RangeSlider({value, setValue}) {
+function RangeSlider({setValue}) {
 
     useEffect(() => {
         var $slider = $("#slider-popa");

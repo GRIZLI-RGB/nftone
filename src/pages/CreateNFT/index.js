@@ -13,30 +13,38 @@ function CreateNFT() {
     const { changeTheme, theme } = useContext(ContextApp);
 
     // CREATE SINGLE NFT
-    const [files, setFiles] = useState(""); // Photo
     const [filename, setFilename] = useState("");
-    const [attrs, setAttrs] = useState([{ id: 1, name: "", value: "", setName(arg) { this.name = arg }, setValue(arg) { this.value = arg}}]); // Attributes
+    const [attrs, setAttrs] = useState([{ id: 1, name: "", value: "" }]); // Attributes
 
     const [nameNFT, setNameNFT] = useState(""); // Display Name
     const [tags, setTags] = useState(["Example"]); // Tags
     const [tagInput, setTagInput] = useState("");
-    const [collectionNFT, setCollectionNFT] = useState("") // Collection
+    const [collectionNFT, setCollectionNFT] = useState(""); // Collection
     const [categoryNFT, setCategoryNFT] = useState(""); // Category
     const [description, setDescription] = useState(""); // Description
     const [typeNFT, setTypeNFT] = useState(""); // Type
-    const [priceNFT, setPriceNFT] = useState(); // Price 
+    const [priceNFT, setPriceNFT] = useState(); // Price
     const [royalties, setRoyalties] = useState(0); // Royalties
-    
 
-    /*
-        Drag-and-drop files (acceptedFiles - массив со всеми файлами,
-            обнуляется при перезагрузке страницы)
-    */
     const { acceptedFiles, getRootProps } = useDropzone();
 
     useEffect(() => {
         setFilename(acceptedFiles[0]?.path);
     }, [acceptedFiles[0]?.path]);
+
+    const setAttrsChange = (e, type) => {
+        let attrs_copy = [...attrs];
+        if (type === "value") {
+            attrs_copy.map(attr =>
+                Number(e.target.getAttribute("data-attrid")) == attr.id ? (attr.value = e.target.value) : null,
+            );
+        } else {
+            attrs_copy.map(attr =>
+                Number(e.target.getAttribute("data-attrid")) == attr.id ? (attr.name = e.target.value) : null,
+            );
+        }
+        setAttrs(attrs_copy);
+    };
 
     // Добавляет теги
     function onChangeTagInput(e) {
@@ -51,10 +59,10 @@ function CreateNFT() {
     function deleteTag(e) {
         setTags(tags.filter(tag => e.target.getAttribute("data-tag") !== tag));
     }
-
+    
     function deleteAttr(id) {
         let attrs_new = [];
-        attrs.map(attr => attr.id == Number(id) ? null : attrs_new.push(attr))
+        attrs.map(attr => (attr.id == Number(id) ? null : attrs_new.push(attr)));
         setAttrs(attrs_new);
     }
 
@@ -68,23 +76,22 @@ function CreateNFT() {
         setTypeNFT("");
         setPriceNFT("");
         document.getElementById("slider-popa").value = "100";
-    }
+    };
 
     const validationEnters = () => {
-        if(nameNFT !== "" && collectionNFT !== "" && categoryNFT !== "" && typeNFT !== "" && priceNFT !== "") {
-            return true
+        if (nameNFT !== "" && collectionNFT !== "" && categoryNFT !== "" && typeNFT !== "" && priceNFT !== "" && acceptedFiles[0]) {
+            return true;
         } else {
-            return false
+            return false;
         }
-    }
+    };
 
     // возвращает все НФТ
     const seeNFTs = () => {
         axios
             .post(
                 "https://nft-one.art/api/nfts/list",
-                {
-                },
+                {},
                 {
                     headers: {
                         Token: localStorage.getItem("adminToken"),
@@ -96,70 +103,68 @@ function CreateNFT() {
                 },
             )
             .then(response => {
-                console.log(response.data)
+                console.log(response.data);
             })
             .catch(error => {
                 console.log("Ошибка при выводе NFTs:", error);
             });
-    }
+    };
 
     // создает НФТ
     const createNFT = () => {
-        if(validationEnters()) {
-            toast.success("NFT created", {
-                position: "bottom-right",
-                style: {
-                    font: "400 21px/100% 'DM Sans'"
-                },
-            })
+        if (validationEnters()) {
+            const formData = new FormData();
+            formData.append("json_data", JSON.stringify({
+                items: [{
+                    img: "file123",
+                    name: nameNFT,
+                    info: description,
+                    royalty_pct: royalties,
+                    price: priceNFT,
+                }]
+            }));
+            formData.append("file123", acceptedFiles[0]);
+            axios
+                .post("https://nft-one.art/api/nfts/upsert", formData, {
+                    headers: {
+                        "Content-Type": "multipart/form-data",
+                        Token: localStorage.getItem("tonhubToken"),
+                    },
+                    auth: {
+                        username: "odmen",
+                        password: "NFTflsy",
+                    },
+                })
+                .then(response => {
+                    console.log("Успешно", response.data);
+                })
+                .catch(error => {
+                    console.log("Ошибка:", error);
+                });
             resetEnters();
-            // axios
-        //     .post(
-        //         "https://nft-one.art/api/nfts/upsert",
-        //         {
-        //             items: [
-        //                 {
-        //                     name: nameNFT,
-        //                     price: priceNFT,
-        //                     info: description
-        //                 }
-        //             ]
-        //         },
-        //         {
-        //             headers: {
-        //                 Token: localStorage.getItem("tonhubToken") ? localStorage.getItem("tonhubToken") : localStorage.getItem("tonkeeperToken"),
-        //             },
-        //             auth: {
-        //                 username: "odmen",
-        //                 password: "NFTflsy",
-        //             },
-        //         },
-        //     )
-        //     .then(response => {
-        //         console.log("NFT успешно создана, его данные:", response.data)
-        //     })
-        //     .catch(error => {
-        //         console.log("Ошибка при создании NFT:", error);
-        //     });
-        } else {
-            toast.error("Check the data", {
+            toast.success(`NFT «${nameNFT}» created`, {
                 position: "bottom-right",
                 style: {
-                    font: "400 21px/100% 'DM Sans'"
+                    font: "400 21px/100% 'DM Sans'",
                 },
-            })
+            });
+        } else {
+            toast.error(`Check the data`, {
+                position: "bottom-right",
+                style: {
+                    font: "400 21px/100% 'DM Sans'",
+                },
+            });
         }
-    }
+    };
 
     // удаляет НФТ
-    const deleteNFT = (id) => {
+    const deleteNFT = id => {
         axios
             .post(
                 "https://nft-one.art/api/nfts/delete",
                 {
-                    "ids": [
-                        id
-                    ]
+                    ids: [id],
                 },
                 {
                     headers: {
@@ -172,12 +177,12 @@ function CreateNFT() {
                 },
             )
             .then(response => {
-                console.log("Удаление NFT прошло успешно")
+                console.log("Удаление NFT прошло успешно");
             })
             .catch(error => {
                 console.log("Ошибка при удалении NFT:", error);
             });
-    }
+    };
 
     return (
         <>
@@ -185,7 +190,7 @@ function CreateNFT() {
             <section
                 className={`createNFT ${changeTheme("", "createNFT--dark")}`}
                 style={{ backgroundColor: changeTheme("#fff", "#15191E") }}>
-                <Toaster/>
+                <Toaster />
                 <div className="createNFT__left">
                     <div
                         {...getRootProps({ className: "dropzone" })}
@@ -232,17 +237,17 @@ function CreateNFT() {
                                     <>
                                         <div className="createNFT__left-attr-box-name">
                                             <label>Name</label>
-                                            <input type="text" placeholder={`${!index ? "Price" : ""}`}/>
+                                            <input type="text" placeholder={`${!index ? "Price" : ""}`} />
                                         </div>
                                         <div className="createNFT__left-attr-box-value">
                                             <label>Value</label>
                                             <div>
-                                            <input type="text" placeholder={`${!index ? "10$" : ""}`} />
-                                            {
-                                                index !== 0 && (
-                                                    <div className="createNFT__left-attr-box-value-minus" onClick={() => deleteAttr()}></div>
-                                                )
-                                            }
+                                                <input type="text" placeholder={`${!index ? "10$" : ""}`} />
+                                                {index !== 0 && (
+                                                    <div
+                                                        className="createNFT__left-attr-box-value-minus"
+                                                        onClick={() => deleteAttr()}></div>
+                                                )}
                                             </div>
                                         </div>
                                     </>
@@ -252,19 +257,34 @@ function CreateNFT() {
                                     <div className="createNFT__left-attr-box-name">
                                         <label>Name</label>
                                         {attrs.map((item, index) => (
-                                            <input type="text" placeholder={`${!index ? "Price" : ""}`} onChange={(e) => item.setName(e.target.value)} />
+                                            <input
+                                                data-attrid={item.id}
+                                                type="text"
+                                                placeholder={`${!index ? "Price" : ""}`}
+                                                value={item.name}
+                                                onChange={e => setAttrsChange(e, "name")}
+                                            />
                                         ))}
                                     </div>
                                     <div className="createNFT__left-attr-box-value">
                                         <label>Value</label>
                                         {attrs.map((item, index) => (
                                             <div>
-                                            <input type="text" placeholder={`${!index ? "10$" : ""}`} onChange={(e) => item.setValue(e.target.value)}/>
-                                            {
-                                                index !== 0 && (
-                                                    <div data-attrid={item.id} className="createNFT__left-attr-box-value-minus" onClick={(e) => deleteAttr(e.target.getAttribute('data-attrid'))}></div>
-                                                )
-                                            }
+                                                <input
+                                                    data-attrid={item.id}
+                                                    type="text"
+                                                    placeholder={`${!index ? "10$" : ""}`}
+                                                    value={item.value}
+                                                    onChange={e => setAttrsChange(e, "value")}
+                                                />
+                                                {index !== 0 && (
+                                                    <div
+                                                        data-attrid={item.id}
+                                                        className="createNFT__left-attr-box-value-minus"
+                                                        onClick={e =>
+                                                            deleteAttr(e.target.getAttribute("data-attrid"))
+                                                        }></div>
+                                                )}
                                             </div>
                                         ))}
                                     </div>
@@ -291,7 +311,12 @@ function CreateNFT() {
                     <form className="createNFT__right-form" action="">
                         <div className="createNFT__right-form-name">
                             <label>Display Name*</label>
-                            <input type="text" placeholder="NFT name" value={nameNFT} onChange={(e) => setNameNFT(e.target.value)}/>
+                            <input
+                                type="text"
+                                placeholder="NFT name"
+                                value={nameNFT}
+                                onChange={e => setNameNFT(e.target.value)}
+                            />
                         </div>
                         <div className="createNFT__right-form-tags">
                             <label>Tags</label>
@@ -334,37 +359,62 @@ function CreateNFT() {
                             <Select
                                 values={["No collection"]}
                                 value={collectionNFT}
-                                setValue={(arg) => setCollectionNFT(arg)}
+                                setValue={arg => setCollectionNFT(arg)}
                             />
                         </div>
                         <div className="createNFT__right-form-category">
                             <label>Category*</label>
                             <Select
-                                values={["Art", "Collectibles", "Music", "Photography", "Sports", "Trading", "Cards", "Utility", "Virtual", "Worlds"]}
+                                values={[
+                                    "Art",
+                                    "Collectibles",
+                                    "Music",
+                                    "Photography",
+                                    "Sports",
+                                    "Trading",
+                                    "Cards",
+                                    "Utility",
+                                    "Virtual",
+                                    "Worlds",
+                                ]}
                                 value={categoryNFT}
-                                setValue={(arg) => setCategoryNFT(arg)}
+                                setValue={arg => setCategoryNFT(arg)}
                             />
                         </div>
                         <div className="createNFT__right-form-description">
                             <label>Description</label>
-                            <textarea value={description} onChange={(e) => setDescription(e.target.value)}></textarea>
+                            <textarea value={description} onChange={e => setDescription(e.target.value)}></textarea>
                         </div>
                         <div className="createNFT__right-form-attributes">
                             <div className="createNFT__right-form-attributes-type">
                                 <label>Type*</label>
-                                <Select values={["Auction", "Sell"]} value={typeNFT} setValue={arg => setTypeNFT(arg)}/>
+                                <Select
+                                    values={["Auction", "Sell"]}
+                                    value={typeNFT}
+                                    setValue={arg => setTypeNFT(arg)}
+                                />
                             </div>
                             <div className="createNFT__right-form-attributes-price">
                                 <label>Price*</label>
-                                <input type="number" min="0" value={priceNFT} onChange={(e) => setPriceNFT(e.target.value)} />
+                                <input
+                                    type="number"
+                                    min="0"
+                                    value={priceNFT}
+                                    onChange={e => setPriceNFT(e.target.value)}
+                                />
                             </div>
                         </div>
                         <div className="createNFT__right-form-royalties">
                             <label>Royalties</label>
-                            <RangeSlider setValue={(val) => setRoyalties(val)} />
+                            <RangeSlider setValue={val => setRoyalties(val)} />
                         </div>
                         <div className="createNFT__right-form-buttons">
-                            <input className="createNFT__right-form-buttons-create" type="button" onClick={createNFT} value="CREATE NFT" />
+                            <input
+                                className="createNFT__right-form-buttons-create"
+                                type="button"
+                                onClick={createNFT}
+                                value="CREATE NFT"
+                            />
                             <input
                                 className={`createNFT__right-form-buttons-reset ${changeTheme(
                                     "",

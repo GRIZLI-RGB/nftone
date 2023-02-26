@@ -11,7 +11,7 @@ import {
     AccordionItemState,
 } from "react-accessible-accordion";
 import axios from "axios";
-import $ from "jquery";
+import { toast, Toaster } from "react-hot-toast";
 
 function AdminPanelAuth() {
     const [login, setLogin] = useState("");
@@ -20,35 +20,43 @@ function AdminPanelAuth() {
         <section className="adminPanelAuth">
             <form className="adminPanelAuth__form" action="">
                 <h1>You Admin?</h1>
-                <input type="text" placeholder="Login" value={login} onChange={(e) => setLogin(e.target.value)}/>
-                <input type="password" placeholder="Password" value={password} onChange={(e) => setPassword(e.target.value)}/>
-                <button onClick={(e) => {
-                    e.preventDefault();
-                    axios
-                        .post(
-                            "https://nft-one.art/api/auth/login",
-                            {
-                                login,
-                                password,
-                            },
-                            {
-                                auth: {
-                                    username: "odmen",
-                                    password: "NFTflsy",
+                <input type="text" placeholder="Login" value={login} onChange={e => setLogin(e.target.value)} />
+                <input
+                    type="password"
+                    placeholder="Password"
+                    value={password}
+                    onChange={e => setPassword(e.target.value)}
+                />
+                <button
+                    onClick={e => {
+                        e.preventDefault();
+                        axios
+                            .post(
+                                "https://nft-one.art/api/auth/login",
+                                {
+                                    login,
+                                    password,
                                 },
-                            },
-                        )
-                        .then(response => {
-                            localStorage.setItem("adminToken", response.data.token)
-                            window.location.reload();
-                        })
-                        .catch(error => {
-                            alert("Неверные данные для входа")
-                        });
-                }}>Enter</button>
+                                {
+                                    auth: {
+                                        username: "odmen",
+                                        password: "NFTflsy",
+                                    },
+                                },
+                            )
+                            .then(response => {
+                                localStorage.setItem("adminToken", response.data.token);
+                                window.location.reload();
+                            })
+                            .catch(error => {
+                                alert("Неверные данные для входа");
+                            });
+                    }}>
+                    Enter
+                </button>
             </form>
         </section>
-    )
+    );
 }
 
 function AdminPanelUsers() {
@@ -228,7 +236,7 @@ function AdminPanelFAQ() {
     const { changeTheme } = useContext(ContextApp);
 
     const [FAQs, setFAQs] = useState([]);
-    const [updateFAQ, setUpdateFAQ] = useState(false);
+    const [FAQsOnce, setFAQsOnce] = useState([]);
 
     // Получаем вопросы-ответы
     useEffect(() => {
@@ -244,56 +252,46 @@ function AdminPanelFAQ() {
                 },
             )
             .then(response => {
-                setFAQs(response.data.items);
+                setFAQs(() => response.data.items);
             })
             .catch(error => {
                 console.log("Ошибка при получении FAQ:", error);
             });
-    }, [updateFAQ]);
+    }, []);
+
+    // Добавляем поле isEdit
+    useEffect(() => {
+        if (FAQs.length > 0) {
+            const FAQs_copy = [...FAQs];
+            FAQs_copy.map(faq => (!("isEdit" in faq) ? (faq.isEdit = false) : null));
+            FAQs_copy.map(faq => (!("name_default" in faq) ? (faq.name_default = faq.name) : null));
+            FAQs_copy.map(faq => (!("info_default" in faq) ? (faq.info_default = faq.info) : null));
+            setFAQs(FAQs);
+        }
+    }, [FAQs]);
 
     // Добавляем вопрос-ответ
     const addFAQ = () => {
-        axios
-            .post(
-                "https://nft-one.art/api/faq/upsert",
-                {
-                    items: [
-                        {
-                            name: "Example question",
-                            info: "Example answer",
-                        },
-                    ],
-                },
-                {
-                    headers: {
-                        Token: localStorage.getItem("adminToken"),
-                    },
-                    auth: {
-                        username: "odmen",
-                        password: "NFTflsy",
-                    },
-                },
-            )
-            .then(response => {
-                setUpdateFAQ(!updateFAQ);
-            })
-            .catch(error => {
-                console.log("Ошибка при добавлении вопроса-ответа в FAQ:", error);
-            });
+        let lastID = FAQs.length > 0 ? Number(FAQs[FAQs.length - 1].id) : 0;
+        setFAQs([...FAQs, { id: lastID + 1, name: "Question", info: "Answer", name_default: "Question", question_default: "Answer", isEdit: false }]);
     };
 
     // Удаляем вопрос-ответ
-    const deleteFAQ = (id) => {
-        axios
+    const deleteFAQ = id => {
+        let FAQs_copy = [...FAQs];
+        FAQs_copy = FAQs_copy.filter(faq => faq.id != Number(id))
+        setFAQs(FAQs_copy);
+    };
+
+    // Сохраняем данные на сервере
+    const saveFAQ = async () => {
+        
+        // Удаляем все имеющиеся FAQ
+        await axios
             .post(
-                "https://nft-one.art/api/faq/delete",
+                "https://nft-one.art/api/faq/list",
+                {},
                 {
-                    ids: [id]
-                },
-                {
-                    headers: {
-                        Token: localStorage.getItem("adminToken"),
-                    },
                     auth: {
                         username: "odmen",
                         password: "NFTflsy",
@@ -301,30 +299,115 @@ function AdminPanelFAQ() {
                 },
             )
             .then(response => {
-                setUpdateFAQ(!updateFAQ);
+                setFAQsOnce(() => response.data.items);
+                console.log("1. Получены все FAQ")
             })
             .catch(error => {
-                console.log("Ошибка при удалении FAQ:", error);
+                console.log("Ошибка при получении FAQ:", error);
             });
+        
+        // Добавляем новые
+    }
+
+    useEffect(() => {
+        const idss = [];
+        FAQsOnce.map(faqOnce => idss.push(Number(faqOnce.id)));
+        if(FAQsOnce.length > 0) {
+            console.log(idss);
+            axios
+                .post(
+                    "https://nft-one.art/api/faq/delete",
+                    {
+                        ids: [...idss]
+                    },
+                    {
+                        headers: {
+                            Token: localStorage.getItem("adminToken"),
+                        },
+                        auth: {
+                            username: "odmen",
+                            password: "NFTflsy",
+                        },
+                    },
+                )
+                .then(response => {
+                    console.log("2. Удалены все FAQ")
+                })
+                .catch(error => {
+                    console.log("Ошибка при удалении FAQ:", error);
+                });
+                FAQs.map(faq => {
+                    axios
+                    .post(
+                        "https://nft-one.art/api/faq/upsert",
+                        {
+                            items: [
+                                {
+                                    name: faq.name,
+                                    info: faq.info,
+                                },
+                            ],
+                        },
+                        {
+                            headers: {
+                                Token: localStorage.getItem("adminToken"),
+                            },
+                            auth: {
+                                username: "odmen",
+                                password: "NFTflsy",
+                            },
+                        },
+                    )
+                    .then(response => {
+                        console.log("3. FAQ загружены")
+                    })
+                    .catch(error => {
+                        console.log("Ошибка при добавлении вопроса-ответа в FAQ:", error);
+                    });
+                })
+                toast.success("Saved", {
+                    position: "bottom-right",
+                    style: {
+                        font: "400 21px/100% 'DM Sans'",
+                    },
+                })
+        }
+    }, [FAQsOnce])
+
+    const setNameOrInfoChange = (e, type) => {
+        let FAQs_copy = [...FAQs];
+        if (type === "name") {
+            FAQs_copy.map(faq =>
+                Number(e.target.getAttribute("data-id")) == faq.id ? (faq.name = e.target.value) : null,
+            );
+        } else {
+            FAQs_copy.map(faq =>
+                Number(e.target.getAttribute("data-id")) == faq.id ? (faq.info = e.target.value) : null,
+            );
+        }
+        setFAQs(FAQs_copy);
     }
 
     return (
         <section className="faqAdmin" style={{ backgroundColor: changeTheme("#f4f6fa", "#15191E") }}>
+            <Toaster/>
             <div className="faqAdmin__box">
                 <h1 className="faqAdmin__box-title" style={{ color: changeTheme("", "#fff") }}>
                     Frequently Asked Questions
                 </h1>
                 {FAQs.length > 0 ? (
                     <Accordion className="faqAdmin__box-items" allowMultipleExpanded={true} allowZeroExpanded={true}>
-                        {FAQs.map((faq) => (
-                            <AccordionItem className="faqAdmin__box-items-item">
+                        {FAQs.map(faq => (
+                            <AccordionItem className="faqAdmin__box-items-item" dangerouslySetExpanded={faq.isEdit ? true : null}>
                                 <AccordionItemHeading className="faqAdmin__box-items-item-question">
                                     <AccordionItemButton
                                         className={changeTheme(
                                             "faqAdmin__box-items-item-question-btn",
                                             "faqAdmin__box-items-item-question-btn faqAdmin__box-items-item-question-btn--dark",
                                         )}>
-                                        {faq.name}
+                                        {
+                                            faq.isEdit ? <input onKeyDown={(ev) => {ev.stopPropagation()}} id="nameFAQ" data-id={faq.id} className="faqAdmin__box-items-item-question-edit" type="text" value={faq.name} onChange={(e) => setNameOrInfoChange(e, "name")}/> : faq.name
+                                        }
                                         <AccordionItemState>
                                             {expanded =>
                                                 expanded.expanded ? (
@@ -345,31 +428,96 @@ function AdminPanelFAQ() {
                                     </AccordionItemButton>
                                 </AccordionItemHeading>
                                 <AccordionItemPanel className="faqAdmin__box-items-item-answer">
-                                    {faq.info}
+                                    {faq.isEdit ? <input data-id={faq.id} className="faqAdmin__box-items-item-answer-edit" type="text" value={faq.info} onChange={(e) => setNameOrInfoChange(e, "info")}/> : faq.info}
                                 </AccordionItemPanel>
-                                <img className="faqAdmin__box-items-item-edit" src="./img/adminPanel/edit.svg" alt="" onClick={() => {
-                                    
-                                }}/>
-                                <img
-                                    data-id={faq.id}
-                                    onClick={(e) => {
-                                        deleteFAQ(e.target.getAttribute("data-id"));
-                                    }}
-                                    className="faqAdmin__box-items-item-delete"
-                                    src="./img/adminPanel/delete.svg"
-                                    alt=""
-                                />
+                                {faq.isEdit ? (
+                                    <>
+                                        <img
+                                            className="faqAdmin__box-items-item-yes"
+                                            src="./img/adminPanel/yes.svg"
+                                            alt=""
+                                            data-faq-id={faq.id}
+                                            onClick={(e) => {
+                                                let FAQs_copy = [...FAQs];
+                                                FAQs_copy.map(faq => {
+                                                    if(Number(e.target.getAttribute("data-faq-id")) == faq.id) {
+                                                        faq.name_default = faq.name
+                                                        faq.info_default = faq.info
+                                                        faq.isEdit = false
+                                                    }
+                                                });
+                                                setFAQs(FAQs_copy);
+                                            }}
+                                        />
+                                        <img
+                                            data-id={faq.id}
+                                            className="faqAdmin__box-items-item-no"
+                                            src="./img/adminPanel/no.svg"
+                                            alt=""
+                                            onClick={(e) => {
+                                                let FAQs_copy = [...FAQs];
+                                                FAQs_copy.map(faq => {
+                                                    if(Number(e.target.getAttribute("data-id")) == faq.id) {
+                                                        faq.name = faq.name_default
+                                                        faq.info = faq.info_default
+                                                        faq.isEdit = false
+                                                    }
+                                                });
+                                                setFAQs(FAQs_copy);
+                                            }}
+                                        />
+                                    </>
+                                ) : (
+                                    <>
+                                        <img
+                                            className="faqAdmin__box-items-item-edit"
+                                            src="./img/adminPanel/edit.svg"
+                                            alt=""
+                                            data-faq-id={faq.id}
+                                            onClick={e => {
+                                                const FAQs_copy = [...FAQs];
+                                                FAQs_copy.map(faq =>
+                                                    Number(e.target.getAttribute("data-faq-id")) == Number(faq.id)
+                                                        ? (faq.isEdit = true)
+                                                        : null,
+                                                );
+                                                setFAQs(FAQs_copy);
+                                            }}
+                                        />
+                                        <img
+                                            data-id={faq.id}
+                                            onClick={e => {
+                                                deleteFAQ(e.target.getAttribute("data-id"));
+                                            }}
+                                            className="faqAdmin__box-items-item-delete"
+                                            src="./img/adminPanel/delete.svg"
+                                            alt=""
+                                        />
+                                    </>
+                                )}
                             </AccordionItem>
                         ))}
                     </Accordion>
                 ) : (
                     <p className="faqAdmin__box-empty">FAQ is empty</p>
                 )}
-                <button className="faqAdmin__box-add" onClick={() => {
-                    addFAQ();
-                    }}>
-                    + Add
-                </button>
+                <div className="faqAdmin__box-btns">
+                    <button
+                        className="faqAdmin__box-add"
+                        onClick={() => {
+                            saveFAQ();
+                        }}
+                        >
+                        Save
+                    </button>
+                    <button
+                        className="faqAdmin__box-add"
+                        onClick={() => {
+                            addFAQ();
+                        }}>
+                        + Add
+                    </button>
+                </div>
             </div>
         </section>
     );

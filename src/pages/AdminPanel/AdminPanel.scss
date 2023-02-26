@@ -491,7 +491,7 @@ input[type="checkbox"] {
             color: #515566;
         }
         &-items {
-            font: 400 1.35vw/100% "DM Sans";
+            font: 400 1.35vw/100% "DM Sans", sans-serif;
             &-item {
                 color: #878a95;
                 border-bottom: 0.10vw solid #878a95;
@@ -503,18 +503,31 @@ input[type="checkbox"] {
                             contrast(101%);
                     }
                 }
-                &-delete {
+                &-yes {
+                    right: -3.05vw;
+                    &:hover {
+                        filter: invert(48%) sepia(85%) saturate(1080%) hue-rotate(70deg) brightness(109%) contrast(105%);
+                    }
+                }
+                &-delete, &-no {
                     right: -4.69vw;
                     &:hover {
                         filter: invert(11%) sepia(81%) saturate(6890%) hue-rotate(7deg) brightness(99%) contrast(118%);
                     }
                 }
-                &-edit, &-delete {
+                &-no {
+                    right: -5.1vw;
+                }
+                &-edit, &-delete, &-yes, &-no {
                     cursor: pointer;
                     top: 0.83vw;
                     position: absolute;
                     width: 1.25vw;
                     transition: all .2s;
+                }
+                &-yes, &-no {
+                    width: 2.1vw;
+                    top: 0.53vw;
                 }
                 &-question {
                     &-btn {
@@ -563,6 +576,11 @@ input[type="checkbox"] {
         &-empty {
             font: 500 16px/100% "DM Sans";
             opacity: .6;
+        }
+        &-btns {
+            display: flex;
+            width: 100%;
+            justify-content: space-between;
         }
     }
 }
