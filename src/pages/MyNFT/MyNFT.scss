@@ -1,6 +1,6 @@
 .myBanner {
-    background: linear-gradient(105.78deg, #2442ad 0%, #2240e0 35.44%, #1fbdeb 67.05%, #f39475 99.49%);
     padding: 5.79vw 0 6.57vw 0;
+    cursor: pointer;
     &--dark {
         background: #132331;
         .myBanner__download {
@@ -12,7 +12,6 @@
         }
     }
     &__download {
-        cursor: pointer;
         position: relative;
         left: 54%;
         background: rgba(255, 255, 255, 0.61);
@@ -92,8 +91,38 @@
             background: #ffffff;
             border-radius: 0.93vw;
             padding: 2.31vw 1.02vw 1.48vw 1.02vw;
-            &-avatar {
+            &-box {
+                position: relative;
+                display: inline-block;
                 width: 7.96vw;
+                border-radius: 100%;
+            }
+            &-avatar {
+                cursor: pointer;
+                border-radius: 100%;
+                width: 100%;
+                height: 100%;
+                display: block;
+                &--extra {
+                    opacity: 0;
+                    transition: all .2s;
+                    cursor: pointer;
+                    width: 100%;
+                    height: 100%;
+                    position: absolute;
+                    left: 0;
+                    right: 0;
+                    top: 0;
+                    bottom: 0;
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                    color: rgba(#fff, 0.8);
+                    border: 5px dashed rgba(#fff, .8);
+                    background-color: rgba(#000, .6);
+                    border-radius: 100%;
+                    font: 400 76px/100% "Montserrat";
+                }
             }
             &-name {
                 font: 700 1.11vw/1.44vw "DM Sans";

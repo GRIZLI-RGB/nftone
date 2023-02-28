@@ -7,6 +7,7 @@ import CollectionCard from "./../../components/CollectionCard";
 import { useContext, useEffect, useState } from "react";
 import { ContextApp } from "../../Context";
 import { useDropzone } from "react-dropzone";
+import axios from "axios";
 
 function MyNFT() {
     const {
@@ -29,6 +30,14 @@ function MyNFT() {
     const [searchQuery, setSearchQuery] = useState("");
     const [sortingPopup, setSortingPopup] = useState(false);
     const [filtersMobile, setFiltersMobile] = useState(false);
+
+    const [users, setUsers] = useState([]);
+    const [username, setUsername] = useState("");
+    const [bannerHash, setBannerHash] = useState(null);
+    const [bannerActive, setBannerActive] = useState(false);
+    const [avatarHash, setAvatarHash] = useState(null);
+    const [avatarActive, setAvatarActive] = useState(false);
+    const [avatarHover, setAvatarHover] = useState(false);
 
     useEffect(() => {
         let currentTab = window.location.href.split("#")[1];
@@ -83,16 +92,110 @@ function MyNFT() {
         });
         return score;
     }
-    /*
-        Drag-and-drop files (acceptedFiles - массив со всеми файлами,
-            обнуляется при перезагрузке страницы)
-    */
+
     const { acceptedFiles, getRootProps } = useDropzone();
+
+    useEffect(() => {
+        axios
+            .post(
+                "https://nft-one.art/api/users/list",
+                {
+                    subqueries: {
+                        hdr: {}
+                    },
+                },
+                {
+                    auth: {
+                        username: "odmen",
+                        password: "NFTflsy",
+                    },
+                },
+            )
+            .then(response => {
+                setUsers(response.data.items)
+            })
+            .catch(error => {
+                console.log(error);
+            });
+    }, [])
+
+    useEffect(() => {
+        if(users.length > 0) {
+            users.map(user => (user.ton_addr === localStorage.getItem("tonhubUsername") || user.ton_addr === localStorage.getItem("tonkeeperUsername")) ? setUsername(user.name) : null)
+            users.map(user => (user.ton_addr === localStorage.getItem("tonhubUsername") || user.ton_addr === localStorage.getItem("tonkeeperUsername")) ? setBannerHash(user.hdr?.hash) : null)
+        }
+    }, [users])
+
+    useEffect(() => {
+        if(acceptedFiles.length > 0) {
+            if(bannerActive) {
+                let currentUserID = null;
+                users.map(user => (user.ton_addr === localStorage.getItem("tonhubUsername") || user.ton_addr === localStorage.getItem("tonkeeperUsername")) ? currentUserID = user.id : null);
+                const formData = new FormData();
+                formData.append("json_data", JSON.stringify({
+                    items: [
+                        {
+                            id: Number(currentUserID),
+                            hdr: "hdr"
+                        }
+                    ]
+                }));
+                formData.append("hdr", acceptedFiles[0]);
+                axios
+                    .post(
+                        "https://nft-one.art/api/users/upsert",
+                        formData,
+                        {
+                            headers: {
+                                "Content-Type": "multipart/form-data",
+                                Token: localStorage.getItem("tonkeeperToken") ? localStorage.getItem("tonkeeperToken") : localStorage.getItem("tonhubToken")
+                            },
+                            auth: {
+                                username: "odmen",
+                                password: "NFTflsy",
+                            },
+                        },
+                    )
+                    .then(response => {
+                    axios
+                        .post(
+                            "https://nft-one.art/api/users/list",
+                            { 
+                                subqueries: {
+                                    hdr: {}
+                                },
+                            },
+                            {
+                                auth: {
+                                    username: "odmen",
+                                    password: "NFTflsy",
+                                },
+                            },
+                        )
+                        .then(response => {
+                            response.data.items.map(item => Number(item.id) === Number(currentUserID) ? setBannerHash(item.hdr.hash) : null)
+                        })
+                        .catch(error => {
+                            console.log(error);
+                        });
+                    })
+                    .catch(error => {
+                        console.log(error);
+                    });
+                setBannerActive(false);
+            }
+            if(avatarActive) {}
+        }
+    }, [acceptedFiles])
+
     return (
         <>
             <Header />
-            <section className={`myBanner ${changeTheme("", "myBanner--dark")}`}>
-                <div class="myBanner__download" {...getRootProps({ className: "dropzone myBanner__download" })}>
+            <section className={`myBanner ${changeTheme("", "myBanner--dark")} ${bannerHash ? "myBanner--hovme" : null} dropzone`} {...getRootProps()}
+            style={{background: `${bannerHash ? `url(https://nft-one.art/api/files/thumb/?hash=${bannerHash}) no-repeat center center/cover` : "linear-gradient(105.78deg, #2442ad 0%, #2240e0 35.44%, #1fbdeb 67.05%, #f39475 99.49%)"}`}}
+            
+            >
+            <div className="myBanner__download" style={{opacity: `${bannerHash ? "0" : "1"}`}}>
                     <img src={`./img/sections/myNFT/download-${theme}.svg`} alt="" class="myBanner__download-img" />
                     <p class="myBanner__download-title">Add banner</p>
                     <p class="myBanner__download-text">Optimal dimensions: 2500×650</p>
@@ -101,8 +204,11 @@ function MyNFT() {
             <section className={`myContent ${changeTheme("", "myContent--dark")}`}>
                 <div class="myContent__left">
                     <div className="myContent__left-user">
-                        <img className="myContent__left-user-avatar" src="./img/sections/myNFT/avatar.svg" alt="" />
-                        <h6 className="myContent__left-user-name">John Doe</h6>
+                        <div className="myContent__left-user-box dropzone" {...getRootProps()} onMouseOver={() => setAvatarHover(true)} onMouseOut={() => setAvatarHover(false)}>
+                            <img className="myContent__left-user-avatar" src={avatarHash ? `https://nft-one.art/api/files/thumb/?hash=${avatarHash}` : "./img/sections/myNFT/avatar.svg"} alt=""/>
+                            <div className="myContent__left-user-avatar--extra" style={{opacity: `${avatarHover ? "1" : "0"}`}}>+</div>
+                        </div>
+                        <h6 className="myContent__left-user-name">{ username.length > 12 ? username.slice(0, 12) + '...' : username }</h6>
                         <div className="myContent__left-user-social">
                             <a href="#">
                                 <img src="./img/sections/myNFT/vk.svg" alt="" />

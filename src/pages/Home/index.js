@@ -6,18 +6,23 @@ import "./Home.scss";
 import { ContextApp } from "./../../Context";
 import Header from "./../../components/Header";
 import Footer from "./../../components/Footer";
-import $ from "jquery";
 import Skeleton from "react-loading-skeleton";
 import "react-loading-skeleton/dist/skeleton.css";
+import axios from "axios";
 
 function Home() {
     const [popularNFT, setPopularNFT] = useState([]);
     const [popularCollection, setPopularCollection] = useState([]);
-    const [isLoadingNFT, setIsLoadingNFT] = useState(true);
-    const [isLoadingCollection, setIsLoadingCollection] = useState(true);
+
+    const [recentNFT, setRecentNFT] = useState([]);
+    const [recentCollection, setRecentCollection] = useState([]);
+
+    const [isLoadingPopular, setIsLoadingPopular] = useState(true);
+    const [isLoadingRecent, setIsLoadingRecent] = useState(true);
 
     const [popularFilter, setPopularFilter] = useState("nft");
     const [recentFilter, setRecentFilter] = useState("nft");
+
     const { changeTheme } = useContext(ContextApp);
 
     const settingsForSlider = {
@@ -44,46 +49,67 @@ function Home() {
         ],
     };
 
-    /* 
-        Отсюда прокидываются два fetch-запроса на бэкенд для получения популярных NFTs и популярных Collections
-    */
+    // Получение с сервера Popular NFTs
     useEffect(() => {
-        fetch("/nfts.json")
-            .then(res => {
-                return res.json();
-            })
-            .then(json => {
-                setPopularNFT(json);
-                setIsLoadingNFT(false);
-            });
-        fetch("/collections.json")
-            .then(res => {
-                return res.json();
-            })
-            .then(json => {
-                setPopularCollection(json);
-                setIsLoadingCollection(false);
-            });
-    }, []);
-
-    /*
-        Плавная прокрутка для кнопки Explore Now
-    */
-    useEffect(() => {
-        $("#popular-btn").on("click", function () {
-            $("html, body").animate(
+        axios
+            .post(
+                "https://nft-one.art/api/nfts/list",
                 {
-                    scrollTop: $("#popular-section").offset().top,
+                    order_by: "most_popular desc",
+                    subqueries: {
+                        img: {}
+                      },
                 },
                 {
-                    duration: 400,
-                    easing: "linear",
+                    auth: {
+                        username: "odmen",
+                        password: "NFTflsy",
+                    },
                 },
-            );
+            )
+            .then(response => {
+                setPopularNFT(response.data.items);
+                setIsLoadingPopular(false);
+            })
+            .catch(error => {
+                console.log("Ошибка при получении Popular NFTs:", error);
+            });
+    }, [])
 
-            return false;
-        });
-    });
+    // Получение с сервера Recent NFTs
+    useEffect(() => {
+        axios
+            .post(
+                "https://nft-one.art/api/nfts/list",
+                {
+                    order_by: "most_popular desc",
+                    subqueries: {
+                        img: {}
+                      },
+                },
+                {
+                    auth: {
+                        username: "odmen",
+                        password: "NFTflsy",
+                    },
+                },
+            )
+            .then(response => {
+                setPopularNFT(response.data.items);
+                setIsLoadingPopular(false);
+            })
+            .catch(error => {
+                console.log("Ошибка при получении Popular NFTs:", error);
+            });
+    }, [])
+
+    useEffect(() => {
+        popularFilter === "collection" ? setIsLoadingPopular(true) : setIsLoadingPopular(false);
+    }, [popularFilter])
+
+    useEffect(() => {
+        recentFilter === "collection" ? setIsLoadingRecent(true) : setIsLoadingRecent(false);
+    }, [recentFilter])
 
     return (
         <>
@@ -102,16 +128,6 @@ function Home() {
                 </div>
                 <div className="welcome__library">
                     <div className="welcome__library-item welcome__library-item-1">
-                        {/* <div className="welcome__library-item-circle">
-                            <div class="welcome__library-item-circle-circular">
-                                <svg viewBox="0 0 170 170">
-                                    <path d="M 0,50 a 50,50 0 1,1 0,1 z" id="circle" />
-                                    <text>
-                                        <textPath xlinkHref="#circle">Live auction · Live auction ·</textPath>
-                                    </text>
-                                </svg>
-                            </div>
-                        </div> */}
                         <img className="welcome__library-item-bg" src="./img/card/card-bg.svg" alt="Card background" />
                         <h6 className="welcome__library-item-title">Abstr Gradient NFT</h6>
                         <div className="welcome__library-item-user">
@@ -282,7 +298,7 @@ function Home() {
                     </button>
                 </div>
 
-                {(isLoadingNFT && isLoadingCollection) ? (
+                {(isLoadingPopular) ? (
                     <Skeleton height="24.21vw" style={{marginTop: "47px"}} count={1} />
                 ) : (
                     <Slider class="popular__list" {...settingsForSlider}>
@@ -291,9 +307,6 @@ function Home() {
                             : popularCollection.map(collection => <CollectionCard collection={collection} />)}
                     </Slider>
                 )}
-                {/* <Slider class="popular__list" {...settingsForSlider}>
-                        {!isLoadingNFT ?  : popularFilter === "nft" ? popularNFT.map(nft => <Card nft={nft}/>) : popularCollection.map(collection => <CollectionCard collection={collection}/>)}
-                    </Slider> */}
             </section>
             <section className={`recent ${changeTheme("", "recent--dark")}`}>
                 <div class="recent__bg"></div>
@@ -314,7 +327,7 @@ function Home() {
                         Collections
                     </button>
                 </div>
-                {isLoadingNFT && isLoadingCollection ? (
+                {isLoadingRecent ? (
                     <Skeleton height="24.21vw" style={{marginTop: "47px"}} count={1} />
                 ) : (
                     <Slider class="popular__list" {...settingsForSlider}>

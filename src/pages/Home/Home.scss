@@ -482,8 +482,10 @@
         max-width: 253px;
         padding: 13px 13px 24px 13px;
         border-radius: 13px;
+        height: unset;
         &__photo {
             border-radius: 11px;
+            height: 30vw;
         }
         &__info {
             flex-direction: column;
