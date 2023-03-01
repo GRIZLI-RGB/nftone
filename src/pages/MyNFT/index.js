@@ -8,6 +8,7 @@ import { useContext, useEffect, useState } from "react";
 import { ContextApp } from "../../Context";
 import { useDropzone } from "react-dropzone";
 import axios from "axios";
+import { toast, Toaster } from "react-hot-toast";
 
 function MyNFT() {
     const {
@@ -21,6 +22,11 @@ function MyNFT() {
         filterCategory,
         filterEmotional,
     } = useContext(ContextApp);
+
+    const [currentUser, setCurrentUser] = useState({});
+    const [username, setUsername] = useState("");
+    const [info, setInfo] = useState("");
+
     const [windowView, setWindowView] = useState("nft");
     const [sortView, setSortView] = useState("not-sale");
     const [pricePopup, setPricePopup] = useState(false);
@@ -31,35 +37,27 @@ function MyNFT() {
     const [sortingPopup, setSortingPopup] = useState(false);
     const [filtersMobile, setFiltersMobile] = useState(false);
 
-    const [users, setUsers] = useState([]);
-    const [username, setUsername] = useState("");
+    // const [users, setUsers] = useState([]);
+    // const [currentUser, setCurrentUser] = useState([]);
     const [bannerHash, setBannerHash] = useState(null);
-    const [bannerActive, setBannerActive] = useState(false);
+    const [bannerHover, setBannerHover] = useState(false);
     const [avatarHash, setAvatarHash] = useState(null);
-    const [avatarActive, setAvatarActive] = useState(false);
     const [avatarHover, setAvatarHover] = useState(false);
 
-    useEffect(() => {
-        let currentTab = window.location.href.split("#")[1];
-        setWindowView(currentTab ? currentTab : "nft");
-    }, []);
+    const [editProfile, setEditProfile] = useState(false);
 
-    useEffect(() => {
-        fetch("/nfts.json")
-            .then(res => {
-                return res.json();
-            })
-            .then(json => {
-                setNFTs(json);
-            });
-        fetch("/collections.json")
-            .then(res => {
-                return res.json();
-            })
-            .then(json => {
-                setCollections(json);
-            });
-    }, []);
+    const [nameForm, setNameForm] = useState("");
+    const [infoForm, setInfoForm] = useState("");
+    const [socialForm, setSocialForm] = useState(
+        {
+            vk: "",
+            telegram: "",
+            twitter: "",
+            reddit: "",
+            discord: ""
+        }
+    );
+    const [emailForm, setEmailForm] = useState("");
 
     function OneOrMinusOne(a, b) {
         return a > b ? 1 : a < b ? -1 : 0;
@@ -93,54 +91,100 @@ function MyNFT() {
         return score;
     }
 
-    const { acceptedFiles, getRootProps } = useDropzone();
+    const { acceptedFiles:acceptedFilesFromBanner, getRootProps:getRootPropsFromBanner, getInputProps:getInputPropsFromBanner } = useDropzone();
+    const { acceptedFiles:acceptedFilesFromAvatar, getRootProps:getRootPropsFromAvatar, getInputProps:getInputPropsFromAvatar } = useDropzone();
+
+    const setSocialFormChange = (e) => {
+        let socialForm_copy = {...socialForm};
+        let currentSocial = e.target.getAttribute("data-social");
+        socialForm_copy[currentSocial] = e.target.value;
+        setSocialForm(socialForm_copy);
+    }
+
+    // const validationForm = () => {
+    //     return true;
+    // }
+
+    // const clearForm = () => {
+    //     setNameForm("");
+    //     setInfoForm("");
+    //     setSocialForm({
+    //         vk: "",
+    //         telegram: "",
+    //         twitter: "",
+    //         reddit: "",
+    //         discord: ""
+    //     });
+    //     setEmailForm("");
+    // }
+
+    // const saveForm = () => {
+    //     if(validationForm()) {
+    //         axios
+    //             .post(
+    //                 "https://nft-one.art/api/users/upsert",
+    //                 {
+    //                     items: [
+    //                         {
+    //                             id: currentUser.id,
+    //                             name: nameForm === "" ? currentUser.name : nameForm,
+    //                             info: infoForm === "" ? currentUser.info : infoForm,
+    //                             social_links: socialForm
+    //                         }
+    //                     ]
+    //                 },
+    //                 {
+    //                     headers: {
+    //                         Token: localStorage.getItem("tonkeeperToken") ? localStorage.getItem("tonkeeperToken") : localStorage.getItem("tonhubToken")
+    //                     },
+    //                     auth: {
+    //                         username: "odmen",
+    //                         password: "NFTflsy",
+    //                     },
+    //                 },
+    //             )
+    //             .then(response => {
+    //                 setCurrentUser(response.data.items[0])
+    //                 setInfo(response.data.items[0].info)
+    //                 setUsername(response.data.items[0].name)
+    //             })
+    //             .catch(error => {
+    //                 console.log(error);
+    //             });
+    //         clearForm();
+    //         toast.success(`Data changed`, {
+    //             position: "bottom-right",
+    //             style: {
+    //                 font: "400 21px/100% 'DM Sans'",
+    //             },
+    //         });
+    //     } else {
+    //         toast.error(`Recheck the data`, {
+    //             position: "bottom-right",
+    //             style: {
+    //                 font: "400 21px/100% 'DM Sans'",
+    //             },
+    //         });
+    //     }
+    // }
 
     useEffect(() => {
-        axios
-            .post(
-                "https://nft-one.art/api/users/list",
-                {
-                    subqueries: {
-                        hdr: {}
-                    },
-                },
-                {
-                    auth: {
-                        username: "odmen",
-                        password: "NFTflsy",
-                    },
-                },
-            )
-            .then(response => {
-                setUsers(response.data.items)
-            })
-            .catch(error => {
-                console.log(error);
-            });
-    }, [])
+        let currentTab = window.location.href.split("#")[1];
+        setWindowView(currentTab ? currentTab : "nft");
+    }, []);
 
     useEffect(() => {
-        if(users.length > 0) {
-            users.map(user => (user.ton_addr === localStorage.getItem("tonhubUsername") || user.ton_addr === localStorage.getItem("tonkeeperUsername")) ? setUsername(user.name) : null)
-            users.map(user => (user.ton_addr === localStorage.getItem("tonhubUsername") || user.ton_addr === localStorage.getItem("tonkeeperUsername")) ? setBannerHash(user.hdr?.hash) : null)
-        }
-    }, [users])
-
-    useEffect(() => {
-        if(acceptedFiles.length > 0) {
-            if(bannerActive) {
-                let currentUserID = null;
-                users.map(user => (user.ton_addr === localStorage.getItem("tonhubUsername") || user.ton_addr === localStorage.getItem("tonkeeperUsername")) ? currentUserID = user.id : null);
+        if(acceptedFilesFromBanner.length > 0) {
                 const formData = new FormData();
                 formData.append("json_data", JSON.stringify({
                     items: [
                         {
-                            id: Number(currentUserID),
+                            id: currentUser.id,
                             hdr: "hdr"
                         }
                     ]
                 }));
-                formData.append("hdr", acceptedFiles[0]);
+                formData.append("hdr", acceptedFilesFromBanner[0]);
                 axios
                     .post(
                         "https://nft-one.art/api/users/upsert",
@@ -159,13 +203,13 @@ function MyNFT() {
                     .then(response => {
                     axios
                         .post(
-                            "https://nft-one.art/api/users/list",
+                            "https://nft-one.art/api/auth/current",
                             { 
-                                subqueries: {
-                                    hdr: {}
-                                },
                             },
                             {
+                                headers: {
+                                    Token: localStorage.getItem("tonkeeperToken") ? localStorage.getItem("tonkeeperToken") : localStorage.getItem("tonhubToken")
+                                },
                                 auth: {
                                     username: "odmen",
                                     password: "NFTflsy",
@@ -173,7 +217,7 @@ function MyNFT() {
                             },
                         )
                         .then(response => {
-                            response.data.items.map(item => Number(item.id) === Number(currentUserID) ? setBannerHash(item.hdr.hash) : null)
+                            setBannerHash(response.data.user.hdr.hash);
                         })
                         .catch(error => {
                             console.log(error);
@@ -182,58 +226,159 @@ function MyNFT() {
                     .catch(error => {
                         console.log(error);
                     });
-                setBannerActive(false);
-            }
-            if(avatarActive) {}
         }
-    }, [acceptedFiles])
+        if(acceptedFilesFromAvatar.length > 0) {
+                const formData = new FormData();
+                formData.append("json_data", JSON.stringify({
+                    items: [
+                        {
+                            id: currentUser.id,
+                            img: "avatar"
+                        }
+                    ]
+                }));
+                formData.append("avatar", acceptedFilesFromAvatar[0]);
+                axios
+                    .post(
+                        "https://nft-one.art/api/users/upsert",
+                        formData,
+                        {
+                            headers: {
+                                "Content-Type": "multipart/form-data",
+                                Token: localStorage.getItem("tonkeeperToken") ? localStorage.getItem("tonkeeperToken") : localStorage.getItem("tonhubToken")
+                            },
+                            auth: {
+                                username: "odmen",
+                                password: "NFTflsy",
+                            },
+                        },
+                    )
+                    .then(response => {
+                    axios
+                        .post(
+                            "https://nft-one.art/api/auth/current",
+                            { 
+                            },
+                            {
+                                headers: {
+                                    Token: localStorage.getItem("tonkeeperToken") ? localStorage.getItem("tonkeeperToken") : localStorage.getItem("tonhubToken")
+                                },
+                                auth: {
+                                    username: "odmen",
+                                    password: "NFTflsy",
+                                },
+                            },
+                        )
+                        .then(response => {
+                            setAvatarHash(response.data.user.img.hash)
+                        })
+                        .catch(error => {
+                            console.log(error);
+                        });
+                    })
+                    .catch(error => {
+                        console.log(error);
+                    });
+        }
+    }, [acceptedFilesFromBanner, acceptedFilesFromAvatar])
+
+    // Получаем объект текущего пользователя
+    useEffect(() => {
+        axios
+            .post(
+                "https://nft-one.art/api/auth/current",
+                {
+                },
+                {
+                    headers: {
+                        Token: localStorage.getItem("tonkeeperToken") ? localStorage.getItem("tonkeeperToken") : localStorage.getItem("tonhubToken")
+                    },
+                    auth: {
+                        username: "odmen",
+                        password: "NFTflsy",
+                    },
+                },
+            )
+            .then(response => {
+                setCurrentUser(response.data.user)
+            })
+            .catch(error => {
+                console.log(error);
+            });
+    }, [])
+
+    // Когда объект пользователя загружен, мы устанавливаем все стейты с данными
+    useEffect(() => {
+        if(JSON.stringify(currentUser) !== "{}") {
+            setUsername(currentUser.name);
+            setInfo(currentUser.info);
+            setAvatarHash(currentUser.img.hash);
+            setBannerHash(currentUser.hdr.hash)
+        }
+    }, [currentUser])
 
     return (
         <>
             <Header />
-            <section className={`myBanner ${changeTheme("", "myBanner--dark")} ${bannerHash ? "myBanner--hovme" : null} dropzone`} {...getRootProps()}
+            <section className={`myBanner ${changeTheme("", "myBanner--dark")} ${bannerHash ? "myBanner--hovme" : null} dropzone`} {...getRootPropsFromBanner()}
             style={{background: `${bannerHash ? `url(https://nft-one.art/api/files/thumb/?hash=${bannerHash}) no-repeat center center/cover` : "linear-gradient(105.78deg, #2442ad 0%, #2240e0 35.44%, #1fbdeb 67.05%, #f39475 99.49%)"}`}}
-            
-            >
-            <div className="myBanner__download" style={{opacity: `${bannerHash ? "0" : "1"}`}}>
-                    <img src={`./img/sections/myNFT/download-${theme}.svg`} alt="" class="myBanner__download-img" />
-                    <p class="myBanner__download-title">Add banner</p>
-                    <p class="myBanner__download-text">Optimal dimensions: 2500×650</p>
+            onMouseOver={() => setBannerHover(true)} onMouseOut={() => setBannerHover(false)}>
+                <div className="myBanner__download" style={{opacity: `${bannerHash ? "0" : "1"}`}}>
+                        <img src={`./img/sections/myNFT/download-${theme}.svg`} alt="" class="myBanner__download-img" />
+                        <p class="myBanner__download-title">Add banner</p>
+                        <p class="myBanner__download-text">Optimal dimensions: 2500×650</p>
                 </div>
+                <div className="myBanner--extra" style={{opacity: `${bannerHover && bannerHash ? "1" : "0"}`}}>+</div>
+                {/* <input className="myBanner--mobileLoad" {...getInputPropsFromBanner} type="file" onClick={e => e.stopPropagation()}/> */}
             </section>
             <section className={`myContent ${changeTheme("", "myContent--dark")}`}>
                 <div class="myContent__left">
                     <div className="myContent__left-user">
-                        <div className="myContent__left-user-box dropzone" {...getRootProps()} onMouseOver={() => setAvatarHover(true)} onMouseOut={() => setAvatarHover(false)}>
+                        <div className="myContent__left-user-box dropzone" {...getRootPropsFromAvatar()} onMouseOver={() => setAvatarHover(true)} onMouseOut={() => setAvatarHover(false)}>
                             <img className="myContent__left-user-avatar" src={avatarHash ? `https://nft-one.art/api/files/thumb/?hash=${avatarHash}` : "./img/sections/myNFT/avatar.svg"} alt=""/>
                             <div className="myContent__left-user-avatar--extra" style={{opacity: `${avatarHover ? "1" : "0"}`}}>+</div>
+                            {/* <input className="myContent--mobileLoad" {...getInputPropsFromAvatar} type="file" onClick={e => e.stopPropagation()}/> */}
                         </div>
-                        <h6 className="myContent__left-user-name">{ username.length > 12 ? username.slice(0, 12) + '...' : username }</h6>
-                        <div className="myContent__left-user-social">
-                            <a href="#">
-                                <img src="./img/sections/myNFT/vk.svg" alt="" />
-                            </a>
-                            <a href="#">
-                                <img src="./img/sections/myNFT/telegram.svg" alt="" />
-                            </a>
-                            <a href="#">
-                                <img src="./img/sections/myNFT/twitter.svg" alt="" />
-                            </a>
-                            <a href="#">
-                                <img src="./img/sections/myNFT/reddit.svg" alt="" />
-                            </a>
-                            <a href="#">
-                                <img src="./img/sections/myNFT/discord.svg" alt="" />
-                            </a>
-                        </div>
+                        <h6 className="myContent__left-user-name">{ username.length > 18 ? username.slice(0, 18) + '...' : username }</h6>
+                            <div className="myContent__left-user-social">
+                                {
+                                    (JSON.stringify(currentUser.social_links) !== "{}" && JSON.stringify(currentUser.social_links !== '{"vk":"","telegram":"","twitter":"","reddit":"","discord":""}')) && (
+                                    <>
+                                        <a href="#">
+                                            <img src="./img/sections/myNFT/vk.svg" alt="" />
+                                        </a>
+                                        <a href="#">
+                                            <img src="./img/sections/myNFT/telegram.svg" alt="" />
+                                        </a>
+                                        <a href="#">
+                                            <img src="./img/sections/myNFT/twitter.svg" alt="" />
+                                        </a>
+                                        <a href="#">
+                                            <img src="./img/sections/myNFT/reddit.svg" alt="" />
+                                        </a>
+                                        <a href="#">
+                                            <img src="./img/sections/myNFT/discord.svg" alt="" />
+                                        </a>
+                                    </>
+                                )
+                                }
+                            </div>
                         <p className="myContent__left-user-text">
-                            Let people find out more about you.
-                            <br />
-                            <br />
-                            Fill out your personal information: nickname, description and social media. Add a new
-                            banner.
+                            {
+                                info === "" ? (
+                                    <>
+                                        Let people find out more about you.
+                                        <br />
+                                        <br />
+                                        Fill out your personal information: nickname, description and social media. Add a new
+                                        banner.
+                                    </>
+                                ) : (
+                                    info
+                                )
+                            }
                         </p>
-                        <button className="myContent__left-user-edit">Edit profile</button>
+                        <button className="myContent__left-user-edit" onClick={() => setEditProfile(!editProfile)}>Edit profile</button>
                     </div>
                     {(windowView === "collection" && window.innerWidth > 768) && (
                         <>
@@ -500,6 +645,64 @@ function MyNFT() {
                     </div>
                 </div>
             </section>
+            {
+                editProfile && (
+                    <div className="editProfile">
+                        <div class="editProfile__box">
+                            <h1>Edit Profile</h1>
+                            <div className="editProfile__box-name">
+                                <label>
+                                    Name
+                                </label>
+                                <div>
+                                    <input value={nameForm} onChange={(e) => setNameForm(e.target.value)} type="text" placeholder="Alexey Zuzin"/>
+                                </div>
+                            </div>
+                            <div className="editProfile__box-info">
+                                <label>
+                                    Info
+                                </label>
+                                <div>
+                                    <textarea value={infoForm} onChange={(e) => setInfoForm(e.target.value)} placeholder="Tell people about yourself"></textarea>
+                                </div>
+                            </div>
+                            <div className="editProfile__box-social">
+                                <label>
+                                    Social Links
+                                </label>
+                                <ul>
+                                    <li>
+                                        <input type="text" placeholder="id" value={socialForm.vk}  data-social="vk" onChange={(e) => setSocialFormChange(e)}/>
+                                    </li>
+                                    <li>
+                                        <input type="text" placeholder="nickname" value={socialForm.telegram}  data-social="telegram" onChange={(e) => setSocialFormChange(e)}/>
+                                    </li>
+                                    <li>
+                                        <input type="text" placeholder="nickname" value={socialForm.twitter}  data-social="twitter" onChange={(e) => setSocialFormChange(e)}/>
+                                    </li>
+                                    <li>
+                                        <input type="text" placeholder="nickname" value={socialForm.reddit}  data-social="reddit" onChange={(e) => setSocialFormChange(e)}/>
+                                    </li>
+                                    <li>
+                                        <input type="text" placeholder="id" value={socialForm.discord}  data-social="discord" onChange={(e) => setSocialFormChange(e)}/>
+                                    </li>
+                                </ul>
+                            </div>
+                            <div className="editProfile__box-email">
+                                <label>
+                                    Email
+                                </label>
+                                <div>
+                                    <input value={emailForm} onChange={e => setEmailForm(e.target.value)} type="email" placeholder="Enter email"/>
+                                </div>
+                            </div>
+                            <button className="editProfile__box-save">Save</button>
+                            <img onClick={() => setEditProfile(false)} src={`./img/header/${theme === "light" ? "close" : "close-white"}.png`} alt=""/>
+                        </div>
+                        <Toaster />
+                    </div>
+                )
+            }
             <Footer />
         </>
     );

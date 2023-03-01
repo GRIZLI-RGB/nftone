@@ -189,6 +189,7 @@ function Header({ currentPage }) {
                 setCollections(json);
             });
     }, []);
+    
     useEffect(() => {
         if (popup) {
             document.body.style.overflow = "hidden";
