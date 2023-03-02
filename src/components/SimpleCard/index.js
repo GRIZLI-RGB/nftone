@@ -2,7 +2,7 @@ import { useContext, useState } from "react";
 import { ContextApp } from "../../Context";
 import "./SimpleCard.scss";
 
-function SimpleCard({nft}) {
+function SimpleCard({nft, avatarHash}) {
     const [diamond, setDiamond] = useState("dark");
     const { theme, changeTheme } = useContext(ContextApp);
     return (
@@ -11,7 +11,7 @@ function SimpleCard({nft}) {
             onMouseOver={() => setDiamond("light")}
             onMouseOut={() => setDiamond("dark")}
             style={{ background: changeTheme("#fff", "#2B3239"), color: changeTheme("#000", "#fff") }}>
-            <img className="simpleCard__photo" src={`./img/card/photo-${nft?.img}.svg`} alt="Card" />
+            <img className="simpleCard__photo" src={`https://nft-one.art/api/files/thumb/?hash=${nft.img.hash}`} alt="Card" />
             <div className="simpleCard__info">
                 <div className="simpleCard__info-left">
                     <h6 className="simpleCard__info-left-title">{nft?.name}</h6>
@@ -22,8 +22,8 @@ function SimpleCard({nft}) {
                 </div>
                 <div className="simpleCard__info-right">
                     <div class="simpleCard__info-right-user">
-                        <img className="simpleCard__info-right-user-avatar" src="./img/card/avatar.png" alt="Avatar" />
-                        <p className="simpleCard__info-right-user-name">by {nft?.creator}</p>
+                        <img className="simpleCard__info-right-user-avatar" src={avatarHash ? `https://nft-one.art/api/files/thumb/?hash=${avatarHash}` : "./img/sections/myNFT/avatar.svg"} alt="Avatar" />
+                        <p className="simpleCard__info-right-user-name">by {nft.creator.name}</p>
                     </div>
                     <div className="simpleCard__info-right-count">
                         1 of 321

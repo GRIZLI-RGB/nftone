@@ -8,6 +8,7 @@ import NFT from "./pages/NFT";
 import Collection from "./pages/Collection";
 import MyNFT from "./pages/MyNFT";
 import AdminPanel from "./pages/AdminPanel";
+import ConfirmEmail from "./pages/ConfirmEmail";
 
 function App() {
     return (
@@ -22,6 +23,7 @@ function App() {
                 <Route exact path="/collection" element={<Collection />} />
                 <Route exact path="/my-nft" element={<MyNFT />} />
                 <Route exact path="/admin-panel" element={<AdminPanel/>} />
+                <Route path="/confirm" element={<ConfirmEmail/>}/>
             </Routes>
         </>
     );

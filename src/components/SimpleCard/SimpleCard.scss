@@ -35,6 +35,9 @@
     &__photo {
         margin-bottom: 1.8vw;
         width: 20.60vw;
+        border-radius: 12px;
+        display: block;
+        height: 15.9vw;
     }
     &__info {
         display: flex;
@@ -67,6 +70,7 @@
                 justify-content: flex-end;
                 &-avatar {
                     width: 1.3vw;
+                    border-radius: 100%;
                 }
                 &-name {
                     font: 500 0.73vw/0.94vw "DM Sans";

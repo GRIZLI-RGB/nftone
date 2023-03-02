@@ -26,6 +26,40 @@ function Header({ currentPage }) {
     const [tonhubData, setTonhubData] = useState({});
     const [tonhubQR, setTonhubQR] = useState(false);
 
+    const [currentUser, setCurrentUser] = useState({});
+    const [avatarHash, setAvatarHash] = useState();
+
+    // Получаем объект текущего пользователя
+    useEffect(() => {
+        axios
+            .post(
+                "https://nft-one.art/api/auth/current",
+                {
+                },
+                {
+                    headers: {
+                        Token: localStorage.getItem("tonkeeperToken") ? localStorage.getItem("tonkeeperToken") : localStorage.getItem("tonhubToken")
+                    },
+                    auth: {
+                        username: "odmen",
+                        password: "NFTflsy",
+                    },
+                },
+            )
+            .then(response => {
+                setCurrentUser(response.data.user)
+            })
+            .catch(error => {
+                console.log(error);
+            });
+    }, [])
+
+    useEffect(() => {
+        if(JSON.stringify(currentUser) !== "{}") {
+            setAvatarHash(currentUser.img.hash)
+        }
+    }, [currentUser])
+
     // Проверка при старте страницы на то, авторизован ли пользователь (отслеживаем наличие токенов в localStorage)
     useEffect(() => {
         if(localStorage.getItem("tonkeeperToken") || localStorage.getItem("tonhubToken")) {
@@ -302,7 +336,7 @@ function Header({ currentPage }) {
                     ) : (
                         <>
                             <button className="header__buttons-user" onClick={() => setUserMenu(!userMenu)}>
-                                <img className="header__buttons-user-avatar" src="./img/header/avatar.svg" alt="" />
+                                <img className="header__buttons-user-avatar" src={avatarHash ? `https://nft-one.art/api/files/thumb/?hash=${avatarHash}` : "./img/sections/myNFT/avatar.svg"} alt="" />
                                 {
                                     localStorage.getItem("tonhubUsername")
                                     ? localStorage.getItem("tonhubUsername").slice(0, 8)

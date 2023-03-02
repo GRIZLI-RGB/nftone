@@ -354,6 +354,18 @@
             display: flex;
             gap: 0.83vw;
             flex-wrap: wrap;
+            &-zero {
+                font: 400 18px/100% 'DM Sans';
+                margin-top: 8px;
+                & > a {
+                    color: rgb(50, 88, 192);
+                    text-decoration: underline;
+                    transition: all .2s;
+                    &:hover {
+                        color: rgb(0, 25, 151);
+                    }
+                }
+            }
         }
     }
 }
@@ -369,6 +381,14 @@
     display: flex;
     align-items: center;
     justify-content: center;
+    &--dark {
+        .editProfile__box {
+            input, textarea {
+                background: #272E37;
+                border-color: #373F4A;
+            }
+        }
+    }
     &__box {
         background-color: #fff;
         padding: 30px;
@@ -449,8 +469,18 @@
             }
         }
         &-email {
+            &-confirmed {
+                filter: invert(48%) sepia(85%) saturate(1080%) hue-rotate(70deg) brightness(109%) contrast(105%);
+            }
             & > div {
                 position: relative;
+                & > img {
+                    position: absolute;
+                    top: 50%;
+                    transform: translateY(-50%);
+                    right: 14px;
+                    width: 32px;
+                }
                 &::after {
                     position: absolute;
                     content: "";

@@ -3,6 +3,7 @@
   "version": "0.1.0",
   "private": false,
   "dependencies": {
+    "@emailjs/browser": "^3.10.0",
     "@emotion/react": "^11.10.5",
     "@emotion/styled": "^11.10.5",
     "@fullpage/react-fullpage": "^0.1.32",
@@ -34,6 +35,7 @@
     "react-scripts": "5.0.1",
     "react-slick": "^0.29.0",
     "react-ton-x": "^1.0.3",
+    "react-tooltip": "^5.8.3",
     "react-uuid": "^2.0.0",
     "sass": "^1.57.1",
     "slick-carousel": "^1.8.1",
