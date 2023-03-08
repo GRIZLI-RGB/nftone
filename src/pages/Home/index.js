@@ -9,6 +9,7 @@ import Footer from "./../../components/Footer";
 import Skeleton from "react-loading-skeleton";
 import "react-loading-skeleton/dist/skeleton.css";
 import axios from "axios";
+import Countdown from "react-countdown";
 
 function Home() {
     const [popularNFT, setPopularNFT] = useState([]);
@@ -22,6 +23,10 @@ function Home() {
 
     const [popularFilter, setPopularFilter] = useState("nft");
     const [recentFilter, setRecentFilter] = useState("nft");
+
+    const [currentUser, setCurrentUser] = useState({});
+
+    const [popularWelcome, setPopularWelcome] = useState([]);
 
     const { changeTheme } = useContext(ContextApp);
 
@@ -49,16 +54,82 @@ function Home() {
         ],
     };
 
-    // Получение с сервера Popular NFTs
+    const rendererCountdown = ({ hours, minutes, seconds, completed }) => {
+        if(completed) {
+            return;
+        } else {
+            return <span>{hours}h {minutes}m {seconds}s</span>
+        }
+    }
+
+    // Smooth scroll for "Explore Now"
+    useEffect(() => {
+        const anchors = document.querySelectorAll('a.welcome__info-btn')
+        for (let anchor of anchors) {
+        anchor.addEventListener('click', function (e) {
+            e.preventDefault()
+            const blockID = anchor.getAttribute('href')
+            document.querySelector(blockID).scrollIntoView({
+            behavior: 'smooth',
+            block: 'start'
+            })
+        })
+        }
+    }, [])
+
     useEffect(() => {
         axios
             .post(
-                "https://nft-one.art/api/nfts/list",
+                "https://nft-one.art/api/batch",
                 {
-                    order_by: "most_popular desc",
-                    subqueries: {
-                        img: {}
-                      },
+                    "popular-nfts": {
+                        "action": "nfts/list",
+                        subqueries: {
+                            img: {},
+                            creator: {
+                                subqueries: {
+                                    img: {}
+                                }
+                            }
+                        },
+                        order_by: "most_popular"
+                    },
+                    "recent-nfts": {
+                        "action": "nfts/list",
+                        order_by: "add_time",
+                        subqueries: {
+                            img: {},
+                            creator: {
+                                subqueries: {
+                                    img: {}
+                                }
+                            }
+                        }
+                    },
+                    "popular-collection": {
+                        "action": "nft_collections/list",
+                        subqueries: {
+                            img: {},
+                            creator: {
+                                subqueries: {
+                                    img: {}
+                                }
+                            }
+                        },
+                        order_by: "most_popular"
+                    },
+                    "recent-collection": {
+                        "action": "nft_collections/list",
+                        order_by: "add_time",
+                        subqueries: {
+                            img: {},
+                            creator: {
+                                subqueries: {
+                                    img: {}
+                                }
+                            }
+                        }
+                    }
                 },
                 {
                     auth: {
@@ -68,26 +139,28 @@ function Home() {
                 },
             )
             .then(response => {
-                setPopularNFT(response.data.items);
+                setPopularNFT(response.data["popular-nfts"].items);
+                setPopularCollection(response.data["popular-collection"].items)
                 setIsLoadingPopular(false);
+                setRecentNFT(response.data["recent-nfts"].items);
+                setRecentCollection(response.data["recent-collection"].items)
+                setIsLoadingRecent(false);
             })
             .catch(error => {
-                console.log("Ошибка при получении Popular NFTs:", error);
-            });
+                console.log(error)
+            })
     }, [])
 
-    // Получение с сервера Recent NFTs
     useEffect(() => {
         axios
             .post(
-                "https://nft-one.art/api/nfts/list",
+                "https://nft-one.art/api/auth/current",
                 {
-                    order_by: "most_popular desc",
-                    subqueries: {
-                        img: {}
-                      },
                 },
                 {
+                    headers: {
+                        Token: localStorage.getItem("tonkeeperToken") ? localStorage.getItem("tonkeeperToken") : localStorage.getItem("tonhubToken")
+                    },
                     auth: {
                         username: "odmen",
                         password: "NFTflsy",
@@ -95,21 +168,21 @@ function Home() {
                 },
             )
             .then(response => {
-                setPopularNFT(response.data.items);
-                setIsLoadingPopular(false);
+                setCurrentUser(response.data.user);
             })
             .catch(error => {
-                console.log("Ошибка при получении Popular NFTs:", error);
+                console.log(error);
             });
     }, [])
 
     useEffect(() => {
-        popularFilter === "collection" ? setIsLoadingPopular(true) : setIsLoadingPopular(false);
-    }, [popularFilter])
-
-    useEffect(() => {
-        recentFilter === "collection" ? setIsLoadingRecent(true) : setIsLoadingRecent(false);
-    }, [recentFilter])
+        if(popularNFT.length > 0 && popularWelcome.length === 0) {
+            const oneNFT = popularNFT[Math.floor(Math.random() * popularNFT.length)]
+            const twoNFT = popularNFT[Math.floor(Math.random() * popularNFT.length)]
+            const threeNFT = popularNFT[Math.floor(Math.random() * popularNFT.length)]
+            setPopularWelcome([oneNFT, twoNFT, threeNFT]);
+        }
+    }, [popularNFT])
 
     return (
         <>
@@ -122,12 +195,37 @@ function Home() {
                         Digital marketplace for crypto collectibles and non-fungible tokens (NFTs). Buy, Sell, and
                         discover exclusive digital assets.
                     </p>
-                    <button className="welcome__info-btn" id="popular-btn">
+                    <a className="welcome__info-btn" href="#popular-section">
                         Explore Now
-                    </button>
+                    </a>
                 </div>
                 <div className="welcome__library">
-                    <div className="welcome__library-item welcome__library-item-1">
+                    {
+                        popularWelcome.map((item, index) => (
+                            <div className={`welcome__library-item welcome__library-item-${index + 1}`} style={{background: `${`url(https://nft-one.art/api/files/thumb/?hash=${item.img.hash}) no-repeat center center/cover`}`}}>
+                                <h6 className="welcome__library-item-title">{item.name}</h6>
+                                <div className="welcome__library-item-user">
+                                    <img
+                                        className="welcome__library-item-user-avatar"
+                                        src={`https://nft-one.art/api/files/thumb/?hash=${item.creator.img.hash}`}
+                                        alt="Avatar"
+                                    />
+                                    <p className="welcome__library-item-user-name">{item.creator.name}</p>
+                                </div>
+                                <div class="welcome__library-item-info">
+                                    <div class="welcome__library-item-info-left">
+                                        <p class="welcome__library-item-info-left-label">Current Bid</p>
+                                        <p class="welcome__library-item-info-left-price">{item.price}</p>
+                                    </div>
+                                    <div class="welcome__library-item-info-right">
+                                        <p class="welcome__library-item-info-right-label">Ends in</p>
+                                        <p class="welcome__library-item-info-right-time"><Countdown date={Date.now() + 863999000} renderer={rendererCountdown}/></p>
+                                    </div>
+                                </div>
+                            </div>
+                        ))
+                    }
+                    {/* <div className="welcome__library-item welcome__library-item-1">
                         <img className="welcome__library-item-bg" src="./img/card/card-bg.svg" alt="Card background" />
                         <h6 className="welcome__library-item-title">Abstr Gradient NFT</h6>
                         <div className="welcome__library-item-user">
@@ -141,11 +239,11 @@ function Home() {
                         <div class="welcome__library-item-info">
                             <div class="welcome__library-item-info-left">
                                 <p class="welcome__library-item-info-left-label">Current Bid</p>
-                                <p class="welcome__library-item-info-left-price">0.25 TON</p>
+                                <p class="welcome__library-item-info-left-price">0.25</p>
                             </div>
                             <div class="welcome__library-item-info-right">
                                 <p class="welcome__library-item-info-right-label">Ends in</p>
-                                <p class="welcome__library-item-info-right-time">12h 43m 42s</p>
+                                <p class="welcome__library-item-info-right-time"><Countdown date={Date.now() + 863999000} renderer={rendererCountdown}/></p>
                             </div>
                         </div>
                     </div>
@@ -163,7 +261,7 @@ function Home() {
                         <div class="welcome__library-item-info">
                             <div class="welcome__library-item-info-left">
                                 <p class="welcome__library-item-info-left-label">Current Bid</p>
-                                <p class="welcome__library-item-info-left-price">0.25 TON</p>
+                                <p class="welcome__library-item-info-left-price">0.25</p>
                             </div>
                             <div class="welcome__library-item-info-right">
                                 <p class="welcome__library-item-info-right-label">Ends in</p>
@@ -185,17 +283,47 @@ function Home() {
                         <div class="welcome__library-item-info">
                             <div class="welcome__library-item-info-left">
                                 <p class="welcome__library-item-info-left-label">Current Bid</p>
-                                <p class="welcome__library-item-info-left-price">0.25 TON</p>
+                                <p class="welcome__library-item-info-left-price">0.25</p>
                             </div>
                             <div class="welcome__library-item-info-right">
                                 <p class="welcome__library-item-info-right-label">Ends in</p>
                                 <p class="welcome__library-item-info-right-time">12h 43m 42s</p>
                             </div>
                         </div>
-                    </div>
+                    </div> */}
                 </div>
                 <div className="welcome__libraryMobile">
-                    <div className="welcome__libraryMobile-item welcome__libraryMobile-item-1">
+                    {
+                        popularWelcome.map((item, index) => (
+                            <div className={`welcome__libraryMobile-item welcome__libraryMobile-item-${index + 1}`} style={{background: `${`url(https://nft-one.art/api/files/thumb/?hash=${item.img.hash}) no-repeat center center/cover`}`}}>
+                                {/* <img
+                                    className="welcome__libraryMobile-item-bg"
+                                    src="./img/card/card-bg.svg"
+                                    alt="Card background"
+                                /> */}
+                                <h6 className="welcome__libraryMobile-item-title">{item.name}</h6>
+                                <div className="welcome__libraryMobile-item-user">
+                                    <img
+                                        className="welcome__libraryMobile-item-user-avatar"
+                                        src={`https://nft-one.art/api/files/thumb/?hash=${item.creator.img.hash}`}
+                                        alt="Avatar"
+                                    />
+                                    <p className="welcome__libraryMobile-item-user-name">{item.creator.name}</p>
+                                </div>
+                                <div class="welcome__libraryMobile-item-info">
+                                    <div class="welcome__libraryMobile-item-info-left">
+                                        <p class="welcome__libraryMobile-item-info-left-label">Current Bid</p>
+                                        <p class="welcome__libraryMobile-item-info-left-price">{item.price}</p>
+                                    </div>
+                                    <div class="welcome__libraryMobile-item-info-right">
+                                        <p class="welcome__libraryMobile-item-info-right-label">Ends in</p>
+                                        <p class="welcome__libraryMobile-item-info-right-time"><Countdown date={Date.now() + 863999000} renderer={rendererCountdown}/></p>
+                                    </div>
+                                </div>
+                            </div>
+                        ))
+                    }
+                    {/* <div className="welcome__libraryMobile-item welcome__libraryMobile-item-1">
                         <img
                             className="welcome__libraryMobile-item-bg"
                             src="./img/card/card-bg.svg"
@@ -272,7 +400,7 @@ function Home() {
                                 <p class="welcome__libraryMobile-item-info-right-time">12h 43m 42s</p>
                             </div>
                         </div>
-                    </div>
+                    </div> */}
                 </div>
             </section>
             <section
@@ -297,14 +425,13 @@ function Home() {
                         Collections
                     </button>
                 </div>
-
                 {(isLoadingPopular) ? (
                     <Skeleton height="24.21vw" style={{marginTop: "47px"}} count={1} />
                 ) : (
                     <Slider class="popular__list" {...settingsForSlider}>
                         {popularFilter === "nft"
-                            ? popularNFT.map(nft => <Card nft={nft} />)
-                            : popularCollection.map(collection => <CollectionCard collection={collection} />)}
+                            ? popularNFT.map(nft => <Card nft={nft} currentUser={currentUser}/>)
+                            : popularCollection.map(collection => <CollectionCard collection={collection} currentUser={currentUser}/>)}
                     </Slider>
                 )}
             </section>
@@ -332,8 +459,8 @@ function Home() {
                 ) : (
                     <Slider class="popular__list" {...settingsForSlider}>
                         {recentFilter === "nft"
-                            ? popularNFT.map(nft => <Card nft={nft} />)
-                            : popularCollection.map(collection => <CollectionCard collection={collection} />)}
+                            ? recentNFT.map(nft => <Card nft={nft} currentUser={currentUser}/>)
+                            : recentCollection.map(collection => <CollectionCard collection={collection} currentUser={currentUser}/>)}
                     </Slider>
                 )}
                 <div class="recent__all">

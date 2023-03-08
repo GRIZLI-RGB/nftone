@@ -1,20 +1,185 @@
 import { useContext, useState } from "react";
 import "./Card.scss";
 import { ContextApp } from "../../Context";
+import { useEffect } from "react";
+import axios from "axios";
 
-function Card({nft}) {
+function Card({nft, currentUser}) {
     const [diamond, setDiamond] = useState("dark");
     const { theme, changeTheme } = useContext(ContextApp);
 
+    const [likes, setLikes] = useState([0, 0, 0, 0, 0, 0, 0]);
 
-    // example photo hash c1b7c8e65f56cc2d951547cbea4037a03377ff40
+    useEffect(() => {
+        axios
+            .post(
+                "https://nft-one.art/api/batch",
+                {
+                    "1": {
+                        "action": "nft_likes/list",
+                        "filters": {
+                            "nft_id": nft.id,
+                            "type_id": 1
+                        }
+                    },
+                    "2": {
+                        "action": "nft_likes/list",
+                        "filters": {
+                            "nft_id": nft.id,
+                            "type_id": 2
+                        }
+                    },
+                    "3": {
+                        "action": "nft_likes/list",
+                        "filters": {
+                            "nft_id": nft.id,
+                            "type_id": 3
+                        }
+                    },
+                    "4": {
+                        "action": "nft_likes/list",
+                        "filters": {
+                            "nft_id": nft.id,
+                            "type_id": 4
+                        }
+                    },
+                    "5": {
+                        "action": "nft_likes/list",
+                        "filters": {
+                            "nft_id": nft.id,
+                            "type_id": 5
+                        }
+                    },
+                    "6": {
+                        "action": "nft_likes/list",
+                        "filters": {
+                            "nft_id": nft.id,
+                            "type_id": 6
+                        }
+                    },
+                    "7": {
+                        "action": "nft_likes/list",
+                        "filters": {
+                            "nft_id": nft.id,
+                            "type_id": 7
+                        }
+                    }
+                },
+                {
+                    auth: {
+                        username: "odmen",
+                        password: "NFTflsy",
+                    },
+                },
+            )
+            .then(response => {
+                setLikes([
+                response.data["1"].items.length,
+                response.data["2"].items.length,
+                response.data["3"].items.length,
+                response.data["4"].items.length,
+                response.data["5"].items.length,
+                response.data["6"].items.length,
+                response.data["7"].items.length
+                ]);
+            })
+            .catch(error => {
+                console.log(error);
+            });
+    }, [])
 
+    const handleUserLike = (e) => {
+        let hasUserLike = false;
+        axios
+            .post(
+                "https://nft-one.art/api/nft_likes/list",
+                {
+                    filters: {
+                        nft_id: nft.id,
+                        user_id: currentUser.id,
+                        type_id: e.target.getAttribute("data-emoji")
+                    }
+                },
+                {
+                    headers: {
+                        Token: localStorage.getItem("tonkeeperToken") ? localStorage.getItem("tonkeeperToken") : localStorage.getItem("tonhubToken")
+                    },
+                    auth: {
+                        username: "odmen",
+                        password: "NFTflsy",
+                    },
+                },
+            )
+            .then(response => {
+                hasUserLike = (response.data.items.length > 0);
+                if(hasUserLike) {
+                    axios
+                        .post(
+                            "https://nft-one.art/api/nft_likes/unlike",
+                            {
+                                nft_id: nft.id,
+                                type_id: e.target.getAttribute("data-emoji")
+                            },
+                            {
+                                headers: {
+                                    Token: localStorage.getItem("tonkeeperToken") ? localStorage.getItem("tonkeeperToken") : localStorage.getItem("tonhubToken")
+                                },
+                                auth: {
+                                    username: "odmen",
+                                    password: "NFTflsy",
+                                },
+                            },
+                        )
+                        .then(response => {
+                            let likes_copy = [...likes];
+                            likes_copy[Number(e.target.getAttribute("data-emoji")) - 1] -= 1;
+                            setLikes([...likes_copy]);
+                        })
+                        .catch(error => {
+                            console.log(error);
+                        });
+                } else {
+                    axios
+                        .post(
+                            "https://nft-one.art/api/nft_likes/upsert",
+                            {
+                                items: [{
+                                    nft_id: nft.id,
+                                    type_id: e.target.getAttribute("data-emoji"),
+                                    user_id: currentUser.id
+                                }]
+                            },
+                            {
+                                headers: {
+                                    Token: localStorage.getItem("tonkeeperToken") ? localStorage.getItem("tonkeeperToken") : localStorage.getItem("tonhubToken")
+                                },
+                                auth: {
+                                    username: "odmen",
+                                    password: "NFTflsy",
+                                },
+                            },
+                        )
+                        .then(response => {
+                            let likes_copy = [...likes];
+                            likes_copy[Number(e.target.getAttribute("data-emoji")) - 1] += 1;
+                            setLikes([...likes_copy]);
+                        })
+                        .catch(error => {
+                            console.log(error);
+                        });
+                }
+            })
+            .catch(error => {
+                console.log(error);
+            });
+    }
+    //  src={`https://nft-one.art/api/files/thumb/?hash=${nft.img.hash}`}
     return (
         <div
             className={changeTheme("card", "card card--dark")}
             onMouseOver={() => setDiamond('light')}
             onMouseOut={() => setDiamond('dark')}>
-            <img className="card__photo" src={`https://nft-one.art/api/files/thumb/?hash=${nft.img.hash}`} alt="Card" />
+            <div className="card__photo" style={{background: `${`url(https://nft-one.art/api/files/thumb/?hash=${nft.img.hash}) no-repeat center center/cover`}`}}></div>
             <div className="card__info">
                 <div className="card__info-left">
                     <h6 className="card__info-left-title">{nft.name}</h6>
@@ -25,42 +190,30 @@ function Card({nft}) {
                 </div>
                 <div className="card__info-right">
                     <div class="card__info-right-user">
-                        <img className="card__info-right-user-avatar" src="./img/card/avatar.png" alt="Avatar" />
-                        <p className="card__info-right-user-name">by creator</p>
+                        <img className="card__info-right-user-avatar" src={`https://nft-one.art/api/files/thumb/?hash=${nft.creator.img.hash}`} alt="Avatar" />
+                        <p className="card__info-right-user-name">by {nft.creator.name}</p>
                     </div>
                     <ul className="card__info-right-emoji">
-                        <li className={"card__info-right-emoji-item-" + theme}>
-                            ❤️<span>0</span>
-                        </li>
-                        <li className={"card__info-right-emoji-item-" + theme}>
-                            🤣<span>0</span>
-                        </li>
-                        <li className={"card__info-right-emoji-item-" + theme}>
-                            😍<span>0</span>
-                        </li>
-                        <li className={"card__info-right-emoji-item-" + theme}>
-                            😡<span>0</span>
-                        </li>
-                        <li className={"card__info-right-emoji-item-" + theme}>
-                            🙀<span>0</span>
-                        </li>
-                        <li className={"card__info-right-emoji-item-" + theme}>
-                            🥴<span>0</span>
-                        </li>
-                        <li className={"card__info-right-emoji-item-" + theme}>
-                            🤑<span>0</span>
-                        </li>
+                        {
+                            likes.every(el => el === 0) ? (
+                                <li className={"card__info-right-emoji-item-" + theme} style={{opacity: "0"}}>
+                                    😡<span>0</span>
+                                </li>
+                            ) : (
+                                ["❤️", "🤣", "😍", "😡", "🙀", "🥴", "🤑"].map((emoji, index) =>
+                                <li className={"card__info-right-emoji-item-" + theme} key={index} style={{display: `${likes[index] === 0 ? "none" : ""}`}}>
+                                    {emoji}<span>{likes[index]}</span>
+                                </li>
+                                )
+                            )
+                        }
                     </ul>
                 </div>
             </div>
             <ul className="card__menuEmoji">
-                <li className="card__menuEmoji-item">❤️</li>
-                <li className="card__menuEmoji-item">🤣</li>
-                <li className="card__menuEmoji-item">😍</li>
-                <li className="card__menuEmoji-item">😡</li>
-                <li className="card__menuEmoji-item">🙀</li>
-                <li className="card__menuEmoji-item">🥴</li>
-                <li className="card__menuEmoji-item">🤑</li>
+                {
+                    ["❤️", "🤣", "😍", "😡", "🙀", "🥴", "🤑"].map((item, index) => <li data-emoji={index + 1} className="card__menuEmoji-item" onClick={(e) => handleUserLike(e)}>{item}</li>)
+                }
             </ul>
         </div>
     );

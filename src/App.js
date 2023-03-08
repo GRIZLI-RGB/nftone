@@ -9,6 +9,7 @@ import Collection from "./pages/Collection";
 import MyNFT from "./pages/MyNFT";
 import AdminPanel from "./pages/AdminPanel";
 import ConfirmEmail from "./pages/ConfirmEmail";
+import CreateCollection from "./pages/CreateCollection";
 
 function App() {
     return (
@@ -19,6 +20,7 @@ function App() {
                 <Route exact path="/catalog" element={<Marketplace />} />
                 <Route exact path="/faq" element={<FAQ />} />
                 <Route exact path="/create-nft" element={<CreateNFT />} />
+                <Route exact path="/create-collection" element={<CreateCollection />} />
                 <Route exact path="/NFT" element={<NFT />} />
                 <Route exact path="/collection" element={<Collection />} />
                 <Route exact path="/my-nft" element={<MyNFT />} />

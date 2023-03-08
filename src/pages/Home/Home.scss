@@ -89,6 +89,7 @@
             color: #565656;
         }
         &-btn {
+            display: inline-block;
             font: 600 24px/29px "Montserrat";
             color: #fff;
             padding: 20px 40px;
@@ -127,6 +128,8 @@
             display: flex;
             transition: all 0.5s;
             border-radius: 24px;
+            min-width: 498px;
+            height: 547px;
             &-circle {
                 position: absolute;
                 // background: #ffe0d4;
@@ -170,7 +173,9 @@
                 align-items: flex-start;
                 left: 32px;
                 &-avatar {
-                    margin-right: 18px;
+                    margin-right: 15px;
+                    width: 2vw;
+                    border-radius: 100%;
                 }
             }
             &-info {
@@ -253,6 +258,13 @@
     &__libraryMobile {
         display: none;
         &-item {
+            min-width: 20.97vw;
+            height: 23.06vw;
+            &-user {
+                &-avatar {
+                    border-radius: 100%;
+                }
+            }
             &-1 {
                 position: relative;
                 &::after {
@@ -445,6 +457,7 @@
     .collectionCard {
         &__img {
             width: 35vw !important;
+            height: 35vw !important;
         }
         &__tag {
             padding: 1vw 1.6vw !important;
@@ -509,6 +522,9 @@
                 &-user {
                     padding: 15px 0;
                     justify-content: flex-start;
+                    &-avatar {
+                        width: 20px;
+                    }
                     &-name {
                         font-size: 14px;
                         line-height: 18px;
@@ -516,6 +532,7 @@
                     }
                 }
                 &-emoji {
+                    justify-content: flex-start;
                     &-item {
                         &-light,
                         &-dark {
@@ -883,7 +900,7 @@
         }
         &__libraryMobile {
             display: block;
-            max-width: 395px;
+            max-width: 390px;
             display: flex;
             align-items: center;
             &:hover &-item-1 {
@@ -1027,7 +1044,7 @@
         }
         &__libraryMobile {
             display: block;
-            max-width: 395px;
+            max-width: 385px;
             display: flex;
             align-items: center;
             &:hover &-item-1 {
@@ -1050,6 +1067,8 @@
                 display: flex;
                 transition: all 0.5s;
                 border-radius: 10px;
+                min-width: 25vw;
+                height: 27vw;
                 &-bg {
                     max-width: 260px;
                 }
@@ -1203,6 +1222,8 @@
                 display: flex;
                 transition: all 0.5s;
                 border-radius: 10px;
+                min-width: 265px;
+                height: 290px;
                 &-bg {
                     max-width: 260px;
                 }
@@ -1351,9 +1372,8 @@
                 display: flex;
                 transition: all 0.5s;
                 border-radius: 10px;
-                &-bg {
-                    max-width: 220px;
-                }
+                min-width: 215px;
+                height: 240px;
                 &-title {
                     position: absolute;
                     top: 10%;
@@ -1474,18 +1494,19 @@
     .collectionCard {
         &__img {
             width: 53vw !important;
+            height: 53vw !important;
         }
         &__tag {
             padding: 1.8vw 2.5vw !important;
-            &-text {
-                font-size: 3vw !important;
+            & > p {
+                font-size: 2.6vw !important;
             }
         }
         &__info {
             height: 10vw !important;
+            padding: 0 !important;
             &-text {
                 font-size: 4vw !important;
-                padding: 3vw !important;
             }
         }
         &__emoji {

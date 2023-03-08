@@ -8,6 +8,8 @@ import { ContextApp } from "../../Context";
 import { useDropzone } from "react-dropzone";
 import axios from "axios";
 import { toast, Toaster } from "react-hot-toast";
+import Checkbox from "../../components/Checkbox";
+import $ from "jquery";
 
 function CreateNFT() {
     const { changeTheme, theme } = useContext(ContextApp);
@@ -20,17 +22,38 @@ function CreateNFT() {
     const [tags, setTags] = useState(["Example"]); // Tags
     const [tagInput, setTagInput] = useState("");
     const [collectionNFT, setCollectionNFT] = useState(""); // Collection
-    const [categoryNFT, setCategoryNFT] = useState(""); // Category
+    const [categories, setCategories] = useState([]); // Category
     const [description, setDescription] = useState(""); // Description
     const [typeNFT, setTypeNFT] = useState(""); // Type
     const [priceNFT, setPriceNFT] = useState(); // Price
     const [royalties, setRoyalties] = useState(0); // Royalties
 
+    const [configCategories, setConfigCategories] = useState([]);
+
     const { acceptedFiles, getRootProps, getInputProps } = useDropzone();
 
     useEffect(() => {
+        axios
+                .post("https://nft-one.art/api/config/get", {}, {
+                    headers: {
+                        Token: localStorage.getItem("tonhubToken") ? localStorage.getItem("tonhubToken") : localStorage.getItem("tonkeeperToken"),
+                    },
+                    auth: {
+                        username: "odmen",
+                        password: "NFTflsy",
+                    },
+                })
+                .then(response => {
+                    setConfigCategories(response.data.defaults["nft_categories"].split("\n"))
+                })
+                .catch(error => {
+                    console.log(error);
+                });
+    }, [])
+
+    useEffect(() => {
         setFilename(acceptedFiles[0]?.path);
-    }, [acceptedFiles[0]?.path]);
+    }, [acceptedFiles]);
 
     const setAttrsChange = (e, type) => {
         let attrs_copy = [...attrs];
@@ -66,48 +89,41 @@ function CreateNFT() {
         setAttrs(attrs_new);
     }
 
+    const getFormatAttrsForBackend = () => {
+        let new_attrs = {};
+        attrs.map(attr => new_attrs[attr.name] = attr.value);
+        return new_attrs;
+    }
+
+    const changeCategoriesArray = (e) => {
+        let currentCategory = e.target.innerText;
+        if (categories.includes(currentCategory)) {
+            setCategories(categories.filter(cat => cat !== currentCategory));
+        } else {
+            setCategories([...categories, currentCategory]);
+        }
+    }
+
     // сбрасывает все поля до дефолтных значений
     const resetEnters = () => {
         setNameNFT("");
         setTags(["Example"]);
         setCollectionNFT("");
-        setCategoryNFT("");
+        setCategories([]);
         setDescription("");
         setTypeNFT("");
         setPriceNFT("");
+        setFilename("");
         document.getElementById("slider-popa").value = "100";
+        $(".checkbox__input").prop("checked", false);
     };
 
     const validationEnters = () => {
-        if (nameNFT !== "" && collectionNFT !== "" && categoryNFT !== "" && typeNFT !== "" && priceNFT !== "" && acceptedFiles[0]) {
+        if (nameNFT !== "" && typeNFT !== "" && priceNFT !== "" && acceptedFiles[0]) {
             return true;
         } else {
             return false;
         }
-    };
-
-    // возвращает все НФТ
-    const seeNFTs = () => {
-        axios
-            .post(
-                "https://nft-one.art/api/nfts/list",
-                {},
-                {
-                    headers: {
-                        Token: localStorage.getItem("adminToken"),
-                    },
-                    auth: {
-                        username: "odmen",
-                        password: "NFTflsy",
-                    },
-                },
-            )
-            .then(response => {
-                console.log(response.data);
-            })
-            .catch(error => {
-                console.log("Ошибка при выводе NFTs:", error);
-            });
     };
 
     // создает НФТ
@@ -121,6 +137,9 @@ function CreateNFT() {
                     info: description,
                     royalty_pct: royalties,
                     price: priceNFT,
+                    attrs: getFormatAttrsForBackend(),
+                    state: typeNFT.toLowerCase(),
+                    categories: categories
                 }]
             }));
             formData.append("file123", acceptedFiles[0]);
@@ -136,18 +155,22 @@ function CreateNFT() {
                     },
                 })
                 .then(response => {
-                    console.log("Успешно", response.data);
+                    toast.success(`NFT «${nameNFT}» created`, {
+                        position: "bottom-right",
+                        style: {
+                            font: "400 21px/100% 'DM Sans'",
+                        },
+                    });
+                    resetEnters();
                 })
                 .catch(error => {
-                    console.log("Ошибка:", error);
+                    toast.error(`Server error: try later`, {
+                        position: "bottom-right",
+                        style: {
+                            font: "400 21px/100% 'DM Sans'",
+                        },
+                    });
                 });
-            resetEnters();
-            toast.success(`NFT «${nameNFT}» created`, {
-                position: "bottom-right",
-                style: {
-                    font: "400 21px/100% 'DM Sans'",
-                },
-            });
         } else {
             toast.error(`Check the data`, {
                 position: "bottom-right",
@@ -156,32 +179,6 @@ function CreateNFT() {
                 },
             });
         }
-    };
-
-    // удаляет НФТ
-    const deleteNFT = id => {
-        axios
-            .post(
-                "https://nft-one.art/api/nfts/delete",
-                {
-                    ids: [id],
-                },
-                {
-                    headers: {
-                        Token: localStorage.getItem("adminToken"),
-                    },
-                    auth: {
-                        username: "odmen",
-                        password: "NFTflsy",
-                    },
-                },
-            )
-            .then(response => {
-                console.log("Удаление NFT прошло успешно");
-            })
-            .catch(error => {
-                console.log("Ошибка при удалении NFT:", error);
-            });
     };
 
     return (
@@ -207,7 +204,7 @@ function CreateNFT() {
                         />
                         {filename ? (
                             <>
-                                <p className="createNFT__left-download-drag">{filename}</p>
+                                <p className="createNFT__left-download-drag">{filename.length > 12 ? filename.slice(filename.length - 12, filename.length) : filename}</p>
                             </>
                         ) : (
                             <>
@@ -219,10 +216,8 @@ function CreateNFT() {
                                 </p>
                             </>
                         )}
-                        {/* <input className="createNFT__left-download-browse" {...getInputProps} type="file"/> */}
-                        {/* Browse Files */}
                         <button className="createNFT__left-download-browse">
-                            <input {...getInputProps} type="file" onClick={e => e.stopPropagation()}/>
+                            <input {...getInputProps()} type="file" onClick={e => e.stopPropagation()}/>
                             Browse Files
                         </button>
                     </div>
@@ -313,7 +308,7 @@ function CreateNFT() {
                     <h1 className="createNFT__right-title">Create single nft</h1>
                     <form className="createNFT__right-form" action="">
                         <div className="createNFT__right-form-name">
-                            <label>Display Name*</label>
+                            <label>Display Name<span>*</span></label>
                             <input
                                 type="text"
                                 placeholder="NFT name"
@@ -358,47 +353,34 @@ function CreateNFT() {
                             </div>
                         </div>
                         <div className="createNFT__right-form-collection">
-                            <label>Collection*</label>
+                            <label>Collection</label>
                             <Select
                                 values={["No collection"]}
                                 value={collectionNFT}
                                 setValue={arg => setCollectionNFT(arg)}
                             />
                         </div>
-                        <div className="createNFT__right-form-category">
-                            <label>Category*</label>
-                            <Select
-                                values={[
-                                    "Art",
-                                    "Collectibles",
-                                    "Music",
-                                    "Photography",
-                                    "Sports",
-                                    "Trading",
-                                    "Cards",
-                                    "Utility",
-                                    "Virtual",
-                                    "Worlds",
-                                ]}
-                                value={categoryNFT}
-                                setValue={arg => setCategoryNFT(arg)}
-                            />
+                        <div className="createNFT__right-form-categories">
+                            <label>Categories</label>
+                            <div>
+                                {configCategories.map(category => <Checkbox text={category} onClick={e => changeCategoriesArray(e)}/>)}
+                            </div>
                         </div>
                         <div className="createNFT__right-form-description">
-                            <label>Description</label>
+                            <label>Description<span>*</span></label>
                             <textarea value={description} onChange={e => setDescription(e.target.value)}></textarea>
                         </div>
                         <div className="createNFT__right-form-attributes">
                             <div className="createNFT__right-form-attributes-type">
-                                <label>Type*</label>
+                                <label>Type<span>*</span></label>
                                 <Select
-                                    values={["Auction", "Sell"]}
+                                    values={["Auction", "Sale"]}
                                     value={typeNFT}
                                     setValue={arg => setTypeNFT(arg)}
                                 />
                             </div>
                             <div className="createNFT__right-form-attributes-price">
-                                <label>Price*</label>
+                                <label>Price<span>*</span></label>
                                 <input
                                     type="number"
                                     min="0"

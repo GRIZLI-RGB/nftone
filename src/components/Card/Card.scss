@@ -81,6 +81,10 @@
                 display: flex;
                 align-items: center;
                 justify-content: flex-end;
+                &-avatar {
+                    width: 1.3vw;
+                    border-radius: 100%;
+                }
                 &-name {
                     font-family: "DM Sans";
                     font-weight: 500;
@@ -92,6 +96,7 @@
             &-emoji {
                 display: flex;
                 column-gap: 0.26vw;
+                justify-content: flex-end;
                 &-item {
                     &-light,
                     &-dark {

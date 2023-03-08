@@ -24,6 +24,7 @@
     "react": "^18.2.0",
     "react-accessible-accordion": "^5.0.0",
     "react-chartjs-2": "^5.2.0",
+    "react-countdown": "^2.3.5",
     "react-dom": "^18.2.0",
     "react-double-range-slider": "^3.0.1",
     "react-draggable": "^4.4.5",
