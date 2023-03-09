@@ -29,36 +29,33 @@ function Header({ currentPage }) {
     const [currentUser, setCurrentUser] = useState({});
     const [avatarHash, setAvatarHash] = useState();
 
-    // Получаем объект текущего пользователя
+    // take currentUser and set avatar in header, if auth is true
     useEffect(() => {
-        axios
-            .post(
-                "https://nft-one.art/api/auth/current",
-                {
-                },
-                {
-                    headers: {
-                        Token: localStorage.getItem("tonkeeperToken") ? localStorage.getItem("tonkeeperToken") : localStorage.getItem("tonhubToken")
+        if(localStorage.getItem("auth").toString() === "true") {
+            axios
+                .post(
+                    "https://nft-one.art/api/auth/current",
+                    {
                     },
-                    auth: {
-                        username: "odmen",
-                        password: "NFTflsy",
+                    {
+                        headers: {
+                            Token: localStorage.getItem("tonkeeperToken") ? localStorage.getItem("tonkeeperToken") : localStorage.getItem("tonhubToken")
+                        },
+                        auth: {
+                            username: "odmen",
+                            password: "NFTflsy",
+                        },
                     },
-                },
-            )
-            .then(response => {
-                setCurrentUser(response.data.user)
-            })
-            .catch(error => {
-                console.log(error);
-            });
-    }, [])
-
-    useEffect(() => {
-        if(JSON.stringify(currentUser) !== "{}") {
-            setAvatarHash(currentUser.img.hash)
+                )
+                .then(response => {
+                    setCurrentUser(response.data.user)
+                    setAvatarHash(response.data.user.img.hash)
+                })
+                .catch(error => {
+                    console.log(error);
+                })
         }
-    }, [currentUser])
+    }, [])
 
     // Проверка при старте страницы на то, авторизован ли пользователь (отслеживаем наличие токенов в localStorage)
     useEffect(() => {
@@ -90,83 +87,6 @@ function Header({ currentPage }) {
     }
 
     const tonkeeperAuthClick = () => {
-        const connector = new TonConnect({ manifestUrl: 'https://grizli-rgb.github.io/meta-info-nftone/tonconnect-manifest.json' });
-        connector.restoreConnection();
-        setTonkeeperQR(true);
-        const walletConnectionSource = {
-            universalLink: "https://app.tonkeeper.com/ton-connect",
-            bridgeUrl: "https://bridge.tonapi.io/bridge",
-        };
-        setTonkeeperUniversalLink(connector.connect(walletConnectionSource, { tonProof: tonkeeperToken }));
-        connector.onStatusChange(walletInfo => {
-            setPopup(false);
-            setTonkeeperQR(false);
-            setAuth(true);
-            localStorage.setItem("auth", true);
-            localStorage.setItem("tonkeeperToken", tonkeeperToken);
-            localStorage.setItem("tonkeeperUsername", toUserFriendlyAddress(walletInfo.account.address));
-            axios
-            .post(
-                "https://nft-one.art/api/auth/check_tonkeeper",
-                {
-                    ton_addr: walletInfo.account.address.toString(),
-                    signature:  walletInfo.connectItems.tonProof.proof.signature.toString()
-                },
-                {
-                    headers: {
-                        Token: tonkeeperToken
-                    },
-                    auth: {
-                        username: "odmen",
-                        password: "NFTflsy",
-                    },
-                },
-            )
-            .then(function (response) {
-                console.log("Удалось проверить Tonkeeper-кошелёк");
-            })
-            .catch(function (error) {
-                console.log("Ошибка: ", error);
-            });
-        })
-    };
-
-    const tonhubAuthClick = () => {
-        setTonhubQR(true);
-        const checkTonhubAuth = setInterval(() => {
-            axios
-            .post(
-                "https://nft-one.art/api/auth/check_tonhub",
-                {},
-                {
-                    headers: {
-                        Token: tonhubData.token
-                    },
-                    auth: {
-                        username: "odmen",
-                        password: "NFTflsy",
-                    },
-                },
-            )
-            .then(function (response) {
-                if(response.data.ok) {
-                    localStorage.setItem("tonhubToken", tonhubData.token);
-                    localStorage.setItem("tonhubUsername", response.data.user.name);
-                    setPopup(false);
-                    setTonhubQR(false);
-                    setAuth(true);
-                    localStorage.setItem("auth", true);
-                    clearInterval(checkTonhubAuth);
-                }
-            })
-            .catch(function (error) {
-                console.log("Ошибка: ", error);
-            });
-        }, 1200);
-    };
-
-    // auth/start_tonkeeper
-    useEffect(() => {
         axios
             .post(
                 "https://nft-one.art/api/auth/start_tonkeeper",
@@ -180,14 +100,53 @@ function Header({ currentPage }) {
             )
             .then(function (response) {
                 setTonkeeperToken(response.data.token);
+                const connector = new TonConnect({ manifestUrl: 'https://grizli-rgb.github.io/meta-info-nftone/tonconnect-manifest.json' });
+                connector.restoreConnection();
+                setTonkeeperQR(true);
+                const walletConnectionSource = {
+                    universalLink: "https://app.tonkeeper.com/ton-connect",
+                    bridgeUrl: "https://bridge.tonapi.io/bridge",
+                };
+                setTonkeeperUniversalLink(connector.connect(walletConnectionSource, { tonProof: response.data.token }));
+                connector.onStatusChange(walletInfo => {
+                    setPopup(false);
+                    setTonkeeperQR(false);
+                    setAuth(true);
+                    localStorage.setItem("auth", true);
+                    localStorage.setItem("tonkeeperToken", response.data.token);
+                    localStorage.setItem("tonkeeperUsername", toUserFriendlyAddress(walletInfo.account.address));
+                    axios
+                    .post(
+                        "https://nft-one.art/api/auth/check_tonkeeper",
+                        {
+                            ton_addr: walletInfo.account.address.toString(),
+                            state_init: walletInfo.account.walletStateInit,
+                            proof: walletInfo.connectItems.tonProof.proof
+                        },
+                        {
+                            headers: {
+                                Token: response.data.token
+                            },
+                            auth: {
+                                username: "odmen",
+                                password: "NFTflsy",
+                            },
+                        },
+                    )
+                    .then(function (response) {
+                        console.log("Удалось проверить Tonkeeper-кошелёк");
+                    })
+                    .catch(function (error) {
+                        console.log("Ошибка: ", error);
+                    });
+                })
             })
             .catch(function (error) {
                 console.log("Ошибка получения токена с сервера: ", error);
             });
-    }, []);
+    };
 
-    // auth/start_tonhub
-    useEffect(() => {
+    const tonhubAuthClick = () => {
         axios
             .post(
                 "https://nft-one.art/api/auth/start_tonhub",
@@ -201,26 +160,98 @@ function Header({ currentPage }) {
             )
             .then(function (response) {
                 setTonhubData(response.data);
+                setTonhubQR(true);
+                const checkTonhubAuth = setInterval(() => {
+                    axios
+                    .post(
+                        "https://nft-one.art/api/auth/check_tonhub",
+                        {},
+                        {
+                            headers: {
+                                Token: response.data.token
+                            },
+                            auth: {
+                                username: "odmen",
+                                password: "NFTflsy",
+                            },
+                        },
+                    )
+                    .then(function (res) {
+                        if(res.data.ok) {
+                            localStorage.setItem("tonhubToken", response.data.token);
+                            localStorage.setItem("tonhubUsername", res.data.user.name);
+                            setPopup(false);
+                            setTonhubQR(false);
+                            setAuth(true);
+                            localStorage.setItem("auth", true);
+                            clearInterval(checkTonhubAuth);
+                        }
+                    })
+                    .catch(function (error) {
+                        console.log("Ошибка: ", error);
+                    });
+                }, 1200);
             })
             .catch(function (error) {
                 console.log("Ошибка получения токена с сервера: ", error);
             });
+    };
+
+    // auth/start_tonkeeper
+    useEffect(() => {
+        // axios
+        //     .post(
+        //         "https://nft-one.art/api/auth/start_tonkeeper",
+        //         {},
+        //         {
+        //             auth: {
+        //                 username: "odmen",
+        //                 password: "NFTflsy",
+        //             },
+        //         },
+        //     )
+        //     .then(function (response) {
+        //         setTonkeeperToken(response.data.token);
+        //     })
+        //     .catch(function (error) {
+        //         console.log("Ошибка получения токена с сервера: ", error);
+        //     });
     }, []);
 
     useEffect(() => {
-        fetch("/nfts.json")
-            .then(res => {
-                return res.json();
+        axios
+            .post(
+                "https://nft-one.art/api/batch",
+                {
+                    "nfts": {
+                        "action": "nfts/list",
+                        "subqueries": {
+                            "img": {}
+                        }
+                    },
+                    "collections": {
+                        "action": "nft_collections/list",
+                        "subqueries": {
+                            "img": {}
+                        }
+                    }
+                },
+                {
+                    headers: {
+                        Token: localStorage.getItem("tonkeeperToken") ? localStorage.getItem("tonkeeperToken") : localStorage.getItem("tonhubToken")
+                    },
+                    auth: {
+                        username: "odmen",
+                        password: "NFTflsy",
+                    },
+                },
+            )
+            .then(response => {
+                setNFTs(response.data.nfts.items);
+                setCollections(response.data.collections.items);
             })
-            .then(json => {
-                setNFTs(json);
-            });
-        fetch("/collections.json")
-            .then(res => {
-                return res.json();
-            })
-            .then(json => {
-                setCollections(json);
+            .catch(error => {
+                console.log(error);
             });
     }, []);
     
@@ -238,7 +269,7 @@ function Header({ currentPage }) {
             {!openSearch && (
                 <div className="header__logo">
                     <a href="/">
-                        <img src="./img/header/header-logo.svg" alt="Logo" />
+                        <img src="/img/header/header-logo.svg" alt="Logo" />
                     </a>
                 </div>
             )}
@@ -272,7 +303,7 @@ function Header({ currentPage }) {
                     }}
                 />
                 <img
-                    src={`./img/header/${searchQuery !== "" ? "clear" : "search"}.svg`}
+                    src={`/img/header/${searchQuery !== "" ? "clear" : "search"}.svg`}
                     alt=""
                     onClick={() => setSearchQuery("")}
                 />
@@ -304,8 +335,10 @@ function Header({ currentPage }) {
                                           searchQuery !== "",
                                   ).map(nft => (
                                       <li className="header__search-popup-list-item">
-                                          <img src={`./img/card/photo-${nft?.img}.svg`} alt="" />
-                                          <p>{nft?.name}</p>
+                                          <a href={`/nft/${nft.id}`}>
+                                            <div style={{background: `${`url(https://nft-one.art/api/files/thumb/?hash=${nft.img.hash}) no-repeat center center/cover`}`}}></div>
+                                            <p>{nft?.name}</p>
+                                          </a>
                                       </li>
                                   ))
                                 : collections
@@ -316,8 +349,10 @@ function Header({ currentPage }) {
                                       )
                                       .map(collection => (
                                           <li className="header__search-popup-list-item">
-                                              <img src={`./img/card/photo-${collection?.img}.svg`} alt="" />
-                                              <p>{collection?.name}</p>
+                                            <a href={`/collection/${collection.id}`}>
+                                                <div  style={{background: `${`url(https://nft-one.art/api/files/thumb/?hash=${collection.img.hash}) no-repeat center center/cover`}`}}></div>
+                                                <p>{collection?.name}</p>
+                                              </a>
                                           </li>
                                       ))}
                         </ul>
@@ -336,7 +371,7 @@ function Header({ currentPage }) {
                     ) : (
                         <>
                             <button className="header__buttons-user" onClick={() => setUserMenu(!userMenu)}>
-                                <img className="header__buttons-user-avatar" src={avatarHash ? `https://nft-one.art/api/files/thumb/?hash=${avatarHash}` : "./img/sections/myNFT/avatar.svg"} alt="" />
+                                <img className="header__buttons-user-avatar" src={avatarHash ? `https://nft-one.art/api/files/thumb/?hash=${avatarHash}` : "/img/sections/myNFT/avatar.svg"} alt="" />
                                 {
                                     localStorage.getItem("tonhubUsername")
                                     ? localStorage.getItem("tonhubUsername").slice(0, 8)
@@ -346,7 +381,7 @@ function Header({ currentPage }) {
                                 }...
                                 <img
                                     className="header__buttons-user-arrow"
-                                    src="./img/header/arrow.svg"
+                                    src="/img/header/arrow.svg"
                                     alt=""
                                     style={{ transform: `rotate(${userMenu ? "180deg" : "0deg"})` }}
                                 />
@@ -358,31 +393,31 @@ function Header({ currentPage }) {
                                         "header__buttons-userMenu--dark",
                                     )}`}>
                                     <li className="header__buttons-userMenu-item">
-                                        <img src={`./img/header/profile-${theme}.svg`} alt="" />
+                                        <img src={`/img/header/profile-${theme}.svg`} alt="" />
                                         <a className="header__buttons-userMenu-item-link" href="/my-nft">
                                             Profile
                                         </a>
                                     </li>
                                     <li className="header__buttons-userMenu-item">
-                                        <img src={`./img/header/collections-${theme}.svg`} alt="" />
+                                        <img src={`/img/header/collections-${theme}.svg`} alt="" />
                                         <a className="header__buttons-userMenu-item-link" href="/my-nft#collection">
                                             My Collections
                                         </a>
                                     </li>
                                     <li className="header__buttons-userMenu-item">
-                                        <img src={`./img/header/create-${theme}.svg`} alt="" />
+                                        <img src={`/img/header/create-${theme}.svg`} alt="" />
                                         <a className="header__buttons-userMenu-item-link" href="/create-nft">
                                             Create
                                         </a>
                                     </li>
                                     <li className="header__buttons-userMenu-item">
-                                        <img src={`./img/header/favorite-${theme}.svg`} alt="" />
+                                        <img src={`/img/header/favorite-${theme}.svg`} alt="" />
                                         <a className="header__buttons-userMenu-item-link" href="/my-nft#favorite">
                                             Favorites
                                         </a>
                                     </li>
                                     <li className="header__buttons-userMenu-item">
-                                        <img src={`./img/header/settings-${theme}.svg`} alt="" />
+                                        <img src={`/img/header/settings-${theme}.svg`} alt="" />
                                         <a className="header__buttons-userMenu-item-link" href="/my-nft">
                                             Settings
                                         </a>
@@ -392,7 +427,7 @@ function Header({ currentPage }) {
                                         onClick={() => {
                                             userExit();
                                         }}>
-                                        <img src={`./img/header/exit-${theme}.svg`} alt="" />
+                                        <img src={`/img/header/exit-${theme}.svg`} alt="" />
                                         <a className="header__buttons-userMenu-item-link" href="#">
                                             Exit
                                         </a>
@@ -407,7 +442,7 @@ function Header({ currentPage }) {
                                 setTheme(theme === "light" ? "dark" : "light");
                                 localStorage.setItem("theme", theme === "light" ? "dark" : "light");
                             }}
-                            src={`./img/header/${theme}-theme.png`}
+                            src={`/img/header/${theme}-theme.png`}
                             alt={`${theme} theme`}
                         />
                     </button>
@@ -416,7 +451,7 @@ function Header({ currentPage }) {
             {!openSearch && (
                 <div className="header__mobile">
                     <button className="header__mobile-search" onClick={() => setOpenSearch(true)}>
-                        <img src="./img/header/search-white.svg" alt="Search" />
+                        <img src="/img/header/search-white.svg" alt="Search" />
                     </button>
                     <div className="header__mobile-hamburger" onClick={() => setOpenMobileMenu(true)}>
                         <div className="header__mobile-hamburger-line"></div>
@@ -434,7 +469,7 @@ function Header({ currentPage }) {
                 }}>
                 <img
                     className="header__mobileMenu-close"
-                    src={`./img/header/${theme === "light" ? "close" : "close-white"}.png`}
+                    src={`/img/header/${theme === "light" ? "close" : "close-white"}.png`}
                     alt="Close"
                     onClick={() => setOpenMobileMenu(false)}
                 />
@@ -472,28 +507,28 @@ function Header({ currentPage }) {
                     </button>
                     <div className="header__mobileMenu-items">
                         <a href="#">
-                            <img src="./img/footer/vk.svg" alt="VK" className="header__mobileMenu-items-item" />
+                            <img src="/img/footer/vk.svg" alt="VK" className="header__mobileMenu-items-item" />
                         </a>
                         <a href="#">
                             <img
-                                src="./img/footer/telegram.svg"
+                                src="/img/footer/telegram.svg"
                                 alt="Telegram"
                                 className="header__mobileMenu-items-item"
                             />
                         </a>
                         <a href="#">
                             <img
-                                src="./img/footer/twitter.svg"
+                                src="/img/footer/twitter.svg"
                                 alt="Twitter"
                                 className="header__mobileMenu-items-item"
                             />
                         </a>
                         <a href="#">
-                            <img src="./img/footer/reddit.svg" alt="Reddit" className="header__mobileMenu-items-item" />
+                            <img src="/img/footer/reddit.svg" alt="Reddit" className="header__mobileMenu-items-item" />
                         </a>
                         <a href="#">
                             <img
-                                src="./img/footer/discord.svg"
+                                src="/img/footer/discord.svg"
                                 alt="Discord"
                                 className="header__mobileMenu-items-item"
                             />
@@ -516,13 +551,13 @@ function Header({ currentPage }) {
                 />
                 <img
                     className="header__mobileSearch-back"
-                    src="./img/header/arrow-left.png"
+                    src="/img/header/arrow-left.png"
                     alt="Back"
                     onClick={() => setOpenSearch(false)}
                 />
                 <img
                     className="header__mobileSearch-clear"
-                    src="./img/header/close-grey.png"
+                    src="/img/header/close-grey.png"
                     alt="Clear"
                     onClick={() => setSearchQuery("")}
                 />
@@ -554,7 +589,7 @@ function Header({ currentPage }) {
                                           searchQuery !== "",
                                   ).map(nft => (
                                       <li className="header__search-popup-list-item">
-                                          <img src={`./img/card/photo-${nft?.img}.svg`} alt="" />
+                                          <img src={`/img/card/photo-${nft?.img}.svg`} alt="" />
                                           <p>{nft?.name}</p>
                                       </li>
                                   ))
@@ -566,7 +601,7 @@ function Header({ currentPage }) {
                                       )
                                       .map(collection => (
                                           <li className="header__search-popup-list-item">
-                                              <img src={`./img/card/photo-${collection?.img}.svg`} alt="" />
+                                              <img src={`/img/card/photo-${collection?.img}.svg`} alt="" />
                                               <p>{collection?.name}</p>
                                           </li>
                                       ))}
@@ -591,7 +626,7 @@ function Header({ currentPage }) {
                                             setTonhubQR(false);
                                         }}
                                         className="connect__popup-img"
-                                        src={`./img/header/${theme === "light" ? "close" : "close-white"}.png`}
+                                        src={`/img/header/${theme === "light" ? "close" : "close-white"}.png`}
                                         alt="Close"
                                     />
                                     <h6
@@ -602,7 +637,7 @@ function Header({ currentPage }) {
                                     <QRCodeSVG 
                                     value={tonhubData?.link}
                                     size={200}
-                                    imageSettings={{src: "./img/sections/connect/crystal.png"}}
+                                    imageSettings={{src: "/img/sections/connect/crystal.png"}}
                                     />
                                 </>
                             ) : 
@@ -614,7 +649,7 @@ function Header({ currentPage }) {
                                             setTonkeeperQR(false);
                                         }}
                                         className="connect__popup-img"
-                                        src={`./img/header/${theme === "light" ? "close" : "close-white"}.png`}
+                                        src={`/img/header/${theme === "light" ? "close" : "close-white"}.png`}
                                         alt="Close"
                                     />
                                     <h6
@@ -625,7 +660,7 @@ function Header({ currentPage }) {
                                     <QRCodeSVG 
                                     value={tonkeeperUniversalLink}
                                     size={200}
-                                    imageSettings={{src: "./img/sections/connect/diamond-big.png"}}
+                                    imageSettings={{src: "/img/sections/connect/diamond-big.png"}}
                                     />
                                 </>
                             ) :
@@ -636,7 +671,7 @@ function Header({ currentPage }) {
                                             setPopup(false);
                                         }}
                                         className="connect__popup-img"
-                                        src={`./img/header/${theme === "light" ? "close" : "close-white"}.png`}
+                                        src={`/img/header/${theme === "light" ? "close" : "close-white"}.png`}
                                         alt="Close"
                                     />
                                     <h6
@@ -687,7 +722,7 @@ function Header({ currentPage }) {
                                             setPopup(false);
                                         }}
                                         className="connect__popup-img"
-                                        src={`./img/header/${theme === "light" ? "close" : "close-white"}.png`}
+                                        src={`/img/header/${theme === "light" ? "close" : "close-white"}.png`}
                                         alt="Close"
                                     />
                                     <h6

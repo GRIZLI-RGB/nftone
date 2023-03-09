@@ -14,6 +14,8 @@ import {
     LinearScale,
     BarElement,
   } from 'chart.js';
+import axios from "axios";
+import { useParams } from "react-router-dom";
 
 ChartJS.register(
     CategoryScale,
@@ -21,10 +23,10 @@ ChartJS.register(
     BarElement
     );
 
-    export const options = {
-        responsive: true,
-        maintainAspectRatio: false,
-      };
+export const options = {
+    responsive: true,
+    maintainAspectRatio: false,
+};
 
 export const data = {
     labels: ["Dec 22", "Dec 23", "Dec 24"],
@@ -37,9 +39,11 @@ export const data = {
         barPercentage: 0.1,
       },
     ],
-  };
+};
 
 function NFT() {
+    const params = useParams();
+
     const [alsoFilter, setAlsoFilter] = useState("nft");
     const [favorite, setFavorite] = useState(false);
     const { changeTheme, theme } = useContext(ContextApp);
@@ -70,38 +74,173 @@ function NFT() {
         ],
     };
 
+    const [likes, setLikes] = useState([0, 0, 0, 0, 0, 0, 0]);
+    const [currentNFT, setCurrentNFT] = useState({});
+    const [currentUser, setCurrentUser] = useState({});
+
+    const handleUserLike = (e) => {
+        let hasUserLike = false;
+        axios
+            .post(
+                "https://nft-one.art/api/nft_likes/list",
+                {
+                    filters: {
+                        nft_id: params.id,
+                        user_id: currentUser.id,
+                        type_id: e.target.getAttribute("data-emoji")
+                    }
+                },
+                {
+                    headers: {
+                        Token: localStorage.getItem("tonkeeperToken") ? localStorage.getItem("tonkeeperToken") : localStorage.getItem("tonhubToken")
+                    },
+                    auth: {
+                        username: "odmen",
+                        password: "NFTflsy",
+                    },
+                },
+            )
+            .then(response => {
+                hasUserLike = (response.data.items.length > 0);
+                if(hasUserLike) {
+                    axios
+                        .post(
+                            "https://nft-one.art/api/nft_likes/unlike",
+                            {
+                                nft_id: params.id,
+                                type_id: e.target.getAttribute("data-emoji")
+                            },
+                            {
+                                headers: {
+                                    Token: localStorage.getItem("tonkeeperToken") ? localStorage.getItem("tonkeeperToken") : localStorage.getItem("tonhubToken")
+                                },
+                                auth: {
+                                    username: "odmen",
+                                    password: "NFTflsy",
+                                },
+                            },
+                        )
+                        .then(response => {
+                            let likes_copy = [...likes];
+                            likes_copy[Number(e.target.getAttribute("data-emoji")) - 1] -= 1;
+                            setLikes([...likes_copy]);
+                        })
+                        .catch(error => {
+                            console.log(error);
+                        });
+                } else {
+                    axios
+                        .post(
+                            "https://nft-one.art/api/nft_likes/upsert",
+                            {
+                                items: [{
+                                    nft_id: params.id,
+                                    type_id: e.target.getAttribute("data-emoji"),
+                                    user_id: currentUser.id
+                                }]
+                            },
+                            {
+                                headers: {
+                                    Token: localStorage.getItem("tonkeeperToken") ? localStorage.getItem("tonkeeperToken") : localStorage.getItem("tonhubToken")
+                                },
+                                auth: {
+                                    username: "odmen",
+                                    password: "NFTflsy",
+                                },
+                            },
+                        )
+                        .then(response => {
+                            let likes_copy = [...likes];
+                            likes_copy[Number(e.target.getAttribute("data-emoji")) - 1] += 1;
+                            setLikes([...likes_copy]);
+                        })
+                        .catch(error => {
+                            console.log(error);
+                        });
+                }
+            })
+            .catch(error => {
+                console.log(error);
+            });
+    }
+
     useEffect(() => {
-        fetch("/nfts.json")
-            .then(res => {
-                return res.json();
+        axios
+            .post(
+                "https://nft-one.art/api/auth/current",
+                {
+                },
+                {
+                    headers: {
+                        Token: localStorage.getItem("tonkeeperToken") ? localStorage.getItem("tonkeeperToken") : localStorage.getItem("tonhubToken")
+                    },
+                    auth: {
+                        username: "odmen",
+                        password: "NFTflsy",
+                    },
+                },
+            )
+            .then(response => {
+                setCurrentUser(response.data.user);
             })
-            .then(json => {
-                setNFTs(json);
+            .catch(error => {
+                console.log(error);
             });
-        fetch("/collections.json")
-            .then(res => {
-                return res.json();
+    }, [])
+
+    useEffect(() => {
+        axios
+            .post(
+                "https://nft-one.art/api/nfts/list",
+                {
+                    "filters": {
+                        "id": params.id
+                    },
+                    "subqueries": {
+                        img: {},
+                        likes: {},
+                        creator: {
+                            subqueries: {
+                                img: {}
+                            }
+                        },
+                    }
+                },
+                {
+                    auth: {
+                        username: "odmen",
+                        password: "NFTflsy",
+                    },
+                },
+            )
+            .then(response => {
+                setCurrentNFT(response.data.items[0])
             })
-            .then(json => {
-                setCollections(json);
+            .catch(error => {
+                console.log(error);
             });
-    }, []);
+    }, [])
+
+    useEffect(() => {
+        if(JSON.stringify(currentNFT) !== "{}") {
+            let likes_copy = [...likes];
+            currentNFT.likes.map(like => likes_copy[Number(like.type_id)] += 1);
+            setLikes([...likes_copy]);
+        }
+    }, [currentNFT])
+
     return (
         <>
             <Header />
             <section className={`nft ${changeTheme("", "nft--dark")}`}>
                 <div class="nft__up">
                     <div class="nft__up-left">
-                        <div class="nft__up-left-card">
-                            <img src="./img/sections/NFT/nft-photo.svg" alt="NFT" />
+                        <div class="nft__up-left-card" style={{background: `${`url(https://nft-one.art/api/files/thumb/?hash=${currentNFT?.img?.hash}) no-repeat center center/cover`}`}}>
+                            <img src="/img/sections/NFT/nft-photo.svg" alt="NFT" />
                             <ul className="nft__up-left-card-menuEmoji">
-                                <li className="nft__up-left-card-menuEmoji-item">❤️</li>
-                                <li className="nft__up-left-card-menuEmoji-item">🤣</li>
-                                <li className="nft__up-left-card-menuEmoji-item">😍</li>
-                                <li className="nft__up-left-card-menuEmoji-item">😡</li>
-                                <li className="nft__up-left-card-menuEmoji-item">🙀</li>
-                                <li className="nft__up-left-card-menuEmoji-item">🥴</li>
-                                <li className="nft__up-left-card-menuEmoji-item">🤑</li>
+                                {
+                                    ["❤️", "🤣", "😍", "😡", "🙀", "🥴", "🤑"].map((item, index) => <li className="nft__up-left-card-menuEmoji-item" onClick={(e) => handleUserLike(e)} data-emoji={index + 1}>{item}</li>)
+                                }
                             </ul>
                             <div
                                 className={`nft__up-left-card-favourite ${
@@ -121,59 +260,47 @@ function NFT() {
                                 </svg>
                             </div>
                         </div>
-                        <ul class="nft__up-left-emoji">
-                            <li className={"nft__up-left-emoji-item-" + theme}>
-                                ❤️<span>250</span>
-                            </li>
-                            <li className={"nft__up-left-emoji-item-" + theme}>
-                                🤣<span>25</span>
-                            </li>
-                            <li className={"nft__up-left-emoji-item-" + theme}>
-                                😍<span>250</span>
-                            </li>
-                            <li className={"nft__up-left-emoji-item-" + theme}>
-                                😡<span>25</span>
-                            </li>
-                            <li className={"nft__up-left-emoji-item-" + theme}>
-                                🙀<span>25</span>
-                            </li>
-                            <li className={"nft__up-left-emoji-item-" + theme}>
-                                🥴<span>25</span>
-                            </li>
-                            <li className={"nft__up-left-emoji-item-" + theme}>
-                                🤑<span>25</span>
-                            </li>
-                        </ul>
+                        {
+                            !likes.every(item => item === 0) && (
+                                <ul class="nft__up-left-emoji">
+                                    {
+                                        ["❤️", "🤣", "😍", "😡", "🙀", "🥴", "🤑"].map((item, index) => (
+                                            <li className={"nft__up-left-emoji-item-" + theme} style={{display: `${likes[index] === 0 ? "none" : ""}`}}>
+                                                {item}<span>{likes[index]}</span>
+                                            </li>
+                                        ))
+                                    }
+                                </ul>
+                            )
+                        }
                         <div class="nft__up-left-people">
                             <div class="nft__up-left-people-owner">
                                 <h6 class="nft__up-left-people-owner-title">Owner</h6>
                                 <div class="nft__up-left-people-owner-left">
-                                    <img
+                                    <div
                                         class="nft__up-left-people-owner-left-avatar"
-                                        src="./img/sections/NFT/user.svg"
-                                        alt=""
-                                    />
-                                    <p class="nft__up-left-people-owner-left-name">John Doe</p>
+                                        style={{background: `${`url(https://nft-one.art/api/files/thumb/?hash=${currentNFT?.creator?.img?.hash}) no-repeat center center/cover`}`}}
+                                    ></div>
+                                    <p class="nft__up-left-people-owner-left-name">{currentNFT?.creator?.name}</p>
                                 </div>
                                 <img
                                     class="nft__up-left-people-owner-arrow"
-                                    src={`./img/sections/NFT/arrow-right-${theme}.svg`}
+                                    src={`/img/sections/NFT/arrow-right-${theme}.svg`}
                                     alt=""
                                 />
                             </div>
                             <div class="nft__up-left-people-creator">
                                 <h6 class="nft__up-left-people-creator-title">Creator</h6>
                                 <div class="nft__up-left-people-creator-left">
-                                    <img
+                                    <div
                                         class="nft__up-left-people-creator-left-avatar"
-                                        src="./img/sections/NFT/user.svg"
-                                        alt=""
-                                    />
-                                    <p class="nft__up-left-people-creator-left-name">John Doe</p>
+                                        style={{background: `${`url(https://nft-one.art/api/files/thumb/?hash=${currentNFT?.creator?.img?.hash}) no-repeat center center/cover`}`}}
+                                    ></div>
+                                    <p class="nft__up-left-people-creator-left-name">{currentNFT?.creator?.name}</p>
                                 </div>
                                 <img
                                     class="nft__up-left-people-creator-arrow"
-                                    src={`./img/sections/NFT/arrow-right-${theme}.svg`}
+                                    src={`/img/sections/NFT/arrow-right-${theme}.svg`}
                                     alt=""
                                 />
                             </div>
@@ -183,7 +310,7 @@ function NFT() {
                             <div class="nft__up-left-collection-user">
                                 <img
                                     class="nft__up-left-collection-user-avatar"
-                                    src="./img/sections/NFT/user-2.svg"
+                                    src="/img/sections/NFT/user-2.svg"
                                     alt=""
                                 />
                                 <p class="nft__up-left-collection-user-name">Annihilation</p>
@@ -198,15 +325,15 @@ function NFT() {
                     <div class="nft__up-right">
                         <div class="nft__up-right-info">
                             <div className="nft__up-right-info-heading">
-                                <h1 className="nft__up-right-info-heading-title">SP33 - Reservation #274</h1>
+                                <h1 className="nft__up-right-info-heading-title">{currentNFT?.name}</h1>
                                 <div class="nft__up-right-info-heading-box">
                                     <p className="nft__up-right-info-heading-box-label">Current price</p>
                                     <img
                                         className="nft__up-right-info-heading-box-diamond"
-                                        src="./img/sections/nft/diamond-light.svg"
+                                        src="/img/sections/nft/diamond-light.svg"
                                         alt=""
                                     />
-                                    <p className="nft__up-right-info-heading-box-price">0.25 TON</p>
+                                    <p className="nft__up-right-info-heading-box-price">{currentNFT?.price} TON</p>
                                 </div>
                             </div>
                             <div className="nft__up-right-info-tags">
@@ -216,11 +343,7 @@ function NFT() {
                             </div>
                             <div className="nft__up-right-info-extra">
                                 <div class="nft__up-right-info-extra-text">
-                                    Orange Comet and Legendary Basketball Champion and Hall of Famer, SCOTTIE PIPPEN,
-                                    are stepping into the metaverse with SP33, a dynamic limited-edition virtual
-                                    wearable cross-platform NFT sneaker collection. Each NFT sneakers will not only
-                                    feature Orange Comet's signature 3D animations, but it will also be built as a
-                                    Metaverse-Ready digital asset – ready to be worn in just about any ecosystem.
+                                    {currentNFT?.info}
                                 </div>
                                 <button class="nft__up-right-info-extra-place">Place a bid</button>
                             </div>

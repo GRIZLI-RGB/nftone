@@ -401,8 +401,8 @@ function MyNFT() {
             setInfo(currentUser.info);
             setSocialLinks(currentUser.social_links);
             setEmail(currentUser.email);
-            setAvatarHash(currentUser.img.hash);
-            setBannerHash(currentUser.hdr.hash);
+            setAvatarHash(currentUser.img?.hash);
+            setBannerHash(currentUser.hdr?.hash);
         }
     }, [currentUser]);
 

@@ -123,9 +123,10 @@
                 display: inline-block;
                 position: relative;
                 margin-bottom: 0.83vw;
+                border-radius: 20px;
                 &:hover &-menuEmoji {
                     opacity: 1;
-                    bottom: 0.14vw;
+                    bottom: 0;
                     pointer-events: all;
                 }
                 &-menuEmoji {
@@ -146,6 +147,7 @@
                             margin-top: 0.78vw;
                         }
                         transition: all 0.2s;
+                        cursor: pointer;
                         &:hover {
                             transform: scale(1.2);
                         }
@@ -153,6 +155,8 @@
                 }
                 img {
                     width: 100%;
+                    display: block;
+                    opacity: 0;
                 }
                 &-favourite {
                     padding: 0.69vw;
@@ -246,6 +250,8 @@
                         font: 700 1.11vw/1.39vw "DM Sans";
                         &-avatar {
                             width: 3.24vw;
+                            height: 3.24vw;
+                            border-radius: 100%;
                         }
                     }
                     &-arrow {

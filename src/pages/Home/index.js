@@ -62,7 +62,7 @@ function Home() {
         }
     }
 
-    // Smooth scroll for "Explore Now"
+    // smooth scroll for "Explore Now"
     useEffect(() => {
         const anchors = document.querySelectorAll('a.welcome__info-btn')
         for (let anchor of anchors) {
@@ -86,6 +86,7 @@ function Home() {
                         "action": "nfts/list",
                         subqueries: {
                             img: {},
+                            likes: {},
                             creator: {
                                 subqueries: {
                                     img: {}
@@ -98,6 +99,7 @@ function Home() {
                         "action": "nfts/list",
                         order_by: "add_time",
                         subqueries: {
+                            likes: {},
                             img: {},
                             creator: {
                                 subqueries: {
@@ -109,6 +111,7 @@ function Home() {
                     "popular-collection": {
                         "action": "nft_collections/list",
                         subqueries: {
+                            likes: {},
                             img: {},
                             creator: {
                                 subqueries: {
@@ -122,6 +125,7 @@ function Home() {
                         "action": "nft_collections/list",
                         order_by: "add_time",
                         subqueries: {
+                            likes: {},
                             img: {},
                             creator: {
                                 subqueries: {
@@ -151,28 +155,31 @@ function Home() {
             })
     }, [])
 
+    // get current user, if auth is true
     useEffect(() => {
-        axios
-            .post(
-                "https://nft-one.art/api/auth/current",
-                {
-                },
-                {
-                    headers: {
-                        Token: localStorage.getItem("tonkeeperToken") ? localStorage.getItem("tonkeeperToken") : localStorage.getItem("tonhubToken")
+        if(localStorage.getItem("auth").toString() === "true") {
+            axios
+                .post(
+                    "https://nft-one.art/api/auth/current",
+                    {
                     },
-                    auth: {
-                        username: "odmen",
-                        password: "NFTflsy",
+                    {
+                        headers: {
+                            Token: localStorage.getItem("tonkeeperToken") ? localStorage.getItem("tonkeeperToken") : localStorage.getItem("tonhubToken")
+                        },
+                        auth: {
+                            username: "odmen",
+                            password: "NFTflsy",
+                        },
                     },
-                },
-            )
-            .then(response => {
-                setCurrentUser(response.data.user);
-            })
-            .catch(error => {
-                console.log(error);
-            });
+                )
+                .then(response => {
+                    setCurrentUser(response.data.user);
+                })
+                .catch(error => {
+                    console.log(error);
+                });
+        }
     }, [])
 
     useEffect(() => {

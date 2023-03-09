@@ -21,11 +21,11 @@ function App() {
                 <Route exact path="/faq" element={<FAQ />} />
                 <Route exact path="/create-nft" element={<CreateNFT />} />
                 <Route exact path="/create-collection" element={<CreateCollection />} />
-                <Route exact path="/NFT" element={<NFT />} />
-                <Route exact path="/collection" element={<Collection />} />
                 <Route exact path="/my-nft" element={<MyNFT />} />
                 <Route exact path="/admin-panel" element={<AdminPanel/>} />
                 <Route path="/confirm" element={<ConfirmEmail/>}/>
+                <Route path="/nft/:id" element={<NFT />} />
+                <Route path="/collection/:id" element={<Collection />} />
             </Routes>
         </>
     );

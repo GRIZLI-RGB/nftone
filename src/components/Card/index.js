@@ -1,7 +1,6 @@
-import { useContext, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import "./Card.scss";
 import { ContextApp } from "../../Context";
-import { useEffect } from "react";
 import axios from "axios";
 
 function Card({nft, currentUser}) {
@@ -10,87 +9,19 @@ function Card({nft, currentUser}) {
 
     const [likes, setLikes] = useState([0, 0, 0, 0, 0, 0, 0]);
 
+    // set likes on start card
     useEffect(() => {
-        axios
-            .post(
-                "https://nft-one.art/api/batch",
-                {
-                    "1": {
-                        "action": "nft_likes/list",
-                        "filters": {
-                            "nft_id": nft.id,
-                            "type_id": 1
-                        }
-                    },
-                    "2": {
-                        "action": "nft_likes/list",
-                        "filters": {
-                            "nft_id": nft.id,
-                            "type_id": 2
-                        }
-                    },
-                    "3": {
-                        "action": "nft_likes/list",
-                        "filters": {
-                            "nft_id": nft.id,
-                            "type_id": 3
-                        }
-                    },
-                    "4": {
-                        "action": "nft_likes/list",
-                        "filters": {
-                            "nft_id": nft.id,
-                            "type_id": 4
-                        }
-                    },
-                    "5": {
-                        "action": "nft_likes/list",
-                        "filters": {
-                            "nft_id": nft.id,
-                            "type_id": 5
-                        }
-                    },
-                    "6": {
-                        "action": "nft_likes/list",
-                        "filters": {
-                            "nft_id": nft.id,
-                            "type_id": 6
-                        }
-                    },
-                    "7": {
-                        "action": "nft_likes/list",
-                        "filters": {
-                            "nft_id": nft.id,
-                            "type_id": 7
-                        }
-                    }
-                },
-                {
-                    auth: {
-                        username: "odmen",
-                        password: "NFTflsy",
-                    },
-                },
-            )
-            .then(response => {
-                setLikes([
-                response.data["1"].items.length,
-                response.data["2"].items.length,
-                response.data["3"].items.length,
-                response.data["4"].items.length,
-                response.data["5"].items.length,
-                response.data["6"].items.length,
-                response.data["7"].items.length
-                ]);
-            })
-            .catch(error => {
-                console.log(error);
-            });
-    }, [])
+        if(nft.likes.length > 0) {
+            let likes_copy = [...likes];
+            nft.likes.map(like => likes_copy[Number(like.type_id) - 1] += 1);
+            setLikes(likes_copy);
+        }
+    }, []);
 
     const handleUserLike = (e) => {
         let hasUserLike = false;
-        axios
+        if(localStorage.getItem("auth").toString() === "true") {
+            axios
             .post(
                 "https://nft-one.art/api/nft_likes/list",
                 {
@@ -172,8 +103,9 @@ function Card({nft, currentUser}) {
             .catch(error => {
                 console.log(error);
             });
+        }
     }
-    //  src={`https://nft-one.art/api/files/thumb/?hash=${nft.img.hash}`}
+    
     return (
         <div
             className={changeTheme("card", "card card--dark")}

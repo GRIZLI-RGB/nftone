@@ -98,17 +98,19 @@
                     border-radius: 50px;
                 }
                 &-item {
-                    display: flex;
-                    justify-content: stretch;
-                    align-items: center;
-                    column-gap: 0.97vw;
                     cursor: pointer;
+                    & > a {
+                        display: flex;
+                        align-items: center;
+                        column-gap: 0.97vw;
+                    }
                     &:hover {
                         background-color: rgba(#000, .05);
                     }
-                    & > img {
+                    & div {
                         border-radius: 0.46vw;
                         width: 2.96vw;
+                        height: 2.2vw;
                     }
                     & + & {
                         margin-top: 0.69vw;
