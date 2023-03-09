@@ -111,37 +111,39 @@ function Card({nft, currentUser}) {
             className={changeTheme("card", "card card--dark")}
             onMouseOver={() => setDiamond('light')}
             onMouseOut={() => setDiamond('dark')}>
-            <div className="card__photo" style={{background: `${`url(https://nft-one.art/api/files/thumb/?hash=${nft.img.hash}) no-repeat center center/cover`}`}}></div>
-            <div className="card__info">
-                <div className="card__info-left">
-                    <h6 className="card__info-left-title">{nft.name}</h6>
-                    <p className="card__info-left-price">
-                        <img src={`./img/card/diamond-${diamond}.png`} alt="Price" />
-                        {nft.price}
-                    </p>
-                </div>
-                <div className="card__info-right">
-                    <div class="card__info-right-user">
-                        <img className="card__info-right-user-avatar" src={`https://nft-one.art/api/files/thumb/?hash=${nft.creator.img.hash}`} alt="Avatar" />
-                        <p className="card__info-right-user-name">by {nft.creator.name}</p>
+            <a href={`/nft/${nft.id}`}>
+                <div className="card__photo" style={{background: `${`url(https://nft-one.art/api/files/thumb/?hash=${nft.img.hash}) no-repeat center center/cover`}`}}></div>
+                <div className="card__info">
+                    <div className="card__info-left">
+                        <h6 className="card__info-left-title">{nft.name}</h6>
+                        <p className="card__info-left-price">
+                            <img src={`/img/card/diamond-${diamond}.png`} alt="Price" />
+                            {nft.price}
+                        </p>
                     </div>
-                    <ul className="card__info-right-emoji">
-                        {
-                            likes.every(el => el === 0) ? (
-                                <li className={"card__info-right-emoji-item-" + theme} style={{opacity: "0"}}>
-                                    😡<span>0</span>
-                                </li>
-                            ) : (
-                                ["❤️", "🤣", "😍", "😡", "🙀", "🥴", "🤑"].map((emoji, index) =>
-                                <li className={"card__info-right-emoji-item-" + theme} key={index} style={{display: `${likes[index] === 0 ? "none" : ""}`}}>
-                                    {emoji}<span>{likes[index]}</span>
-                                </li>
+                    <div className="card__info-right">
+                        <div class="card__info-right-user">
+                            <img className="card__info-right-user-avatar" src={`https://nft-one.art/api/files/thumb/?hash=${nft.creator.img.hash}`} alt="Avatar" />
+                            <p className="card__info-right-user-name">by {nft.creator.name}</p>
+                        </div>
+                        <ul className="card__info-right-emoji">
+                            {
+                                likes.every(el => el === 0) ? (
+                                    <li className={"card__info-right-emoji-item-" + theme} style={{opacity: "0"}}>
+                                        😡<span>0</span>
+                                    </li>
+                                ) : (
+                                    ["❤️", "🤣", "😍", "😡", "🙀", "🥴", "🤑"].map((emoji, index) =>
+                                    <li className={"card__info-right-emoji-item-" + theme} key={index} style={{display: `${likes[index] === 0 ? "none" : ""}`}}>
+                                        {emoji}<span>{likes[index]}</span>
+                                    </li>
+                                    )
                                 )
-                            )
-                        }
-                    </ul>
+                            }
+                        </ul>
+                    </div>
                 </div>
-            </div>
+            </a>
             <ul className="card__menuEmoji">
                 {
                     ["❤️", "🤣", "😍", "😡", "🙀", "🥴", "🤑"].map((item, index) => <li data-emoji={index + 1} className="card__menuEmoji-item" onClick={(e) => handleUserLike(e)}>{item}</li>)

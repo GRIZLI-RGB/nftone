@@ -9,83 +9,14 @@ function CollectionCard({collection, currentUser}) {
 
     const [likes, setLikes] = useState([0, 0, 0, 0, 0, 0, 0]);
 
+    // set likes on start collection
     useEffect(() => {
-        axios
-            .post(
-                "https://nft-one.art/api/batch",
-                {
-                    "1": {
-                        "action": "nft_likes/list",
-                        "filters": {
-                            "collection_id": collection.id,
-                            "type_id": 1
-                        }
-                    },
-                    "2": {
-                        "action": "nft_likes/list",
-                        "filters": {
-                            "collection_id": collection.id,
-                            "type_id": 2
-                        }
-                    },
-                    "3": {
-                        "action": "nft_likes/list",
-                        "filters": {
-                            "collection_id": collection.id,
-                            "type_id": 3
-                        }
-                    },
-                    "4": {
-                        "action": "nft_likes/list",
-                        "filters": {
-                            "collection_id": collection.id,
-                            "type_id": 4
-                        }
-                    },
-                    "5": {
-                        "action": "nft_likes/list",
-                        "filters": {
-                            "collection_id": collection.id,
-                            "type_id": 5
-                        }
-                    },
-                    "6": {
-                        "action": "nft_likes/list",
-                        "filters": {
-                            "collection_id": collection.id,
-                            "type_id": 6
-                        }
-                    },
-                    "7": {
-                        "action": "nft_likes/list",
-                        "filters": {
-                            "collection_id": collection.id,
-                            "type_id": 7
-                        }
-                    }
-                },
-                {
-                    auth: {
-                        username: "odmen",
-                        password: "NFTflsy",
-                    },
-                },
-            )
-            .then(response => {
-                setLikes([
-                response.data["1"].items.length,
-                response.data["2"].items.length,
-                response.data["3"].items.length,
-                response.data["4"].items.length,
-                response.data["5"].items.length,
-                response.data["6"].items.length,
-                response.data["7"].items.length
-                ]);
-            })
-            .catch(error => {
-                console.log(error);
-            });
-    }, [])
+        if(collection.likes.length > 0) {
+            let likes_copy = [...likes];
+            collection.likes.map(like => likes_copy[Number(like.type_id) - 1] += 1);
+            setLikes(likes_copy);
+        }
+    }, []);
 
     const handleUserLike = (e) => {
         let hasUserLike = false;
@@ -176,24 +107,26 @@ function CollectionCard({collection, currentUser}) {
 
     return (
         <div className="collectionCard" style={{background: `${`url(https://nft-one.art/api/files/thumb/?hash=${collection.img.hash}) no-repeat center center/cover`}`}}>
-            <img className="collectionCard__img" src={`https://nft-one.art/api/files/thumb/?hash=${collection.img.hash}`} alt="" />
-            <div class="collectionCard__tag">
-                <div className="collectionCard__tag-bg"></div>
-                <p className="collectionCard__tag-text">Collection</p>
-            </div>
-            <ul class="collectionCard__emoji">
-                {
-                    ["❤️", "🤣", "😍", "😡", "🙀", "🥴", "🤑"].map((emoji, index) =>
-                        <li className={"collectionCard__emoji-item-" + theme} key={index} style={{display: `${likes[index] === 0 ? "none" : ""}`}}>
-                            {emoji}<span>{likes[index]}</span>
-                        </li>
-                    )
-                }
-            </ul>
-            <div class="collectionCard__info">
-                <div class="collectionCard__info-bg"></div>
-                <p className="collectionCard__info-text">{collection?.name}</p>
-            </div>
+            <a href={`/collection/${collection.id}`}>
+                <img className="collectionCard__img" src={`https://nft-one.art/api/files/thumb/?hash=${collection.img.hash}`} alt="" />
+                <div class="collectionCard__tag">
+                    <div className="collectionCard__tag-bg"></div>
+                    <p className="collectionCard__tag-text">Collection</p>
+                </div>
+                <ul class="collectionCard__emoji">
+                    {
+                        ["❤️", "🤣", "😍", "😡", "🙀", "🥴", "🤑"].map((emoji, index) =>
+                            <li className={"collectionCard__emoji-item-" + theme} key={index} style={{display: `${likes[index] === 0 ? "none" : ""}`}}>
+                                {emoji}<span>{likes[index]}</span>
+                            </li>
+                        )
+                    }
+                </ul>
+                <div class="collectionCard__info">
+                    <div class="collectionCard__info-bg"></div>
+                    <p className="collectionCard__info-text">{collection?.name}</p>
+                </div>
+            </a>
             <ul className="collectionCard__menuEmoji"
                 style={{backgroundColor: changeTheme("#fff", "#2B3239")}}
             >

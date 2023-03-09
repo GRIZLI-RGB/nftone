@@ -8,6 +8,8 @@ import Checkbox from "../../components/Checkbox";
 import Filters from "../../components/Filters";
 import SimpleCard from "../../components/SimpleCard";
 import { Line } from "react-chartjs-2";
+import { useParams } from "react-router";
+import axios from "axios";
 
 ChartJS.register(CategoryScale, LinearScale, PointElement, LineElement);
 
@@ -43,6 +45,8 @@ export const dataFloor = {
 };
 
 function Collection() {
+    const params = useParams();
+
     const { theme, changeTheme, filterStatus, filterQuantity, filterCategory, filterPriceAt, filterPriceTo, filterRarity, filterEmotional } = useContext(ContextApp);
     const [graphView, setGraphView] = useState("volume");
     const [sortingCurrent, setSortingCurrent] = useState("Recently created");
@@ -97,15 +101,73 @@ function Collection() {
         return score;
     }
 
+    const [likes, setLikes] = useState([0, 0, 0, 0, 0, 0, 0]);
+    const [currentCollection, setCurrentCollection] = useState({});
+    const [currentUser, setCurrentUser] = useState({});
+
     useEffect(() => {
-        fetch("/nfts.json")
-            .then(res => {
-                return res.json();
+        axios
+            .post(
+                "https://nft-one.art/api/auth/current",
+                {},
+                {
+                    headers: {
+                        Token: localStorage.getItem("tonkeeperToken")
+                            ? localStorage.getItem("tonkeeperToken")
+                            : localStorage.getItem("tonhubToken"),
+                    },
+                    auth: {
+                        username: "odmen",
+                        password: "NFTflsy",
+                    },
+                },
+            )
+            .then(response => {
+                setCurrentUser(response.data.user);
             })
-            .then(json => {
-                setNFTs(json);
+            .catch(error => {
+                console.log(error);
             });
     }, []);
+
+    useEffect(() => {
+        axios
+            .post(
+                "https://nft-one.art/api/batch",
+                {
+                    "current-collection": {
+                        "action": "nft_collections/list",
+                        filters: {
+                            id: params.id,
+                        },
+                        subqueries: {
+                            img: {},
+                            likes: {},
+                            creator: {
+                                subqueries: {
+                                    img: {},
+                                },
+                            },
+                        },
+                    },
+                },
+                {
+                    auth: {
+                        username: "odmen",
+                        password: "NFTflsy",
+                    },
+                },
+            )
+            .then(response => {
+                setCurrentCollection(response.data["current-collection"].items[0]);
+                let likes_copy = [0, 0, 0, 0, 0, 0, 0];
+                response.data["current-collection"].items[0].likes.map(like => (likes_copy[Number(like.type_id) - 1] += 1));
+                setLikes([...likes_copy]);
+            })
+            .catch(error => {
+                console.log(error)
+            })
+    }, [])
 
     return (
         <>
@@ -113,8 +175,26 @@ function Collection() {
             <section className="banner">
                 <div class="banner__content">
                     <div class="banner__content-card" style={{ backgroundColor: changeTheme("#fff", "#1C2026") }}>
-                        <img class="banner__content-card-img" src="./img/sections/collection/card-photo.svg" alt="" />
-                        <ul class="banner__content-card-emoji">
+                        <div style={{
+                                background: `${`url(https://nft-one.art/api/files/thumb/?hash=${currentCollection?.img?.hash}) no-repeat center center/cover`}`,
+                            }}>
+                            <img class="banner__content-card-img" src="/img/sections/collection/card-photo.svg" alt="" />
+                        </div>
+                        {!likes.every(item => item === 0) && (
+                            <ul className="banner__content-card-emoji">
+                                {["❤️", "🤣", "😍", "😡", "🙀", "🥴", "🤑"].map((item, index) => (
+                                    <li
+                                        className="banner__content-card-emoji-item"
+                                        style={{  backgroundColor: changeTheme("rgba(0, 77, 140, 0.1)", "rgba(255, 255, 255, 0.1)"), display: `${likes[index] === 0 ? "none" : ""}` }}>
+                                        {item}
+                                        <span style={{ color: changeTheme("rgba(0, 0, 0, 0.7)", "rgba(255, 255, 255, 0.7)") }}>
+                                            {likes[index]}
+                                        </span>
+                                    </li>
+                                ))}
+                            </ul>
+                        )}
+                        {/* <ul class="banner__content-card-emoji">
                             <li
                                 className="banner__content-card-emoji-item"
                                 style={{
@@ -185,14 +265,14 @@ function Collection() {
                                     25
                                 </span>
                             </li>
-                        </ul>
+                        </ul> */}
                     </div>
                     <div class="banner__content-info">
-                        <h1 class="banner__content-info-title">Mystic funeral</h1>
+                        <h1 class="banner__content-info-title">{currentCollection?.name}</h1>
                         <p class="banner__content-info-text">
-                            To scream, and to fail being heard. How can I make myself heard? How can I be understood?
-                            How can I be found in the game of hide-and-seek, where the main point is not to be found?
-                            Drapi Superpower: making everything visible
+                            {
+                                currentCollection?.info !== "" ? currentCollection?.info : "Unfortunately, the author of this nft did not take care of its content. Do not despair, look at the works of other authors with a detailed description of the cards or buy this one and add the necessary information to it."
+                            }
                         </p>
                     </div>
                 </div>
@@ -200,63 +280,63 @@ function Collection() {
                     <a className="banner__social-link" href="#">
                         <img
                             className="banner__social-link-img"
-                            src="./img/sections/collection/social-icons/facebook.svg"
+                            src="/img/sections/collection/social-icons/facebook.svg"
                             alt=""
                         />
                     </a>
                     <a className="banner__social-link" href="#">
                         <img
                             className="banner__social-link-img"
-                            src="./img/sections/collection/social-icons/vk.svg"
+                            src="/img/sections/collection/social-icons/vk.svg"
                             alt=""
                         />
                     </a>
                     <a className="banner__social-link" href="#">
                         <img
                             className="banner__social-link-img"
-                            src="./img/sections/collection/social-icons/tg.svg"
+                            src="/img/sections/collection/social-icons/tg.svg"
                             alt=""
                         />
                     </a>
                     <a className="banner__social-link" href="#">
                         <img
                             className="banner__social-link-img"
-                            src="./img/sections/collection/social-icons/twitter.svg"
+                            src="/img/sections/collection/social-icons/twitter.svg"
                             alt=""
                         />
                     </a>
                     <a className="banner__social-link" href="#">
                         <img
                             className="banner__social-link-img"
-                            src="./img/sections/collection/social-icons/reddit.svg"
+                            src="/img/sections/collection/social-icons/reddit.svg"
                             alt=""
                         />
                     </a>
                     <a className="banner__social-link" href="#">
                         <img
                             className="banner__social-link-img"
-                            src="./img/sections/collection/social-icons/instagram.svg"
+                            src="/img/sections/collection/social-icons/instagram.svg"
                             alt=""
                         />
                     </a>
                     <a className="banner__social-link" href="#">
                         <img
                             className="banner__social-link-img"
-                            src="./img/sections/collection/social-icons/discord.svg"
+                            src="/img/sections/collection/social-icons/discord.svg"
                             alt=""
                         />
                     </a>
                     <a className="banner__social-link" href="#">
                         <img
                             className="banner__social-link-img"
-                            src="./img/sections/collection/social-icons/tik-tok.svg"
+                            src="/img/sections/collection/social-icons/tik-tok.svg"
                             alt=""
                         />
                     </a>
                     <a className="banner__social-link" href="#">
                         <img
                             className="banner__social-link-img"
-                            src="./img/sections/collection/social-icons/youtube.svg"
+                            src="/img/sections/collection/social-icons/youtube.svg"
                             alt=""
                         />
                     </a>
@@ -268,7 +348,7 @@ function Collection() {
                 }
                 <button className="collection__filtersMobile" onClick={() => setFiltersMobile(!filtersMobile)}>
                     Filters
-                    <img src={`./img/sections/collection/filters-${theme}.svg`} alt="" />
+                    <img src={`/img/sections/collection/filters-${theme}.svg`} alt="" />
                 </button>
                 <div class="collection__main">
                     <div class="collection__main-info">
@@ -291,17 +371,17 @@ function Collection() {
                         <div className="collection__main-info-buttons">
                             <img
                                 className="collection__main-info-buttons-open"
-                                src={`./img/sections/collection/open-${theme}.svg`}
+                                src={`/img/sections/collection/open-${theme}.svg`}
                                 alt=""
                             />
                             <img
                                 className="collection__main-info-buttons-repost"
-                                src={`./img/sections/collection/repost-${theme}.svg`}
+                                src={`/img/sections/collection/repost-${theme}.svg`}
                                 alt=""
                             />
                             <img
                                 className="collection__main-info-buttons-flag"
-                                src={`./img/sections/collection/flag-${theme}.svg`}
+                                src={`/img/sections/collection/flag-${theme}.svg`}
                                 alt=""
                             />
                         </div>
@@ -312,14 +392,14 @@ function Collection() {
                             <div class="collection__main-people-owner-left">
                                 <img
                                     class="collection__main-people-owner-left-avatar"
-                                    src="./img/sections/NFT/user.svg"
+                                    src="/img/sections/NFT/user.svg"
                                     alt=""
                                 />
                                 <p class="collection__main-people-owner-left-name">John Doe</p>
                             </div>
                             <img
                                 class="collection__main-people-owner-arrow"
-                                src={`./img/sections/collection/arrow-right-${theme}.svg`}
+                                src={`/img/sections/collection/arrow-right-${theme}.svg`}
                                 alt=""
                             />
                         </div>
@@ -328,14 +408,14 @@ function Collection() {
                             <div class="collection__main-people-creator-left">
                                 <img
                                     class="collection__main-people-creator-left-avatar"
-                                    src="./img/sections/NFT/user.svg"
+                                    src="/img/sections/NFT/user.svg"
                                     alt=""
                                 />
                                 <p class="collection__main-people-creator-left-name">John Doe</p>
                             </div>
                             <img
                                 class="collection__main-people-creator-arrow"
-                                src={`./img/sections/collection/arrow-right-${theme}.svg`}
+                                src={`/img/sections/collection/arrow-right-${theme}.svg`}
                                 alt=""
                             />
                         </div>
@@ -351,7 +431,7 @@ function Collection() {
                             </p>
                             <img
                                 class="collection__main-other-box-img"
-                                src={`./img/sections/nft/arrow-extra-${theme}.svg`}
+                                src={`/img/sections/nft/arrow-extra-${theme}.svg`}
                                 alt=""
                             />
                         </div>
@@ -378,7 +458,7 @@ function Collection() {
                                 </button>
                                 <img
                                     className="collection__main-graph-up-settings-resize"
-                                    src={`./img/sections/nft/resize-${theme}.svg`}
+                                    src={`/img/sections/nft/resize-${theme}.svg`}
                                     alt=""
                                     onClick={() => setGraphPopup(!graphPopup)}
                                 />
@@ -404,7 +484,7 @@ function Collection() {
                                 />
                                 <img
                                     class="collection__main-cards-options-search-img"
-                                    src={`./img/sections/collection/search-${theme}.svg`}
+                                    src={`/img/sections/collection/search-${theme}.svg`}
                                     alt=""
                                 />
                             </div>
@@ -429,7 +509,7 @@ function Collection() {
                                         </ul>
                                     )}
                                     <img
-                                        src={`./img/sections/collection/arrow-up-${theme}.svg`}
+                                        src={`/img/sections/collection/arrow-up-${theme}.svg`}
                                         alt=""
                                         style={{ transform: sortingPopup ? "rotate(-180deg)" : "rotate(0deg)" }}
                                     />
@@ -449,7 +529,7 @@ function Collection() {
                                         </ul>
                                     )}
                                     <img
-                                        src={`./img/sections/collection/arrow-up-${theme}.svg`}
+                                        src={`/img/sections/collection/arrow-up-${theme}.svg`}
                                         alt=""
                                         style={{ transform: pricePopup ? "rotate(-180deg)" : "rotate(0deg)" }}
                                     />

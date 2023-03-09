@@ -8,20 +8,12 @@ import Footer from "../../components/Footer";
 import Header from "../../components/Header";
 import { ContextApp } from "../../Context";
 import "./NFT.scss";
-import {
-    Chart as ChartJS,
-    CategoryScale,
-    LinearScale,
-    BarElement,
-  } from 'chart.js';
+import { Chart as ChartJS, CategoryScale, LinearScale, BarElement } from "chart.js";
 import axios from "axios";
 import { useParams } from "react-router-dom";
+import { toast, Toaster } from "react-hot-toast";
 
-ChartJS.register(
-    CategoryScale,
-    LinearScale,
-    BarElement
-    );
+ChartJS.register(CategoryScale, LinearScale, BarElement);
 
 export const options = {
     responsive: true,
@@ -31,13 +23,13 @@ export const options = {
 export const data = {
     labels: ["Dec 22", "Dec 23", "Dec 24"],
     datasets: [
-      {
-        data: [1.2, 1.5, 1.28],
-        backgroundColor: '#e9e9e9',
-        borderWidth: 1,
-        borderRadius: 8,
-        barPercentage: 0.1,
-      },
+        {
+            data: [1.2, 1.5, 1.28],
+            backgroundColor: "#e9e9e9",
+            borderWidth: 1,
+            borderRadius: 8,
+            barPercentage: 0.1,
+        },
     ],
 };
 
@@ -78,8 +70,7 @@ function NFT() {
     const [currentNFT, setCurrentNFT] = useState({});
     const [currentUser, setCurrentUser] = useState({});
 
-    const handleUserLike = (e) => {
-        let hasUserLike = false;
+    const handleUserLike = e => {
         axios
             .post(
                 "https://nft-one.art/api/nft_likes/list",
@@ -87,12 +78,14 @@ function NFT() {
                     filters: {
                         nft_id: params.id,
                         user_id: currentUser.id,
-                        type_id: e.target.getAttribute("data-emoji")
-                    }
+                        type_id: e.target.getAttribute("data-emoji"),
+                    },
                 },
                 {
                     headers: {
-                        Token: localStorage.getItem("tonkeeperToken") ? localStorage.getItem("tonkeeperToken") : localStorage.getItem("tonhubToken")
+                        Token: localStorage.getItem("tonkeeperToken")
+                            ? localStorage.getItem("tonkeeperToken")
+                            : localStorage.getItem("tonhubToken"),
                     },
                     auth: {
                         username: "odmen",
@@ -101,18 +94,19 @@ function NFT() {
                 },
             )
             .then(response => {
-                hasUserLike = (response.data.items.length > 0);
-                if(hasUserLike) {
+                if (response.data.items.length > 0) {
                     axios
                         .post(
                             "https://nft-one.art/api/nft_likes/unlike",
                             {
                                 nft_id: params.id,
-                                type_id: e.target.getAttribute("data-emoji")
+                                type_id: e.target.getAttribute("data-emoji"),
                             },
                             {
                                 headers: {
-                                    Token: localStorage.getItem("tonkeeperToken") ? localStorage.getItem("tonkeeperToken") : localStorage.getItem("tonhubToken")
+                                    Token: localStorage.getItem("tonkeeperToken")
+                                        ? localStorage.getItem("tonkeeperToken")
+                                        : localStorage.getItem("tonhubToken"),
                                 },
                                 auth: {
                                     username: "odmen",
@@ -133,15 +127,19 @@ function NFT() {
                         .post(
                             "https://nft-one.art/api/nft_likes/upsert",
                             {
-                                items: [{
-                                    nft_id: params.id,
-                                    type_id: e.target.getAttribute("data-emoji"),
-                                    user_id: currentUser.id
-                                }]
+                                items: [
+                                    {
+                                        nft_id: params.id,
+                                        type_id: e.target.getAttribute("data-emoji"),
+                                        user_id: currentUser.id,
+                                    },
+                                ],
                             },
                             {
                                 headers: {
-                                    Token: localStorage.getItem("tonkeeperToken") ? localStorage.getItem("tonkeeperToken") : localStorage.getItem("tonhubToken")
+                                    Token: localStorage.getItem("tonkeeperToken")
+                                        ? localStorage.getItem("tonkeeperToken")
+                                        : localStorage.getItem("tonhubToken"),
                                 },
                                 auth: {
                                     username: "odmen",
@@ -162,17 +160,18 @@ function NFT() {
             .catch(error => {
                 console.log(error);
             });
-    }
+    };
 
     useEffect(() => {
         axios
             .post(
                 "https://nft-one.art/api/auth/current",
-                {
-                },
+                {},
                 {
                     headers: {
-                        Token: localStorage.getItem("tonkeeperToken") ? localStorage.getItem("tonkeeperToken") : localStorage.getItem("tonhubToken")
+                        Token: localStorage.getItem("tonkeeperToken")
+                            ? localStorage.getItem("tonkeeperToken")
+                            : localStorage.getItem("tonhubToken"),
                     },
                     auth: {
                         username: "odmen",
@@ -186,24 +185,53 @@ function NFT() {
             .catch(error => {
                 console.log(error);
             });
-    }, [])
+    }, []);
 
     useEffect(() => {
         axios
             .post(
-                "https://nft-one.art/api/nfts/list",
+                "https://nft-one.art/api/batch",
                 {
-                    "filters": {
-                        "id": params.id
-                    },
-                    "subqueries": {
-                        img: {},
-                        likes: {},
-                        creator: {
-                            subqueries: {
-                                img: {}
-                            }
+                    "current-nft": {
+                        "action": "nfts/list",
+                        filters: {
+                            id: params.id,
                         },
+                        subqueries: {
+                            img: {},
+                            likes: {},
+                            creator: {
+                                subqueries: {
+                                    img: {},
+                                },
+                            },
+                        },
+                    },
+                    "also-nfts": {
+                        "action": "nfts/list",
+                        limit: 30,
+                        subqueries: {
+                            likes: {},
+                            img: {},
+                            creator: {
+                                subqueries: {
+                                    img: {}
+                                }
+                            }
+                        }
+                    },
+                    "also-collections": {
+                        "action": "nft_collections/list",
+                        limit: 30,
+                        subqueries: {
+                            likes: {},
+                            img: {},
+                            creator: {
+                                subqueries: {
+                                    img: {}
+                                }
+                            }
+                        }
                     }
                 },
                 {
@@ -214,33 +242,40 @@ function NFT() {
                 },
             )
             .then(response => {
-                setCurrentNFT(response.data.items[0])
+                setCurrentNFT(response.data["current-nft"].items[0]);
+                setNFTs(response.data["also-nfts"].items);
+                setCollections(response.data["also-collections"].items);
+                let likes_copy = [0, 0, 0, 0, 0, 0, 0];
+                response.data["current-nft"].items[0].likes.map(like => (likes_copy[Number(like.type_id) - 1] += 1));
+                setLikes([...likes_copy]);
             })
             .catch(error => {
-                console.log(error);
-            });
+                console.log(error)
+            })
     }, [])
-
-    useEffect(() => {
-        if(JSON.stringify(currentNFT) !== "{}") {
-            let likes_copy = [...likes];
-            currentNFT.likes.map(like => likes_copy[Number(like.type_id)] += 1);
-            setLikes([...likes_copy]);
-        }
-    }, [currentNFT])
 
     return (
         <>
             <Header />
+            <Toaster/>
             <section className={`nft ${changeTheme("", "nft--dark")}`}>
                 <div class="nft__up">
                     <div class="nft__up-left">
-                        <div class="nft__up-left-card" style={{background: `${`url(https://nft-one.art/api/files/thumb/?hash=${currentNFT?.img?.hash}) no-repeat center center/cover`}`}}>
+                        <div
+                            class="nft__up-left-card"
+                            style={{
+                                background: `${`url(https://nft-one.art/api/files/thumb/?hash=${currentNFT?.img?.hash}) no-repeat center center/cover`}`,
+                            }}>
                             <img src="/img/sections/NFT/nft-photo.svg" alt="NFT" />
                             <ul className="nft__up-left-card-menuEmoji">
-                                {
-                                    ["❤️", "🤣", "😍", "😡", "🙀", "🥴", "🤑"].map((item, index) => <li className="nft__up-left-card-menuEmoji-item" onClick={(e) => handleUserLike(e)} data-emoji={index + 1}>{item}</li>)
-                                }
+                                {["❤️", "🤣", "😍", "😡", "🙀", "🥴", "🤑"].map((item, index) => (
+                                    <li
+                                        className="nft__up-left-card-menuEmoji-item"
+                                        onClick={e => handleUserLike(e)}
+                                        data-emoji={index + 1}>
+                                        {item}
+                                    </li>
+                                ))}
                             </ul>
                             <div
                                 className={`nft__up-left-card-favourite ${
@@ -260,27 +295,27 @@ function NFT() {
                                 </svg>
                             </div>
                         </div>
-                        {
-                            !likes.every(item => item === 0) && (
-                                <ul class="nft__up-left-emoji">
-                                    {
-                                        ["❤️", "🤣", "😍", "😡", "🙀", "🥴", "🤑"].map((item, index) => (
-                                            <li className={"nft__up-left-emoji-item-" + theme} style={{display: `${likes[index] === 0 ? "none" : ""}`}}>
-                                                {item}<span>{likes[index]}</span>
-                                            </li>
-                                        ))
-                                    }
-                                </ul>
-                            )
-                        }
-                        <div class="nft__up-left-people">
+                        {!likes.every(item => item === 0) && (
+                            <ul class="nft__up-left-emoji">
+                                {["❤️", "🤣", "😍", "😡", "🙀", "🥴", "🤑"].map((item, index) => (
+                                    <li
+                                        className={"nft__up-left-emoji-item-" + theme}
+                                        style={{ display: `${likes[index] === 0 ? "none" : ""}` }}>
+                                        {item}
+                                        <span>{likes[index]}</span>
+                                    </li>
+                                ))}
+                            </ul>
+                        )}
+                        {/* <div class="nft__up-left-people">
                             <div class="nft__up-left-people-owner">
                                 <h6 class="nft__up-left-people-owner-title">Owner</h6>
                                 <div class="nft__up-left-people-owner-left">
                                     <div
                                         class="nft__up-left-people-owner-left-avatar"
-                                        style={{background: `${`url(https://nft-one.art/api/files/thumb/?hash=${currentNFT?.creator?.img?.hash}) no-repeat center center/cover`}`}}
-                                    ></div>
+                                        style={{
+                                            background: `${`url(https://nft-one.art/api/files/thumb/?hash=${currentNFT?.creator?.img?.hash}) no-repeat center center/cover`}`,
+                                        }}></div>
                                     <p class="nft__up-left-people-owner-left-name">{currentNFT?.creator?.name}</p>
                                 </div>
                                 <img
@@ -294,8 +329,9 @@ function NFT() {
                                 <div class="nft__up-left-people-creator-left">
                                     <div
                                         class="nft__up-left-people-creator-left-avatar"
-                                        style={{background: `${`url(https://nft-one.art/api/files/thumb/?hash=${currentNFT?.creator?.img?.hash}) no-repeat center center/cover`}`}}
-                                    ></div>
+                                        style={{
+                                            background: `${`url(https://nft-one.art/api/files/thumb/?hash=${currentNFT?.creator?.img?.hash}) no-repeat center center/cover`}`,
+                                        }}></div>
                                     <p class="nft__up-left-people-creator-left-name">{currentNFT?.creator?.name}</p>
                                 </div>
                                 <img
@@ -304,8 +340,8 @@ function NFT() {
                                     alt=""
                                 />
                             </div>
-                        </div>
-                        <div class="nft__up-left-collection">
+                        </div> */}
+                        {/* <div class="nft__up-left-collection">
                             <h6 class="nft__up-left-collection-title">Collection</h6>
                             <div class="nft__up-left-collection-user">
                                 <img
@@ -317,10 +353,10 @@ function NFT() {
                             </div>
                             <img
                                 class="nft__up-left-collection-arrow"
-                                src={`./img/sections/NFT/arrow-right-${theme}.svg`}
+                                src={`/img/sections/NFT/arrow-right-${theme}.svg`}
                                 alt=""
                             />
-                        </div>
+                        </div> */}
                     </div>
                     <div class="nft__up-right">
                         <div class="nft__up-right-info">
@@ -336,15 +372,21 @@ function NFT() {
                                     <p className="nft__up-right-info-heading-box-price">{currentNFT?.price} TON</p>
                                 </div>
                             </div>
-                            <div className="nft__up-right-info-tags">
-                                <div class="nft__up-right-info-tags-tag">Tsunama</div>
-                                <div class="nft__up-right-info-tags-tag">Tsunama</div>
-                                <div class="nft__up-right-info-tags-tag">Tsunama</div>
-                            </div>
-                            <div className="nft__up-right-info-extra">
-                                <div class="nft__up-right-info-extra-text">
-                                    {currentNFT?.info}
+                            {currentNFT?.tags?.length > 0 ? (
+                                <div className="nft__up-right-info-tags">
+                                    {currentNFT.tags.map((item, index) => (
+                                        <div className="nft__up-right-info-tags-tag" key={index}>
+                                            {item}
+                                        </div>
+                                    ))}
                                 </div>
+                            ) : (
+                                <div className="nft__up-right-info-tags">
+                                    <div class="nft__up-right-info-tags-tag">No tags</div>
+                                </div>
+                            )}
+                            <div className="nft__up-right-info-extra">
+                                <div class="nft__up-right-info-extra-text">{currentNFT?.info === "" ? "Unfortunately, the author of this nft did not take care of its content. Do not despair, look at the works of other authors with a detailed description of the cards or buy this one and add the necessary information to it." : currentNFT?.info}</div>
                                 <button class="nft__up-right-info-extra-place">Place a bid</button>
                             </div>
                         </div>
@@ -354,55 +396,89 @@ function NFT() {
                                 <p class="nft__up-right-other-box-title">Contract Address</p>
                                 <p class="nft__up-right-other-box-text">
                                     {window.innerWidth <= 768
-                                        ? "EQB0PAgMahaikkK..."
-                                        : "EQB0PAgMahaikkKhqNXc8AR4o9sIDQgkyHYZUlcdOUHdxCkc"}
+                                        ? currentNFT?.creator?.ton_addr.slice(0, 15) + "..."
+                                        : currentNFT?.creator?.ton_addr}
                                 </p>
                                 <img
                                     class="nft__up-right-other-box-img"
-                                    src={`./img/sections/nft/arrow-extra-${theme}.svg`}
+                                    src={`/img/sections/nft/arrow-extra-${theme}.svg`}
                                     alt=""
+                                    onClick={() => {
+                                        navigator.clipboard.writeText(currentNFT?.creator?.ton_addr).then(() => {
+                                            toast.success("Copied to Clipboard", {
+                                                position: "bottom-right",
+                                                style: {
+                                                    font: "400 21px/100% 'DM Sans'",
+                                                },
+                                            });
+                                        }, () => {
+                                            toast.error("An error has occurred", {
+                                                position: "bottom-right",
+                                                style: {
+                                                    font: "400 21px/100% 'DM Sans'",
+                                                },
+                                            });
+                                        })
+                                    }}
                                 />
                             </div>
                             <div class="nft__up-right-other-box">
                                 <p class="nft__up-right-other-box-title">Sale contract</p>
                                 <p class="nft__up-right-other-box-text">
                                     {window.innerWidth <= 768
-                                        ? "EQB0PAgMahaikkK..."
-                                        : "EQB0PAgMahaikkKhqNXc8AR4o9sIDQgkyHYZUlcdOUHdxCkc"}
+                                        ? currentNFT?.creator?.ton_addr.slice(0, 15) + "..."
+                                        : currentNFT?.creator?.ton_addr}
                                 </p>
                                 <img
                                     class="nft__up-right-other-box-img"
-                                    src={`./img/sections/nft/arrow-extra-${theme}.svg`}
+                                    src={`/img/sections/nft/arrow-extra-${theme}.svg`}
                                     alt=""
+                                    onClick={() => {
+                                        navigator.clipboard.writeText(currentNFT?.creator?.ton_addr).then(() => {
+                                            toast.success("Copied to Clipboard", {
+                                                position: "bottom-right",
+                                                style: {
+                                                    font: "400 21px/100% 'DM Sans'",
+                                                },
+                                            });
+                                        }, () => {
+                                            toast.error("An error has occurred", {
+                                                position: "bottom-right",
+                                                style: {
+                                                    font: "400 21px/100% 'DM Sans'",
+                                                },
+                                            });
+                                        })
+                                    }}
                                 />
                             </div>
                             <div class="nft__up-right-other-box">
                                 <p class="nft__up-right-other-box-title">Token ID</p>
-                                <p class="nft__up-right-other-box-text">97</p>
+                                <p class="nft__up-right-other-box-text">{currentNFT?.id}</p>
                             </div>
                             <div class="nft__up-right-other-box">
                                 <p class="nft__up-right-other-box-title">Metadata</p>
                                 <p class="nft__up-right-other-box-text">Centralized</p>
                             </div>
                         </div>
-                        <div class="nft__up-right-history">
+                        {/* <div class="nft__up-right-history">
                             <h6 class="nft__up-right-history-title">Price history</h6>
                             <div class="nft__up-right-history-box">
                                 <div class="nft__up-right-history-box-graph">
-                                    <Bar data={data} options={options}/>
+                                    <Bar data={data} options={options} />
                                 </div>
                             </div>
                             <img
                                 className="nft__up-right-history-resize"
-                                src={`./img/sections/nft/resize-${theme}.svg`}
+                                src={`/img/sections/nft/resize-${theme}.svg`}
                                 alt=""
                                 onClick={() => setGraphPopup(!graphPopup)}
                             />
-                        </div>
+                        </div> */}
                     </div>
                 </div>
-                {window.innerWidth <= 768 ? (
-                    <Draggable bounds={{right: 0}} axis="x">
+                {/* {window.innerWidth <= 768 ? (
+                    <Draggable bounds={{ right: 0 }} axis="x">
                         <div>
                             <div class="nft__history" id="nft-history">
                                 <h6 class="nft__history-title">Owners history</h6>
@@ -417,7 +493,7 @@ function NFT() {
                                     <div class="nft__history-table-row">
                                         <div className="nft__history-table-row-item">
                                             Put up for sale
-                                            <img src="./img/sections/nft/ok-light.svg" alt="Ok" />
+                                            <img src="/img/sections/nft/ok-light.svg" alt="Ok" />
                                         </div>
                                         <div className="nft__history-table-row-item">
                                             11 TON
@@ -430,7 +506,7 @@ function NFT() {
                                     <div class="nft__history-table-row">
                                         <div className="nft__history-table-row-item">
                                             Put up for sale
-                                            <img src="./img/sections/nft/ok-light.svg" alt="Ok" />
+                                            <img src="/img/sections/nft/ok-light.svg" alt="Ok" />
                                         </div>
                                         <div className="nft__history-table-row-item">
                                             11 TON
@@ -443,7 +519,7 @@ function NFT() {
                                     <div class="nft__history-table-row">
                                         <div className="nft__history-table-row-item">
                                             Put up for sale
-                                            <img src="./img/sections/nft/ok-light.svg" alt="Ok" />
+                                            <img src="/img/sections/nft/ok-light.svg" alt="Ok" />
                                         </div>
                                         <div className="nft__history-table-row-item">
                                             11 TON
@@ -471,7 +547,7 @@ function NFT() {
                             <div class="nft__history-table-row">
                                 <div className="nft__history-table-row-item">
                                     Put up for sale
-                                    <img src="./img/sections/nft/ok-light.svg" alt="Ok" />
+                                    <img src="/img/sections/nft/ok-light.svg" alt="Ok" />
                                 </div>
                                 <div className="nft__history-table-row-item">
                                     11 TON
@@ -484,7 +560,7 @@ function NFT() {
                             <div class="nft__history-table-row">
                                 <div className="nft__history-table-row-item">
                                     Put up for sale
-                                    <img src="./img/sections/nft/ok-light.svg" alt="Ok" />
+                                    <img src="/img/sections/nft/ok-light.svg" alt="Ok" />
                                 </div>
                                 <div className="nft__history-table-row-item">
                                     11 TON
@@ -497,7 +573,7 @@ function NFT() {
                             <div class="nft__history-table-row">
                                 <div className="nft__history-table-row-item">
                                     Put up for sale
-                                    <img src="./img/sections/nft/ok-light.svg" alt="Ok" />
+                                    <img src="/img/sections/nft/ok-light.svg" alt="Ok" />
                                 </div>
                                 <div className="nft__history-table-row-item">
                                     11 TON
@@ -509,14 +585,14 @@ function NFT() {
                             </div>
                         </div>
                     </div>
-                )}
+                )} */}
             </section>
             {graphPopup && (
                 <div
                     className="graph-popup"
                     onClick={e => e.target.getAttribute("class") === "graph-popup" && setGraphPopup(!graphPopup)}>
                     <div className="graph-popup-two">
-                    <Bar data={data} options={options}/>
+                        <Bar data={data} options={options} />
                     </div>
                 </div>
             )}
@@ -575,12 +651,14 @@ function NFT() {
                     </button>
                 </div>
                 <Slider class="also__list" {...settingsForSlider}>
-                    {[1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map(() =>
-                        alsoFilter === "nft" ? (NFTs.map(nft => <Card nft={nft}/>)) : (collections.map(collection => <CollectionCard collection={collection}/>)),
-                    )}
+                    {alsoFilter === "nft"
+                        ? NFTs.map(nft => <Card nft={nft} currentUser={currentUser}/>)
+                        : collections.map(collection => <CollectionCard collection={collection} currentUser={currentUser}/>)}
                 </Slider>
                 <div class="also__all">
-                    <a className="recent__all-btn" href='/marketplace'>View all</a>
+                    <a className="recent__all-btn" href="/catalog">
+                        View all
+                    </a>
                 </div>
             </section>
             <Footer />

@@ -116,29 +116,29 @@ function Header({ currentPage }) {
                     localStorage.setItem("tonkeeperToken", response.data.token);
                     localStorage.setItem("tonkeeperUsername", toUserFriendlyAddress(walletInfo.account.address));
                     axios
-                    .post(
-                        "https://nft-one.art/api/auth/check_tonkeeper",
-                        {
-                            ton_addr: walletInfo.account.address.toString(),
-                            state_init: walletInfo.account.walletStateInit,
-                            proof: walletInfo.connectItems.tonProof.proof
-                        },
-                        {
-                            headers: {
-                                Token: response.data.token
+                        .post(
+                            "https://nft-one.art/api/auth/check_tonkeeper",
+                            {
+                                ton_addr: walletInfo.account.address.toString(),
+                                state_init: walletInfo.account.walletStateInit,
+                                proof: walletInfo.connectItems.tonProof.proof
                             },
-                            auth: {
-                                username: "odmen",
-                                password: "NFTflsy",
+                            {
+                                headers: {
+                                    Token: response.data.token
+                                },
+                                auth: {
+                                    username: "odmen",
+                                    password: "NFTflsy",
+                                },
                             },
-                        },
-                    )
-                    .then(function (response) {
-                        console.log("Удалось проверить Tonkeeper-кошелёк");
-                    })
-                    .catch(function (error) {
-                        console.log("Ошибка: ", error);
-                    });
+                        )
+                        .then(function (response) {
+                            window.location.reload()
+                        })
+                        .catch(function (error) {
+                            console.log("Ошибка: ", error);
+                        });
                 })
             })
             .catch(function (error) {
@@ -185,6 +185,7 @@ function Header({ currentPage }) {
                             setAuth(true);
                             localStorage.setItem("auth", true);
                             clearInterval(checkTonhubAuth);
+                            window.location.reload()
                         }
                     })
                     .catch(function (error) {
