@@ -139,7 +139,8 @@ function CreateNFT() {
                     price: priceNFT,
                     attrs: getFormatAttrsForBackend(),
                     state: typeNFT.toLowerCase(),
-                    categories: categories
+                    categories: categories,
+                    tags: tags.slice(1)
                 }]
             }));
             formData.append("file123", acceptedFiles[0]);

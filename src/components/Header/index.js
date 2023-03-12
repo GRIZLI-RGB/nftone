@@ -395,13 +395,13 @@ function Header({ currentPage }) {
                                     )}`}>
                                     <li className="header__buttons-userMenu-item">
                                         <img src={`/img/header/profile-${theme}.svg`} alt="" />
-                                        <a className="header__buttons-userMenu-item-link" href="/my-nft">
+                                        <a className="header__buttons-userMenu-item-link" href={`/profile/${currentUser.id}`}>
                                             Profile
                                         </a>
                                     </li>
                                     <li className="header__buttons-userMenu-item">
                                         <img src={`/img/header/collections-${theme}.svg`} alt="" />
-                                        <a className="header__buttons-userMenu-item-link" href="/my-nft#collection">
+                                        <a className="header__buttons-userMenu-item-link" href="/profile#collection">
                                             My Collections
                                         </a>
                                     </li>
@@ -413,13 +413,13 @@ function Header({ currentPage }) {
                                     </li>
                                     <li className="header__buttons-userMenu-item">
                                         <img src={`/img/header/favorite-${theme}.svg`} alt="" />
-                                        <a className="header__buttons-userMenu-item-link" href="/my-nft#favorite">
+                                        <a className="header__buttons-userMenu-item-link" href="/profile#favorite">
                                             Favorites
                                         </a>
                                     </li>
                                     <li className="header__buttons-userMenu-item">
                                         <img src={`/img/header/settings-${theme}.svg`} alt="" />
-                                        <a className="header__buttons-userMenu-item-link" href="/my-nft">
+                                        <a className="header__buttons-userMenu-item-link" href="/profile">
                                             Settings
                                         </a>
                                     </li>

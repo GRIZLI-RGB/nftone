@@ -1,9 +1,9 @@
-import "./MyNFT.scss";
-import Header from "./../../components/Header";
-import Footer from "./../../components/Footer";
-import Filters from "./../../components/Filters";
-import SimpleCard from "./../../components/SimpleCard";
-import CollectionCard from "./../../components/CollectionCard";
+import "./Profile.scss";
+import Header from "../../components/Header";
+import Footer from "../../components/Footer";
+import Filters from "../../components/Filters";
+import SimpleCard from "../../components/SimpleCard";
+import CollectionCard from "../../components/CollectionCard";
 import { useContext, useEffect, useState } from "react";
 import { ContextApp } from "../../Context";
 import { useDropzone } from "react-dropzone";
@@ -11,8 +11,11 @@ import axios from "axios";
 import { toast, Toaster } from "react-hot-toast";
 import "react-tooltip/dist/react-tooltip.css";
 import { Tooltip } from "react-tooltip";
+import { useParams } from "react-router";
 
-function MyNFT() {
+function Profile() {
+    const params = useParams();
+
     const {
         theme,
         changeTheme,
@@ -54,6 +57,8 @@ function MyNFT() {
     const [avatarHover, setAvatarHover] = useState(false);
 
     const [editProfile, setEditProfile] = useState(false);
+
+    const [userAdmin, setUserAdmin] = useState(false);
 
     const [nameForm, setNameForm] = useState("");
     const [infoForm, setInfoForm] = useState("");
@@ -191,10 +196,10 @@ function MyNFT() {
         }
     };
 
-    useEffect(() => {
-        let currentTab = window.location.href.split("#")[1];
-        setWindowView(currentTab ? currentTab : "nft");
-    }, []);
+    // useEffect(() => {
+    //     let currentTab = window.location.href.split("#")[1];
+    //     setWindowView(currentTab ? currentTab : "nft");
+    // }, []);
 
     useEffect(() => {
         axios
@@ -236,11 +241,6 @@ function MyNFT() {
                     },
                 },
                 {
-                    headers: {
-                        Token: localStorage.getItem("tonkeeperToken")
-                            ? localStorage.getItem("tonkeerToken")
-                            : localStorage.getItem("tonhubToken"),
-                    },
                     auth: {
                         username: "odmen",
                         password: "NFTflsy",
@@ -254,18 +254,17 @@ function MyNFT() {
                 console.log(error);
             });
     }, []);
-    // Получаем объект текущего пользователя
+
     useEffect(() => {
         axios
             .post(
-                "https://nft-one.art/api/auth/current",
-                {},
+                "https://nft-one.art/api/users/list",
                 {
-                    headers: {
-                        Token: localStorage.getItem("tonkeeperToken")
-                            ? localStorage.getItem("tonkeeperToken")
-                            : localStorage.getItem("tonhubToken"),
+                    "filters": {
+                        "id": params.id
                     },
+                },
+                {
                     auth: {
                         username: "odmen",
                         password: "NFTflsy",
@@ -273,7 +272,33 @@ function MyNFT() {
                 },
             )
             .then(response => {
-                setCurrentUser(response.data.user);
+                axios
+                    .post(
+                        "https://nft-one.art/api/auth/current",
+                        {
+                        },
+                        {
+                            headers: {
+                                Token: localStorage.getItem('tonkeeperToken') ? localStorage.getItem("tonkeeperToken") : localStorage.getItem("tonhubToken")
+                            },
+                            auth: {
+                                username: "odmen",
+                                password: "NFTflsy",
+                            },
+                        },
+                    )
+                    .then(res => {
+                        if(response.data.items[0].id === res.data.user.id) {
+                            setUserAdmin(true);
+                            setCurrentUser(res.data.user);
+                        } else {
+                            setCurrentUser(response.data.items[0])
+                        }
+                    })
+                    .catch(error => {
+                        console.log(error);
+                        setCurrentUser(response.data.items[0])
+                    });
             })
             .catch(error => {
                 console.log(error);
@@ -409,7 +434,9 @@ function MyNFT() {
     return (
         <>
             <Header />
-            <section
+            {
+                userAdmin ? (
+                    <section
                 className={`myBanner ${changeTheme("", "myBanner--dark")} ${
                     bannerHash ? "myBanner--hovme" : null
                 } dropzone`}
@@ -424,7 +451,7 @@ function MyNFT() {
                 onMouseOver={() => setBannerHover(true)}
                 onMouseOut={() => setBannerHover(false)}>
                 <div className="myBanner__download" style={{ opacity: `${bannerHash ? "0" : "1"}` }}>
-                    <img src={`./img/sections/myNFT/download-${theme}.svg`} alt="" class="myBanner__download-img" />
+                    <img src={`/img/sections/myNFT/download-${theme}.svg`} alt="" class="myBanner__download-img" />
                     <p class="myBanner__download-title">Add banner</p>
                     <p class="myBanner__download-text">Optimal dimensions: 2500×650</p>
                 </div>
@@ -438,35 +465,71 @@ function MyNFT() {
                     onClick={e => e.stopPropagation()}
                 />
             </section>
+                ) : (
+                    <section
+                        className={`myBanner ${changeTheme("", "myBanner--dark")}`}
+                        style={{
+                            background: `${
+                                bannerHash
+                                    ? `url(https://nft-one.art/api/files/thumb/?hash=${bannerHash}) no-repeat center center/cover`
+                                    : "linear-gradient(105.78deg, #2442ad 0%, #2240e0 35.44%, #1fbdeb 67.05%, #f39475 99.49%)"
+                            }`,
+                            cursor: "default"
+                        }}>
+                        <div className="myBanner__download" style={{ opacity: "0"}}>
+                            <img src={`/img/sections/myNFT/download-${theme}.svg`} alt="" class="myBanner__download-img" />
+                            <p class="myBanner__download-title">Add banner</p>
+                            <p class="myBanner__download-text">Optimal dimensions: 2500×650</p>
+                        </div>
+                    </section>
+                )
+            }
             <section className={`myContent ${changeTheme("", "myContent--dark")}`}>
                 <div class="myContent__left">
                     <div className="myContent__left-user">
-                        <div
-                            className="myContent__left-user-box dropzone"
-                            {...getRootPropsFromAvatar()}
-                            onMouseOver={() => setAvatarHover(true)}
-                            onMouseOut={() => setAvatarHover(false)}>
-                            <img
-                                className="myContent__left-user-avatar"
-                                src={
-                                    avatarHash
-                                        ? `https://nft-one.art/api/files/thumb/?hash=${avatarHash}`
-                                        : "./img/sections/myNFT/avatar.svg"
-                                }
-                                alt=""
-                            />
-                            <div
-                                className="myContent__left-user-avatar--extra"
-                                style={{ opacity: `${avatarHover ? "1" : "0"}` }}>
-                                +
-                            </div>
-                            <input
-                                className="myContent--mobileLoad"
-                                {...getInputPropsFromAvatar()}
-                                type="file"
-                                onClick={e => e.stopPropagation()}
-                            />
-                        </div>
+                        {
+                            userAdmin ? (
+                                <div
+                                    className="myContent__left-user-box dropzone"
+                                    {...getRootPropsFromAvatar()}
+                                    onMouseOver={() => setAvatarHover(true)}
+                                    onMouseOut={() => setAvatarHover(false)}>
+                                    <img
+                                        className="myContent__left-user-avatar"
+                                        src={
+                                            avatarHash
+                                                ? `https://nft-one.art/api/files/thumb/?hash=${avatarHash}`
+                                                : "/img/sections/myNFT/avatar.svg"
+                                        }
+                                        alt=""
+                                    />
+                                    <div
+                                        className="myContent__left-user-avatar--extra"
+                                        style={{ opacity: `${avatarHover ? "1" : "0"}` }}>
+                                        +
+                                    </div>
+                                    <input
+                                        className="myContent--mobileLoad"
+                                        {...getInputPropsFromAvatar()}
+                                        type="file"
+                                        onClick={e => e.stopPropagation()}
+                                    />
+                                </div>
+                            ) : (
+                                <div className="myContent__left-user-box">
+                                    <img
+                                        className="myContent__left-user-avatar"
+                                        src={
+                                            avatarHash
+                                                ? `https://nft-one.art/api/files/thumb/?hash=${avatarHash}`
+                                                : "/img/sections/myNFT/avatar.svg"
+                                        }
+                                        alt=""
+                                        style={{cursor: "default"}}
+                                    />
+                                </div>
+                            )
+                        }
                         <h6 className="myContent__left-user-name">
                             {username.length > 18 ? username.slice(0, 18) + "..." : username}
                         </h6>
@@ -493,7 +556,7 @@ function MyNFT() {
                                                     href={"https://" + currentLink + socialLinks[key]}
                                                     target="_blank"
                                                     rel="noreferrer">
-                                                    <img src={`./img/sections/myNFT/${key}.svg`} alt="" />
+                                                    <img src={`/img/sections/myNFT/${key}.svg`} alt="" />
                                                 </a>
                                             );
                                         }
@@ -513,9 +576,13 @@ function MyNFT() {
                                 info
                             )}
                         </p>
-                        <button className="myContent__left-user-edit" onClick={() => setEditProfile(!editProfile)}>
-                            Edit profile
-                        </button>
+                        {
+                            userAdmin && (
+                                <button className="myContent__left-user-edit" onClick={() => setEditProfile(!editProfile)}>
+                                    Edit profile
+                                </button>
+                            )
+                        }
                     </div>
                     {/* {(windowView === "collection" && window.innerWidth > 768) && (
                         <>
@@ -524,14 +591,14 @@ function MyNFT() {
                                 <div class="myContent__left-owner-left">
                                     <img
                                         class="myContent__left-owner-left-avatar"
-                                        src="./img/sections/NFT/user.svg"
+                                        src="/img/sections/NFT/user.svg"
                                         alt=""
                                     />
                                     <p class="myContent__left-owner-left-name">John Doe</p>
                                 </div>
                                 <img
                                     class="myContent__left-owner-arrow"
-                                    src={`./img/sections/collection/arrow-right-${theme}.svg`}
+                                    src={`/img/sections/collection/arrow-right-${theme}.svg`}
                                     alt=""
                                 />
                             </div>
@@ -542,7 +609,7 @@ function MyNFT() {
                                     <p class="myContent__left-other-box-text">EQB0PAgMahaikkK...</p>
                                     <img
                                         class="myContent__left-other-box-img"
-                                        src={`./img/sections/nft/arrow-extra-${theme}.svg`}
+                                        src={`/img/sections/nft/arrow-extra-${theme}.svg`}
                                         alt=""
                                     />
                                 </div>
@@ -594,7 +661,7 @@ function MyNFT() {
                             <img
                                 className="myContent__right-settings-search-img"
                                 alt=""
-                                src={`./img/sections/collection/search-${theme}.svg`}
+                                src={`/img/sections/collection/search-${theme}.svg`}
                             />
                         </div>
                         <div className="myContent__right-settings-box">
@@ -603,7 +670,7 @@ function MyNFT() {
                                 onClick={() => setPricePopup(!pricePopup)}>
                                 Price: {priceCurrent}
                                 <img
-                                    src={`./img/sections/collection/arrow-up-${theme}.svg`}
+                                    src={`/img/sections/collection/arrow-up-${theme}.svg`}
                                     alt=""
                                     style={{ transform: pricePopup ? "rotate(-180deg)" : "rotate(0deg)" }}
                                 />
@@ -622,7 +689,7 @@ function MyNFT() {
                                     </ul>
                                 )}
                             </button>
-                            {windowView !== "favorite" && (
+                            {(windowView !== "favorite") && userAdmin && (
                                 <a
                                     className="myContent__right-settings-box-add"
                                     href={windowView === "nft" ? "/create-nft" : "create-collection"}>
@@ -635,13 +702,13 @@ function MyNFT() {
                                 className="myContent__right-settings-boxMobile-filters"
                                 onClick={() => setFiltersMobile(!filtersMobile)}>
                                 Filters
-                                <img src={`./img/sections/collection/filters-${theme}.svg`} alt="" />
+                                <img src={`/img/sections/collection/filters-${theme}.svg`} alt="" />
                             </button>
                             <button
                                 className="myContent__right-settings-boxMobile-sort"
                                 onClick={() => setSortingPopup(!sortingPopup)}>
                                 Sort
-                                <img src={`./img/sections/collection/arrow-up-${theme}.svg`} alt="" />
+                                <img src={`/img/sections/collection/arrow-up-${theme}.svg`} alt="" />
                                 {sortingPopup && (
                                     <ul className="collection__main-cards-options-filters-sort-popup">
                                         <li
@@ -790,7 +857,6 @@ function MyNFT() {
                                                     }
                                                 )
                                             }
-                                            {/* console.log(a.name) */}
                                             return (scoreB > scoreA ? 1 : scoreB < scoreA ? -1 : 0);
                                         })
                                         .map(collection => (
@@ -803,7 +869,7 @@ function MyNFT() {
                         ) : (
                             <>
                                 {favorites.length > 0 ? (
-                                    favorites.map(nft => <SimpleCard nft={nft} />)
+                                    favorites.map(nft => <SimpleCard nft={nft} avatarHash={avatarHash}/>)
                                 ) : (
                                     <div className="myContent__right-items-zero">NO FAVORITES</div>
                                 )}
@@ -906,7 +972,7 @@ function MyNFT() {
                                 {email !== "" ? (
                                     <img
                                         className="editProfile__box-email-confirmed"
-                                        src="./img/adminPanel/yes.svg"
+                                        src="/img/adminPanel/yes.svg"
                                         alt=""
                                         data-tooltip-id="check-email"
                                         data-tooltip-content="Email confirmed"
@@ -915,7 +981,7 @@ function MyNFT() {
                                     />
                                 ) : (
                                     <img
-                                        src="./img/editProfile/ex.svg"
+                                        src="/img/editProfile/ex.svg"
                                         alt=""
                                         data-tooltip-id="check-email"
                                         data-tooltip-content="Сheck your email"
@@ -930,7 +996,7 @@ function MyNFT() {
                         </button>
                         <img
                             onClick={() => setEditProfile(false)}
-                            src={`./img/header/${theme === "light" ? "close" : "close-white"}.png`}
+                            src={`/img/header/${theme === "light" ? "close" : "close-white"}.png`}
                             alt=""
                         />
                     </div>
@@ -942,4 +1008,4 @@ function MyNFT() {
     );
 }
 
-export default MyNFT;
+export default Profile;

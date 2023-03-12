@@ -12,11 +12,11 @@ function CollectionCard({collection, currentUser}) {
     // set likes on start collection
     useEffect(() => {
         if(collection.likes.length > 0) {
-            let likes_copy = [...likes];
+            let likes_copy = [0, 0, 0, 0, 0, 0, 0];
             collection.likes.map(like => likes_copy[Number(like.type_id) - 1] += 1);
             setLikes(likes_copy);
         }
-    }, []);
+    }, [collection.likes]);
 
     const handleUserLike = (e) => {
         let hasUserLike = false;

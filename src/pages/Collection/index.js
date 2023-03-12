@@ -61,6 +61,8 @@ function Collection() {
 
     const [NFTs, setNFTs] = useState([]);
 
+    const [collectionCreateDate, setCollectionCreateDate] = useState("");
+
     function addOrRemoveCheck(status) {
         if (checkes.includes(status)) {
             setCheckes(checkes.filter(rar => rar !== status));
@@ -103,32 +105,6 @@ function Collection() {
 
     const [likes, setLikes] = useState([0, 0, 0, 0, 0, 0, 0]);
     const [currentCollection, setCurrentCollection] = useState({});
-    const [currentUser, setCurrentUser] = useState({});
-
-    useEffect(() => {
-        axios
-            .post(
-                "https://nft-one.art/api/auth/current",
-                {},
-                {
-                    headers: {
-                        Token: localStorage.getItem("tonkeeperToken")
-                            ? localStorage.getItem("tonkeeperToken")
-                            : localStorage.getItem("tonhubToken"),
-                    },
-                    auth: {
-                        username: "odmen",
-                        password: "NFTflsy",
-                    },
-                },
-            )
-            .then(response => {
-                setCurrentUser(response.data.user);
-            })
-            .catch(error => {
-                console.log(error);
-            });
-    }, []);
 
     useEffect(() => {
         axios
@@ -143,6 +119,7 @@ function Collection() {
                         subqueries: {
                             img: {},
                             likes: {},
+                            hdr: {},
                             creator: {
                                 subqueries: {
                                     img: {},
@@ -163,6 +140,9 @@ function Collection() {
                 let likes_copy = [0, 0, 0, 0, 0, 0, 0];
                 response.data["current-collection"].items[0].likes.map(like => (likes_copy[Number(like.type_id) - 1] += 1));
                 setLikes([...likes_copy]);
+                const createDate = new Date(response.data["current-collection"].items[0].add_time * 1000);
+                const formatCreateDate = `${createDate.getDate() < 10 ? "0" + createDate.getDate().toString() : createDate.getDate()}.${createDate.getMonth() + 1 < 10 ? '0' + (createDate.getMonth()+1).toString() : createDate.getMonth()+1}.${createDate.getFullYear()}`
+                setCollectionCreateDate(formatCreateDate)
             })
             .catch(error => {
                 console.log(error)
@@ -172,7 +152,9 @@ function Collection() {
     return (
         <>
             <Header />
-            <section className="banner">
+            <section className="banner" style={{
+                                background: currentCollection?.hdr?.hash ? `${`url(https://nft-one.art/api/files/thumb/?hash=${currentCollection?.hdr?.hash}) no-repeat center center/cover`}` : "",
+                            }}>
                 <div class="banner__content">
                     <div class="banner__content-card" style={{ backgroundColor: changeTheme("#fff", "#1C2026") }}>
                         <div style={{
@@ -194,78 +176,6 @@ function Collection() {
                                 ))}
                             </ul>
                         )}
-                        {/* <ul class="banner__content-card-emoji">
-                            <li
-                                className="banner__content-card-emoji-item"
-                                style={{
-                                    backgroundColor: changeTheme("rgba(0, 77, 140, 0.1)", "rgba(255, 255, 255, 0.1)"),
-                                }}>
-                                ❤️
-                                <span style={{ color: changeTheme("rgba(0, 0, 0, 0.7)", "rgba(255, 255, 255, 0.7)") }}>
-                                    250
-                                </span>
-                            </li>
-                            <li
-                                className="banner__content-card-emoji-item"
-                                style={{
-                                    backgroundColor: changeTheme("rgba(0, 77, 140, 0.1)", "rgba(255, 255, 255, 0.1)"),
-                                }}>
-                                🤣
-                                <span style={{ color: changeTheme("rgba(0, 0, 0, 0.7)", "rgba(255, 255, 255, 0.7)") }}>
-                                    25
-                                </span>
-                            </li>
-                            <li
-                                className="banner__content-card-emoji-item"
-                                style={{
-                                    backgroundColor: changeTheme("rgba(0, 77, 140, 0.1)", "rgba(255, 255, 255, 0.1)"),
-                                }}>
-                                😍
-                                <span style={{ color: changeTheme("rgba(0, 0, 0, 0.7)", "rgba(255, 255, 255, 0.7)") }}>
-                                    250
-                                </span>
-                            </li>
-                            <li
-                                className="banner__content-card-emoji-item"
-                                style={{
-                                    backgroundColor: changeTheme("rgba(0, 77, 140, 0.1)", "rgba(255, 255, 255, 0.1)"),
-                                }}>
-                                😡
-                                <span style={{ color: changeTheme("rgba(0, 0, 0, 0.7)", "rgba(255, 255, 255, 0.7)") }}>
-                                    25
-                                </span>
-                            </li>
-                            <li
-                                className="banner__content-card-emoji-item"
-                                style={{
-                                    backgroundColor: changeTheme("rgba(0, 77, 140, 0.1)", "rgba(255, 255, 255, 0.1)"),
-                                }}>
-                                🙀
-                                <span style={{ color: changeTheme("rgba(0, 0, 0, 0.7)", "rgba(255, 255, 255, 0.7)") }}>
-                                    25
-                                </span>
-                            </li>
-                            <li
-                                className="banner__content-card-emoji-item"
-                                style={{
-                                    backgroundColor: changeTheme("rgba(0, 77, 140, 0.1)", "rgba(255, 255, 255, 0.1)"),
-                                }}>
-                                🥴
-                                <span style={{ color: changeTheme("rgba(0, 0, 0, 0.7)", "rgba(255, 255, 255, 0.7)") }}>
-                                    25
-                                </span>
-                            </li>
-                            <li
-                                className="banner__content-card-emoji-item"
-                                style={{
-                                    backgroundColor: changeTheme("rgba(0, 77, 140, 0.1)", "rgba(255, 255, 255, 0.1)"),
-                                }}>
-                                🤑
-                                <span style={{ color: changeTheme("rgba(0, 0, 0, 0.7)", "rgba(255, 255, 255, 0.7)") }}>
-                                    25
-                                </span>
-                            </li>
-                        </ul> */}
                     </div>
                     <div class="banner__content-info">
                         <h1 class="banner__content-info-title">{currentCollection?.name}</h1>
@@ -277,69 +187,41 @@ function Collection() {
                     </div>
                 </div>
                 <div className="banner__social">
-                    <a className="banner__social-link" href="#">
-                        <img
-                            className="banner__social-link-img"
-                            src="/img/sections/collection/social-icons/facebook.svg"
-                            alt=""
-                        />
-                    </a>
-                    <a className="banner__social-link" href="#">
-                        <img
-                            className="banner__social-link-img"
-                            src="/img/sections/collection/social-icons/vk.svg"
-                            alt=""
-                        />
-                    </a>
-                    <a className="banner__social-link" href="#">
-                        <img
-                            className="banner__social-link-img"
-                            src="/img/sections/collection/social-icons/tg.svg"
-                            alt=""
-                        />
-                    </a>
-                    <a className="banner__social-link" href="#">
-                        <img
-                            className="banner__social-link-img"
-                            src="/img/sections/collection/social-icons/twitter.svg"
-                            alt=""
-                        />
-                    </a>
-                    <a className="banner__social-link" href="#">
-                        <img
-                            className="banner__social-link-img"
-                            src="/img/sections/collection/social-icons/reddit.svg"
-                            alt=""
-                        />
-                    </a>
-                    <a className="banner__social-link" href="#">
-                        <img
-                            className="banner__social-link-img"
-                            src="/img/sections/collection/social-icons/instagram.svg"
-                            alt=""
-                        />
-                    </a>
-                    <a className="banner__social-link" href="#">
-                        <img
-                            className="banner__social-link-img"
-                            src="/img/sections/collection/social-icons/discord.svg"
-                            alt=""
-                        />
-                    </a>
-                    <a className="banner__social-link" href="#">
-                        <img
-                            className="banner__social-link-img"
-                            src="/img/sections/collection/social-icons/tik-tok.svg"
-                            alt=""
-                        />
-                    </a>
-                    <a className="banner__social-link" href="#">
-                        <img
-                            className="banner__social-link-img"
-                            src="/img/sections/collection/social-icons/youtube.svg"
-                            alt=""
-                        />
-                    </a>
+                    {
+                        currentCollection?.social_links
+                        ? (Object.keys(currentCollection?.social_links).map(social => {
+                            const currentLink =
+                                            social === "vk"
+                                                ? "vk.com/"
+                                                : social === "tg"
+                                                ? "t.me/"
+                                                : social === "reddit"
+                                                ? "reddit.com/"
+                                                : social === "twitter"
+                                                ? "twitter.com/"
+                                                : social === "discord"
+                                                ? "discord.gg/"
+                                                : social === "tik-tok"
+                                                ? "tiktok.com/"
+                                                : social === "youtube"
+                                                ? "youtube.com/"
+                                                : social === "facebook"
+                                                ? "facebook.com/"
+                                                : social === "instagram"
+                                                ? "instagram.com/"
+                                                : null;
+                            return currentCollection.social_links[social] !== "" && (
+                                <a className="banner__social-link" href={"https://" + currentLink + currentCollection.social_links[social]}>
+                                    <img
+                                        className="banner__social-link-img"
+                                        src={`/img/sections/collection/social-icons/${social}.svg`}
+                                        alt=""
+                                    />
+                                </a>
+                            )
+                        }))
+                        : null
+                    }
                 </div>
             </section>
             <section className={`collection ${changeTheme("", "collection--dark")}`}>
@@ -354,19 +236,19 @@ function Collection() {
                     <div class="collection__main-info">
                         <div class="collection__main-info-box">
                             <h6 className="collection__main-info-box-title">Create date</h6>
-                            <p class="collection__main-info-box-text">15.02.2022</p>
+                            <p class="collection__main-info-box-text">{collectionCreateDate}</p>
                         </div>
                         <div class="collection__main-info-box">
                             <h6 className="collection__main-info-box-title">Commission</h6>
-                            <p class="collection__main-info-box-text">$2</p>
+                            <p class="collection__main-info-box-text">—</p>
                         </div>
                         <div class="collection__main-info-box">
                             <h6 className="collection__main-info-box-title">Floor price</h6>
-                            <p class="collection__main-info-box-text">$25</p>
+                            <p class="collection__main-info-box-text">—</p>
                         </div>
                         <div class="collection__main-info-box">
                             <h6 className="collection__main-info-box-title">Total</h6>
-                            <p class="collection__main-info-box-text">$30</p>
+                            <p class="collection__main-info-box-text">—</p>
                         </div>
                         <div className="collection__main-info-buttons">
                             <img
@@ -392,10 +274,10 @@ function Collection() {
                             <div class="collection__main-people-owner-left">
                                 <img
                                     class="collection__main-people-owner-left-avatar"
-                                    src="/img/sections/NFT/user.svg"
+                                    src={`https://nft-one.art/api/files/thumb/?hash=${currentCollection?.creator?.img?.hash}`}
                                     alt=""
                                 />
-                                <p class="collection__main-people-owner-left-name">John Doe</p>
+                                <p class="collection__main-people-owner-left-name">{currentCollection?.creator?.name}</p>
                             </div>
                             <img
                                 class="collection__main-people-owner-arrow"
@@ -408,10 +290,10 @@ function Collection() {
                             <div class="collection__main-people-creator-left">
                                 <img
                                     class="collection__main-people-creator-left-avatar"
-                                    src="/img/sections/NFT/user.svg"
+                                    src={`https://nft-one.art/api/files/thumb/?hash=${currentCollection?.creator?.img?.hash}`}
                                     alt=""
                                 />
-                                <p class="collection__main-people-creator-left-name">John Doe</p>
+                                <p class="collection__main-people-creator-left-name">{currentCollection?.creator?.name}</p>
                             </div>
                             <img
                                 class="collection__main-people-creator-arrow"

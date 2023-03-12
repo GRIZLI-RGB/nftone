@@ -16,13 +16,13 @@ function SimpleCard({nft, avatarHash}) {
                 <div className="simpleCard__info-left">
                     <h6 className="simpleCard__info-left-title">{nft?.name}</h6>
                     <p className="simpleCard__info-left-price" style={{ color: theme === "light" ? "#0088cc" : "#fff" }}>
-                        <img src={`./img/card/diamond-${diamond}.png`} alt="Price" />
+                        <img src={`/img/card/diamond-${diamond}.png`} alt="Price" />
                         {nft?.price}
                     </p>
                 </div>
                 <div className="simpleCard__info-right">
                     <div class="simpleCard__info-right-user">
-                        <img className="simpleCard__info-right-user-avatar" src={avatarHash ? `https://nft-one.art/api/files/thumb/?hash=${avatarHash}` : "./img/sections/myNFT/avatar.svg"} alt="Avatar" />
+                        <img className="simpleCard__info-right-user-avatar" src={avatarHash ? `https://nft-one.art/api/files/thumb/?hash=${avatarHash}` : "/img/sections/myNFT/avatar.svg"} alt="Avatar" />
                         <p className="simpleCard__info-right-user-name">by {nft.creator.name}</p>
                     </div>
                     <div className="simpleCard__info-right-count">

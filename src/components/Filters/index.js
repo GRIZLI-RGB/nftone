@@ -90,10 +90,10 @@ function Filters({ example }) {
                             }>
                             <h6>Status</h6>
                             {popups[0] ? (
-                                <img src={`./img/sections/catalog/arrow-${theme}.png`} alt="Arrow" />
+                                <img src={`/img/sections/catalog/arrow-${theme}.png`} alt="Arrow" />
                             ) : (
                                 <img
-                                    src={`./img/sections/catalog/arrow-${theme}.png`}
+                                    src={`/img/sections/catalog/arrow-${theme}.png`}
                                     alt="Arrow"
                                     style={{ transform: "rotate(-90deg) translateX(30%)" }}
                                 />
@@ -113,10 +113,10 @@ function Filters({ example }) {
                             }>
                             <h6>Quantity</h6>
                             {popups[1] ? (
-                                <img src={`./img/sections/catalog/arrow-${theme}.png`} alt="Arrow" />
+                                <img src={`/img/sections/catalog/arrow-${theme}.png`} alt="Arrow" />
                             ) : (
                                 <img
-                                    src={`./img/sections/catalog/arrow-${theme}.png`}
+                                    src={`/img/sections/catalog/arrow-${theme}.png`}
                                     alt="Arrow"
                                     style={{ transform: "rotate(-90deg) translateX(30%)" }}
                                 />
@@ -149,10 +149,10 @@ function Filters({ example }) {
                             }>
                             <h6>Price range</h6>
                             {popups[2] ? (
-                                <img src={`./img/sections/catalog/arrow-${theme}.png`} alt="Arrow" />
+                                <img src={`/img/sections/catalog/arrow-${theme}.png`} alt="Arrow" />
                             ) : (
                                 <img
-                                    src={`./img/sections/catalog/arrow-${theme}.png`}
+                                    src={`/img/sections/catalog/arrow-${theme}.png`}
                                     alt="Arrow"
                                     style={{ transform: "rotate(-90deg) translateX(30%)" }}
                                 />
@@ -181,17 +181,17 @@ function Filters({ example }) {
                             </div>
                         )}
                     </div>
-                    <div class="filters__rarity">
+                    {/* <div class="filters__rarity">
                         <div
                             onClick={() =>
                                 setPopups([popups[0], popups[1], popups[2], !popups[3], popups[4], popups[5]])
                             }>
                             <h6>Rarity rank</h6>
                             {popups[3] ? (
-                                <img src={`./img/sections/catalog/arrow-${theme}.png`} alt="Arrow" />
+                                <img src={`/img/sections/catalog/arrow-${theme}.png`} alt="Arrow" />
                             ) : (
                                 <img
-                                    src={`./img/sections/catalog/arrow-${theme}.png`}
+                                    src={`/img/sections/catalog/arrow-${theme}.png`}
                                     alt="Arrow"
                                     style={{ transform: "rotate(-90deg) translateX(30%)" }}
                                 />
@@ -213,17 +213,17 @@ function Filters({ example }) {
                                 />
                             </>
                         )}
-                    </div>
+                    </div> */}
                 </>
             )}
             <div class="filters__emotional">
                 <div onClick={() => setPopups([popups[0], popups[1], popups[2], popups[3], !popups[4], popups[5]])}>
                     <h6>The most emotional</h6>
                     {popups[4] ? (
-                        <img src={`./img/sections/catalog/arrow-${theme}.png`} alt="Arrow" />
+                        <img src={`/img/sections/catalog/arrow-${theme}.png`} alt="Arrow" />
                     ) : (
                         <img
-                            src={`./img/sections/catalog/arrow-${theme}.png`}
+                            src={`/img/sections/catalog/arrow-${theme}.png`}
                             alt="Arrow"
                             style={{ transform: "rotate(-90deg) translateX(30%)" }}
                         />
@@ -254,10 +254,10 @@ function Filters({ example }) {
                 <div onClick={() => setPopups([popups[0], popups[1], popups[2], popups[3], popups[4], !popups[5]])}>
                     <h6>Category</h6>
                     {popups[5] ? (
-                        <img src={`./img/sections/catalog/arrow-${theme}.png`} alt="Arrow" />
+                        <img src={`/img/sections/catalog/arrow-${theme}.png`} alt="Arrow" />
                     ) : (
                         <img
-                            src={`./img/sections/catalog/arrow-${theme}.png`}
+                            src={`/img/sections/catalog/arrow-${theme}.png`}
                             alt="Arrow"
                             style={{ transform: "rotate(-90deg) translateX(30%)" }}
                         />

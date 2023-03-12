@@ -13,9 +13,11 @@ import $ from "jquery";
 function CreateCollection() {
     const { changeTheme } = useContext(ContextApp);
 
-    const { acceptedFiles, getRootProps, getInputProps } = useDropzone();
+    const { acceptedFiles:acceptedFilesFromPhoto, getRootProps:getRootPropsFromPhoto, getInputProps:getInputPropsFromPhoto } = useDropzone();
+    const { acceptedFiles:acceptedFilesFromBanner, getRootProps:getRootPropsFromBanner, getInputProps:getInputPropsFromBanner } = useDropzone();
 
-    const [filename, setFilename] = useState("");
+    const [filenamePhoto, setFilenamePhoto] = useState("");
+    const [filenameBanner, setFilenameBanner] = useState("");
     const [attrs, setAttrs] = useState([{ id: 1, name: "", value: "" }]);
     const [nameCollection, setNameCollection] = useState("");
     const [descriptionCollection, setDescriptionCollection] = useState("");
@@ -71,8 +73,9 @@ function CreateCollection() {
     }, [])
 
     useEffect(() => {
-        setFilename(acceptedFiles[0]?.path);
-    }, [acceptedFiles]);
+        setFilenamePhoto(acceptedFilesFromPhoto[0]?.path);
+        setFilenameBanner(acceptedFilesFromBanner[0]?.path);
+    }, [acceptedFilesFromPhoto, acceptedFilesFromBanner]);
 
     const setAttrsChange = (e, type) => {
         let attrs_copy = [...attrs];
@@ -117,11 +120,12 @@ function CreateCollection() {
     }
 
     const validationCreateCollection = () => {
-        return (nameCollection !== "" && descriptionCollection !== "" && acceptedFiles.length !== 0)
+        return (nameCollection !== "" && descriptionCollection !== "" && acceptedFilesFromPhoto.length !== 0 && acceptedFilesFromBanner.length !== 0)
     }
 
     const resetCreateCollection = () => {
-        setFilename("");
+        setFilenamePhoto("");
+        setFilenameBanner("");
         setAttrs([{ id: 1, name: "", value: "" }]);
         setNameCollection("");
         setDescriptionCollection("");
@@ -146,6 +150,7 @@ function CreateCollection() {
             formData.append("json_data", JSON.stringify({
                 items: [{
                     img: "img-collection",
+                    hdr: "hdr-collection",
                     name: nameCollection,
                     info: descriptionCollection,
                     categories: categories,
@@ -153,7 +158,8 @@ function CreateCollection() {
                     attrs: getFormatAttrsForBackend(),
                 }]
             }));
-            formData.append("img-collection", acceptedFiles[0]);
+            formData.append("img-collection", acceptedFilesFromPhoto[0]);
+            formData.append("hdr-collection", acceptedFilesFromBanner[0]);
             axios
                 .post("https://nft-one.art/api/nft_collections/upsert", formData, {
                     headers: {
@@ -197,23 +203,42 @@ function CreateCollection() {
             <Header />
             <section className={changeTheme("createCollection", "createCollection createCollection--dark")}>
                 <div className="createCollection__left">
-                    <div className="createCollection__left-download dropzone" {...getRootProps()}>
+                    <div className="createCollection__left-download dropzone" {...getRootPropsFromPhoto()}>
                         <img
                             className="createCollection__left-download-img"
                             src="./img/sections/createNFT/drag-and-drop.svg"
                             alt="Drag and drop"
                         />
-                        {filename ? (
-                            <p className="createCollection__left-download-drag">{filename}</p>
+                        {filenamePhoto ? (
+                            <p className="createCollection__left-download-drag">{filenamePhoto.length > 12 ? filenamePhoto.slice(filenamePhoto.length - 12, filenamePhoto.length) : filenamePhoto}</p>
                         ) : (
                             <>
-                                <p className="createCollection__left-download-drag">Drag and drop photos here</p>
+                                <p className="createCollection__left-download-drag">Add photo</p>
                                 <p className="createCollection__left-download-or">or</p>
                             </>
                         )}
                         <button className="createCollection__left-download-browse">
-                            <input {...getInputProps()} type="file" onClick={e => e.stopPropagation()} />
-                            Browse Files
+                            <input {...getInputPropsFromPhoto()} type="file" onClick={e => e.stopPropagation()} />
+                            Browse File
+                        </button>
+                    </div>
+                    <div className="createCollection__left-download dropzone" {...getRootPropsFromBanner()}>
+                        <img
+                            className="createCollection__left-download-img"
+                            src="./img/sections/createNFT/drag-and-drop.svg"
+                            alt="Drag and drop"
+                        />
+                        {filenameBanner ? (
+                            <p className="createCollection__left-download-drag">{filenameBanner.length > 12 ? filenameBanner.slice(filenameBanner.length - 12, filenameBanner.length) : filenameBanner}</p>
+                        ) : (
+                            <>
+                                <p className="createCollection__left-download-drag">Add banner</p>
+                                <p className="createCollection__left-download-or">or</p>
+                            </>
+                        )}
+                        <button className="createCollection__left-download-browse">
+                            <input {...getInputPropsFromBanner()} type="file" onClick={e => e.stopPropagation()} />
+                            Browse File
                         </button>
                     </div>
                     <div className="createCollection__left-attr">
